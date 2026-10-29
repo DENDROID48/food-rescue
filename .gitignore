@@ -1,0 +1,13 @@
+# Build output
+target/
+
+# IntelliJ: personal settings (shared code style files could be committed later)
+.idea/
+*.iml
+
+# macOS
+.DS_Store
+
+# Local environment files with secrets
+.env
+*.env

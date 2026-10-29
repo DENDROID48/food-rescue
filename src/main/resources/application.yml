@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: food-rescue
+  profiles:
+    # "dev" loads sample data (see DevDataSeeder). Use SPRING_PROFILES_ACTIVE=postgres in production.
+    default: dev
+  datasource:
+    # PostgreSQL compatibility mode, so the same Flyway migrations run on H2 and in production.
+    url: jdbc:h2:mem:foodrescue;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      # Flyway creates the schema (src/main/resources/db/migration); Hibernate only checks at
+      # startup that the entities match it, and refuses to start if they do not.
+      ddl-auto: validate
+    # Disable open-in-view so lazy loading cannot silently happen inside controllers.
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+  servlet:
+    multipart:
+      # Food photos; FoodItemPhotoService also checks the size and the real image type.
+      max-file-size: 3MB
+      max-request-size: 3MB
+
+# Business rules, bound to FoodRescueProperties.
+foodrescue:
+  max-search-radius-km: 25
+  reservation-window-minutes: 60
+  pay-it-forward-daily-limit: 1
+  max-quantity-per-reservation: 5
+  expiry-job-delay-ms: 60000
+
+  # Login tokens, bound to SecurityProperties.
+  security:
+    # Signs the login tokens. The dev value below is public, so production MUST set
+    # FOODRESCUE_JWT_SECRET to a random string of at least 32 characters.
+    jwt-secret: ${FOODRESCUE_JWT_SECRET:dev-only-secret-change-me-0123456789abcdef}
+    token-validity-hours: 168
+
+  # Address lookup, bound to GeocodingProperties.
+  geocoding:
+    enabled: true
+    # OpenStreetMap's free geocoder. Its usage policy allows about one request per second and
+    # asks for an identifying User-Agent; for real traffic use a paid provider or host your own.
+    base-url: https://nominatim.openstreetmap.org
+    user-agent: food-rescue/0.1 (${FOODRESCUE_CONTACT_EMAIL:local development})
+    # Limits results to these countries (ISO codes, comma separated); empty means worldwide.
+    country-codes: ro
+
+server:
+  error:
+    include-stacktrace: never

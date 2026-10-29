@@ -1,0 +1,15 @@
+# Activate with: SPRING_PROFILES_ACTIVE=postgres
+# Secrets come from environment variables, never from the repository.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/foodrescue}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  h2:
+    console:
+      enabled: false
+
+foodrescue:
+  security:
+    # No default here: the application refuses to start without a real secret.
+    jwt-secret: ${FOODRESCUE_JWT_SECRET}

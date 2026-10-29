@@ -1,0 +1,43 @@
+# Runs the application with a PostgreSQL database:
+#   export FOODRESCUE_JWT_SECRET=$(openssl rand -hex 32)
+#   export FOODRESCUE_ADMIN_EMAIL=you@example.com FOODRESCUE_ADMIN_PASSWORD='a long password'
+#   docker compose up --build
+# then open http://localhost:8080/
+#
+# The postgres profile starts with an empty database (no demo data). The admin variables create
+# the first administrator on the first start; everyone else registers on the web page.
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: foodrescue
+      POSTGRES_USER: foodrescue
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-foodrescue-local}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U foodrescue -d foodrescue"]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      DB_URL: jdbc:postgresql://db:5432/foodrescue
+      DB_USERNAME: foodrescue
+      DB_PASSWORD: ${DB_PASSWORD:-foodrescue-local}
+      # Required: compose refuses to start without it, so a known secret is never used by accident.
+      FOODRESCUE_JWT_SECRET: ${FOODRESCUE_JWT_SECRET:?Set FOODRESCUE_JWT_SECRET to a random string of at least 32 characters}
+      FOODRESCUE_ADMIN_EMAIL: ${FOODRESCUE_ADMIN_EMAIL:-}
+      FOODRESCUE_ADMIN_PASSWORD: ${FOODRESCUE_ADMIN_PASSWORD:-}
+    ports:
+      # Change the host port with APP_PORT, e.g. APP_PORT=8081 if 8080 is taken.
+      - "${APP_PORT:-8080}:8080"
+
+volumes:
+  db-data:
