@@ -24,8 +24,29 @@ Open http://localhost:8080/ and sign in with a demo account. Every one uses the 
 | `admin@example.com` | administrator | Approve the pending verification request, suspend a store |
 | `applicant@example.com` | consumer | Has a verification request waiting for the admin |
 
-The demo data is recreated on every start. The H2 database console is at http://localhost:8080/h2-console
+By default the demo data is recreated on every start. The H2 database console is at http://localhost:8080/h2-console
 (JDBC URL `jdbc:h2:mem:foodrescue`, user `sa`, no password).
+
+## Ways to start
+
+| Command | What happens |
+|---|---|
+| `mvn spring-boot:run` | Demo mode: demo data in memory, lost when the program stops |
+| `mvn spring-boot:run -Dspring-boot.run.arguments="--mode=files"` | Data is kept in CSV files in `data/` and read back on the next start (demo accounts are added the first time) |
+| `... -Dspring-boot.run.arguments="--mode=files --data-dir=other-folder --port=8081"` | Another data folder and port |
+| `... -Dspring-boot.run.arguments="--spring.profiles.active=dev,files"` | The same as `--mode=files`, chosen through the `application-files.yml` config file |
+| `... -Dspring-boot.run.arguments="--help"` | Lists the options |
+
+With a built jar the same options follow `java -jar target/food-rescue-*.jar`. In IntelliJ put them in
+**Run → Edit Configurations → Program arguments**. A wrong value (`--port=abc`, `--mode=cloud`) stops
+the program with a one-line message.
+
+In files mode the data is saved every 10 seconds and when the program stops (Ctrl+C), to
+`users.csv`, `stores.csv`, `food-items.csv`, `photos.csv`, `orders.csv` and the `photos/` folder.
+They open in a spreadsheet. If a file is edited by hand and a value is wrong, the program refuses
+to start and names the file, line and column. Delete the folder to start over with the demo data.
+
+The class diagram is in [docs/class-diagram.md](docs/class-diagram.md).
 
 ## How it works
 

@@ -36,6 +36,14 @@ foodrescue:
   max-quantity-per-reservation: 5
   expiry-job-delay-ms: 60000
 
+  # Where the data lives, bound to StorageProperties. Program arguments override these:
+  #   --mode=files --data-dir=PATH   (see LaunchOptions, or run with --help)
+  storage:
+    # memory: demo data, lost when the program stops. files: CSV files read back on the next start.
+    mode: memory
+    data-dir: data
+    autosave-seconds: 10
+
   # Login tokens, bound to SecurityProperties.
   security:
     # Signs the login tokens. The dev value below is public, so production MUST set

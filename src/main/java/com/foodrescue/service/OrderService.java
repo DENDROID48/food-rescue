@@ -103,7 +103,7 @@ public class OrderService {
 
         // The expiry job runs once a minute, so a reservation can be past its deadline but not
         // released yet. It must not be handed over: the stock may be returned at any moment.
-        if (!order.getPickupDeadline().isAfter(clock.instant())) {
+        if (order.isExpiredAt(clock.instant())) {
             throw new BusinessRuleException(HttpStatus.GONE, "The pickup deadline for this reservation has passed");
         }
 

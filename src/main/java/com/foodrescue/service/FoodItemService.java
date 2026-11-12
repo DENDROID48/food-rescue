@@ -2,6 +2,7 @@ package com.foodrescue.service;
 
 import com.foodrescue.config.FoodRescueProperties;
 import com.foodrescue.domain.FoodItem;
+import com.foodrescue.domain.GeoPoint;
 import com.foodrescue.domain.Order;
 import com.foodrescue.domain.OrderStatus;
 import com.foodrescue.domain.OrderType;
@@ -81,6 +82,7 @@ public class FoodItemService {
         }
 
         Instant now = clock.instant();
+        GeoPoint searchFrom = new GeoPoint(lat, lng);
         GeoUtils.BoundingBox box = GeoUtils.boundingBox(lat, lng, radiusKm);
 
         List<FoodItem> candidates = foodItemRepository.findAvailableInBoundingBox(
@@ -88,8 +90,7 @@ public class FoodItemService {
 
         return candidates.stream()
                 // Pair every item with its exact distance so it is calculated only once.
-                .map(item -> new ItemWithDistance(item, GeoUtils.haversineKm(
-                        lat, lng, item.getStore().getLatitude(), item.getStore().getLongitude())))
+                .map(item -> new ItemWithDistance(item, searchFrom.distanceKmTo(item.getStore())))
                 // Filter on the exact distance. Rounding for display happens later in the DTO,
                 // so a shop at 3.04 km is correctly excluded from a 3 km search.
                 .filter(candidate -> candidate.distanceKm() <= radiusKm)

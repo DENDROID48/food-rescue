@@ -19,7 +19,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Store {
+public class Store implements Locatable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

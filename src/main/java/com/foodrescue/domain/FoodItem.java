@@ -30,7 +30,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-public class FoodItem {
+public class FoodItem implements Expirable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,9 +95,14 @@ public class FoodItem {
         }
     }
 
+    @Override
+    public Instant expiryMoment() {
+        return expiresAt;
+    }
+
     /** True while the item has not expired at the given moment. */
     public boolean isNotExpired(Instant now) {
-        return expiresAt.isAfter(now);
+        return !isExpiredAt(now);
     }
 
     /** Percentage saved by the consumer, rounded for display (for example 60 means 60 percent off). */

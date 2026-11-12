@@ -76,7 +76,7 @@ public class FoodItemPhotoService {
     }
 
     /** JPEG, PNG or WebP from the file signature, or null for anything else. */
-    static String detectImageType(byte[] data) {
+    public static String detectImageType(byte[] data) {
         if (startsWith(data, 0xFF, 0xD8, 0xFF)) {
             return "image/jpeg";
         }

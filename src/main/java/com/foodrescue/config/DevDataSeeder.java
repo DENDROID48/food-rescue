@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,7 @@ import java.time.Instant;
  */
 @Component
 @Profile("dev")
+@Order(10) // After FileDataStore has loaded any saved data.
 @RequiredArgsConstructor
 @Slf4j
 public class DevDataSeeder implements CommandLineRunner {
@@ -44,6 +46,10 @@ public class DevDataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        if (userRepository.count() > 0) {
+            log.info("Data was loaded from the data files, so no demo data is added");
+            return;
+        }
         newUser("Platform Admin", "admin@example.com", UserRole.ADMIN, EligibilityStatus.NOT_REQUESTED);
         User owner = newUser("Bakery Owner", "owner@example.com", UserRole.STORE_OWNER, EligibilityStatus.NOT_REQUESTED);
         newUser("Test Student", "student@example.com", UserRole.CONSUMER, EligibilityStatus.NOT_REQUESTED);

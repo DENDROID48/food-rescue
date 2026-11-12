@@ -21,7 +21,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Order {
+public class Order implements Expirable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,4 +68,10 @@ public class Order {
      */
     @Version
     private Long version;
+
+    /** A reservation expires at its pickup deadline. */
+    @Override
+    public Instant expiryMoment() {
+        return pickupDeadline;
+    }
 }
