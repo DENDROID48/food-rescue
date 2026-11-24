@@ -110,6 +110,18 @@ class WebPushSenderTest {
             "4 × Sourdough loaf for 4.50 lei · until 17:30", "/?alert=12", "alert-12");
 
     @Test
+    void constructorUsesConfiguredKeysOrMakesTemporaryOnes() throws Exception {
+        assertThat(sender.publicKey()).isEqualTo(vapid[0]);
+
+        WebPushSender temporary = new WebPushSender(new PushProperties(true, "", "", "mailto:a@example.org",
+                List.of("localhost"), true), repository, new ObjectMapper(), Clock.fixed(NOW, ZoneOffset.UTC));
+        byte[] key = java.util.Base64.getUrlDecoder().decode(temporary.publicKey());
+        assertThat(key).hasSize(65);            // an uncompressed P-256 public key
+        assertThat(key[0]).isEqualTo((byte) 4);
+        assertThat(temporary.publicKey()).isNotEqualTo(vapid[0]);
+    }
+
+    @Test
     void theBrowserCanDecryptTheMessageAndVerifyTheSender() throws Exception {
         PushSubscription s = subscription();
 

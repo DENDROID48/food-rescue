@@ -14,8 +14,9 @@ RUN mvn -q -B package -DskipTests
 # ---- Runtime stage: only a Java runtime and the jar ----
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-# Run as an unprivileged user rather than root.
-RUN useradd --system --uid 1001 foodrescue
+# Run as an unprivileged user rather than root. It owns the photo folder, so uploads can be saved.
+RUN useradd --system --uid 1001 foodrescue && mkdir -p /app/uploads && chown foodrescue /app/uploads
+ENV FOODRESCUE_UPLOADS_DIR=/app/uploads
 COPY --from=build /src/target/food-rescue-*.jar app.jar
 USER foodrescue
 EXPOSE 8080

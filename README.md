@@ -24,8 +24,12 @@ OpenStreetMap; without them, food search still works as a list.
 
 ```bash
 mvn spring-boot:run      # http://localhost:8080, in-memory database with demo data
-mvn test                 # unit and integration tests
+mvn test                 # 143 unit and integration tests
 ```
+
+Settings come from `src/main/resources/application.yml`. Any of them can be changed for one run
+with a program argument, for example `--server.port=9090` or
+`--foodrescue.max-quantity-per-reservation=2`.
 
 Or open the project in IntelliJ and run `FoodRescueApplication`.
 
@@ -39,7 +43,10 @@ Open http://localhost:8080/ and sign in with a demo account. Every one uses the 
 | `admin@example.com` | administrator | Approve the pending verification request, suspend a store |
 | `applicant@example.com` | consumer | Has a verification request waiting for the admin |
 
-The demo data is recreated on every start. The H2 database console is at http://localhost:8080/h2-console
+The demo data is recreated on every start. Uploaded photos are saved as files in the `uploads/`
+folder next to where the app was started (`uploads/templates/7` is the photo of product 7,
+`uploads/food-items/42` of offer 42); they survive restarts, but the demo data that pointed to
+them does not. The H2 database console is at http://localhost:8080/h2-console
 (JDBC URL `jdbc:h2:mem:foodrescue`, user `sa`, no password).
 
 ## How it works
@@ -208,6 +215,7 @@ FOODRESCUE_JWT_SECRET=... java -jar target/food-rescue-0.1.0-SNAPSHOT.jar
 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | yes | PostgreSQL connection |
 | `FOODRESCUE_ADMIN_EMAIL`, `FOODRESCUE_ADMIN_PASSWORD` | first start | Creates the first administrator (password at least 12 characters). Nothing happens if the account exists. |
 | `FOODRESCUE_CONTACT_EMAIL` | recommended | Contact for OpenStreetMap's geocoder and for push services (VAPID subject) |
+| `FOODRESCUE_UPLOADS_DIR` | no | Folder for uploaded photos (default `uploads`, in Docker `/app/uploads` on its own volume). Back it up together with the database. |
 | `FOODRESCUE_PUSH_PUBLIC_KEY`, `FOODRESCUE_PUSH_PRIVATE_KEY` | for push | VAPID key pair, for example from `npx web-push generate-vapid-keys`. Keep them fixed: browsers must subscribe again when they change. Without them, temporary keys are used. Push also needs HTTPS. |
 
 The production profile starts with an empty database and no demo accounts.
@@ -280,15 +288,18 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 
 | Package | Responsibility |
 |---|---|
-| `domain` | JPA entities and enums |
+| `domain` | JPA entities, enums, and the interfaces `Expirable` (offers and orders that run out) and `Locatable` (stores, alert areas and search points on the map) |
 | `repository` | Spring Data interfaces |
-| `service` | Business rules, address lookup, scheduled cleanup |
+| `service` | Business rules, address lookup, alerts, analytics, scheduled jobs |
+| `storage` | Photo files: the `PhotoStorage` interface and `FilePhotoStorage`, which keeps them in the uploads folder |
+| `push` | Web Push: subscriptions, encryption and sending in the background |
 | `security` | Login tokens, access rules, `@CurrentUser` |
 | `web` | REST controllers and error mapping |
 | `dto` | Request and response objects |
 | `config`, `util`, `exception` | Settings, demo data, geo maths, custom exceptions |
 | `resources/static` | The web page |
 | `resources/db/migration` | Database schema (Flyway) |
+| `docs/class-diagram.md` | Class diagram (Mermaid): open it in IntelliJ's Markdown preview or paste it into https://mermaid.live |
 
 ## Not built yet
 
@@ -299,4 +310,4 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 - **Address lookup at scale:** OpenStreetMap's free geocoder allows about one request per second.
   For real traffic, use a paid provider or host your own Nominatim.
 - **Very large catalogues:** move to PostGIS if there are hundreds of thousands of stores, and move
-  photos to object storage (S3 or similar).
+  photos to object storage (S3 or similar) by adding a second `PhotoStorage` implementation.
