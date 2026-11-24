@@ -1,12 +1,18 @@
 package com.foodrescue.dto;
 
+import com.foodrescue.domain.FoodTag;
+import java.util.Set;
+
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import com.foodrescue.domain.OfferKind;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -23,5 +29,26 @@ public record FoodItemRequest(
         @NotNull @DecimalMin("0.00") @Digits(integer = 8, fraction = 2) BigDecimal discountedPrice,
         @NotNull @Min(0) Integer quantityAvailable,
         @NotNull @Min(0) Integer payItForwardQuantity,
-        @NotNull @Future Instant expiresAt) {
+        @NotNull @Future Instant expiresAt,
+        /** Optional, PRODUCT when missing. */
+        OfferKind kind,
+        /** Optional start of the pickup window; must be before expiresAt. */
+        Instant pickupStartsAt,
+        /** Optional food types, as stated by the shop; null keeps the current ones. */
+        @Size(max = 6) Set<FoodTag> tags,
+        /** Optional approximate weight of one unit, in grams. */
+        @Min(1) @Max(50_000) Integer unitWeightGrams) {
+
+    public FoodItemRequest(String name, String description, BigDecimal originalPrice, BigDecimal discountedPrice,
+                           Integer quantityAvailable, Integer payItForwardQuantity, Instant expiresAt,
+                           OfferKind kind, Instant pickupStartsAt) {
+        this(name, description, originalPrice, discountedPrice, quantityAvailable, payItForwardQuantity, expiresAt,
+                kind, pickupStartsAt, null, null);
+    }
+
+    /** The fields every client sent before kinds and pickup windows existed. */
+    public FoodItemRequest(String name, String description, BigDecimal originalPrice, BigDecimal discountedPrice,
+                           Integer quantityAvailable, Integer payItForwardQuantity, Instant expiresAt) {
+        this(name, description, originalPrice, discountedPrice, quantityAvailable, payItForwardQuantity, expiresAt, null, null, null, null);
+    }
 }

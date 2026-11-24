@@ -38,8 +38,8 @@ import java.util.List;
  * Who may call what.
  *
  * <ul>
- *   <li>Anyone: register, log in, search food, view photos, look up addresses, the web page.</li>
- *   <li>CONSUMER: reserve, claim free items, own orders.</li>
+ *   <li>Anyone: register, log in, search food, view food and product photos, look up addresses, the web page.</li>
+ *   <li>CONSUMER: reserve, claim free items, own orders, drop alerts and the notification inbox.</li>
  *   <li>STORE_OWNER: everything under /stores (StoreService also checks they own the store).</li>
  *   <li>ADMIN: everything under /admin.</li>
  * </ul>
@@ -68,9 +68,10 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/food-items/nearby", "/api/v1/food-items/*/photo",
-                                "/api/v1/geocode", "/api/v1/geocode/**").permitAll()
+                                "/api/v1/geocode", "/api/v1/geocode/**", "/api/v1/template-photos/*",
+                                "/api/v1/push/public-key").permitAll()
                         .requestMatchers("/api/v1/food-items/*/reservations", "/api/v1/food-items/*/free-claims",
-                                "/api/v1/orders/**", "/api/v1/users/me/eligibility-request").hasRole("CONSUMER")
+                                "/api/v1/orders/**", "/api/v1/users/me/eligibility-request", "/api/v1/me/**").hasRole("CONSUMER")
                         .requestMatchers("/api/v1/stores/**").hasRole("STORE_OWNER")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").authenticated()

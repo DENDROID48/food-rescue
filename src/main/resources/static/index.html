@@ -2,894 +2,888 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Food Rescue</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%232f7d4f'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Food Rescue — good food, rescued nearby</title>
+<meta name="description" content="Reserve surplus food from shops near you at a lower price, and collect it with a pickup code.">
+<meta name="theme-color" content="#f8f5ee">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Food Rescue">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2317543e'/%3E%3Cpath d='M32 47V28m0 7c-12 0-16-9-15-17 12 0 18 6 15 17Zm0-7c0-12 7-17 17-17 1 10-4 17-17 17Z' stroke='%23f7cf74' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
 <!--
   Web client for the Food Rescue API, served by Spring Boot at http://localhost:8080/.
-  Plain HTML and JavaScript, no build step. Maps use Leaflet with OpenStreetMap tiles; if they
-  cannot load (no internet), everything still works without the map.
+  Plain HTML, CSS and JavaScript (app.js), no build step. Maps use Leaflet with OpenStreetMap
+  tiles; if they cannot load (no internet), everything still works without the map.
 -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-  :root {
-    --bg: #f6f5f1; --card: #fff; --ink: #1d1f1c; --muted: #6b6f68; --line: #e3e1da;
-    --green: #2f7d4f; --green-soft: #e4f1e8; --amber: #a86512; --amber-soft: #fbefdc;
-    --red: #b3372f; --red-soft: #f8e3e1; --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  /* Elements with the hidden attribute stay hidden even when a class sets display (e.g. .row). */
-  [hidden] { display: none !important; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  header { background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 1000; }
-  .bar { max-width: 1040px; margin: 0 auto; padding: 12px 16px; display: flex; gap: 12px 16px; align-items: center; flex-wrap: wrap; }
-  .logo { font-weight: 700; font-size: 18px; color: var(--green); margin-right: auto; }
-  main { max-width: 1040px; margin: 0 auto; padding: 20px 16px 60px; }
-  h2 { font-size: 17px; margin: 28px 0 10px; }
-  h2:first-child { margin-top: 0; }
-  .muted { color: var(--muted); }
-  .small { font-size: 13px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
-  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
-  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .grow { flex: 1 1 220px; }
-  .spread { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
-  input, select, textarea, button { font: inherit; }
-  input, select, textarea { border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; background: #fff; color: var(--ink); min-width: 0; width: 100%; }
-  input[type="file"] { padding: 5px; }
-  label { display: grid; gap: 3px; font-size: 13px; color: var(--muted); }
-  button { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 8px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
-  button:hover { border-color: #c9c6bc; }
-  button.primary { background: var(--green); border-color: var(--green); color: #fff; }
-  button.primary:hover { background: #276a43; }
-  button.danger { color: var(--red); }
-  button.link { border: 0; background: none; color: var(--green); padding: 0; text-decoration: underline; }
-  button:disabled { opacity: .45; cursor: not-allowed; }
-  .tabs button { border-radius: 999px; }
-  .tabs button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .price { font-size: 20px; font-weight: 700; }
-  .strike { text-decoration: line-through; color: var(--muted); margin-left: 6px; }
-  .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--green-soft); color: var(--green); }
-  .badge.amber { background: var(--amber-soft); color: var(--amber); }
-  .badge.red { background: var(--red-soft); color: var(--red); }
-  .badge.grey { background: #eceae4; color: var(--muted); }
-  .code { font: 700 22px/1 ui-monospace, Menlo, monospace; letter-spacing: 3px; }
-  .form-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); align-items: end; }
-  .form-grid .wide { grid-column: 1 / -1; }
-  table { width: 100%; border-collapse: collapse; }
-  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
-  .table-wrap { overflow-x: auto; }
-  .empty { padding: 18px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: var(--radius); }
-  .photo { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #eceae4; }
-  .thumb { width: 56px; height: 42px; object-fit: cover; border-radius: 6px; background: #eceae4; display: block; }
-  .map { height: 320px; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 12px; }
-  .map.small { height: 240px; margin: 10px 0 0; }
-  .suggestions { display: grid; gap: 4px; margin-top: 8px; }
-  .suggestions button { text-align: left; white-space: normal; }
-  .location-label { font-weight: 600; }
-  .auth { max-width: 420px; margin: 40px auto; }
-  .auth .card + .card { margin-top: 12px; }
-  .stack { display: grid; gap: 10px; }
-  #toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 2000; max-width: min(560px, calc(100% - 32px));
-           padding: 10px 16px; border-radius: 8px; color: #fff; background: var(--ink); box-shadow: 0 4px 18px rgba(0,0,0,.18); }
-  #toast.error { background: var(--red); }
-  #toast.ok { background: var(--green); }
-  details summary { cursor: pointer; color: var(--green); font-weight: 600; }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Outfit:wght@500..700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="styles.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+<script src="app.js" defer></script>
 </head>
 <body>
-<header>
-  <div class="bar">
-    <div class="logo">Food Rescue</div>
-    <div class="row tabs" id="tabs" hidden></div>
-    <div class="row" id="account" hidden>
-      <span class="small"><span id="accountName"></span> <span id="accountRole" class="muted"></span></span>
-      <button id="logout">Sign out</button>
+<!-- Icons, referenced with <svg><use href="#i-name"/></svg>. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-8m0 3.5C6.5 15.5 4.6 11.4 5 7.6c5.6 0 8.2 3 7 7.9Zm0-3.6c0-5.6 3.3-7.9 7.8-7.9.5 4.8-2 7.9-7.8 7.9Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+    <symbol id="i-locate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 8 4v10l-8 4-8-4V7l8-4Z"/><path d="m4 7 8 4 8-4M12 11v10"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.3 4.6 13a4.7 4.7 0 0 1 6.7-6.7l.7.7.7-.7a4.7 4.7 0 0 1 6.7 6.7L12 20.3Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 9.5V20h16V9.5M3 9.5 5 4h14l2 5.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0Z"/><path d="M10 20v-5h4v5"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 5 6v5.5c0 4.3 3 7.9 7 9.5 4-1.6 7-5.2 7-9.5V6l-7-3Z"/><path d="m9 12 2 2 4-4" stroke-linecap="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5.5M12 16.4v.1"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m3.5 6.5 5.5-2.5 6 2.5 5.5-2.5v13.5L15 20l-6-2.5-5.5 2.5V6.5Z"/><path d="M9 4v13.5M15 6.5V20"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 8h3l1.5-2.5h7L17 8h3v11H4V8Z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l16 16M10 6c.6-.3 1.3-.5 2-.5 6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-2.7 3.4M6.6 7.6A16 16 0 0 0 2.5 12S6 18.5 12 18.5c1.7 0 3.2-.5 4.4-1.2"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4.5H6.5v15H14M10.5 12H20m-3-3.5 3.5 3.5-3.5 3.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M13.5 2.5 5 13.5h6l-1 8 8.5-11h-6l1-8Z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15l1.5-2Z"/><path d="M10 21h4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7Z"/><path d="M19 15.5c.2 1.6.9 2.3 2.5 2.5-1.6.2-2.3.9-2.5 2.5-.2-1.6-.9-2.3-2.5-2.5 1.6-.2 2.3-.9 2.5-2.5Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9L12 3.5Z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5v4h-4"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Food Rescue, home">
+      <span class="brand-mark" aria-hidden="true"><svg><use href="#i-leaf"/></svg></span>
+      <span class="brand-word" aria-hidden="true">food<span>rescue</span><i>.</i></span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Main" hidden></nav>
+    <div class="account" id="account" hidden>
+      <span class="avatar" id="accountAvatar" aria-hidden="true"></span>
+      <span class="account-text"><strong id="accountName"></strong><span id="accountRole"></span></span>
+      <button class="btn btn-ghost btn-sm btn-icon inbox-btn" id="inboxBtn" type="button" aria-label="Alerts" hidden><svg aria-hidden="true"><use href="#i-bell"/></svg><span class="nav-dot inbox-dot" id="inboxDot" hidden></span></button>
+      <button class="btn btn-ghost btn-sm" id="logout" type="button"><svg aria-hidden="true"><use href="#i-logout"/></svg><span>Sign out</span></button>
     </div>
   </div>
 </header>
 
-<main>
-  <!-- Sign in / register -->
-  <section id="view-auth" class="auth" hidden>
-    <form id="loginForm" class="card stack">
-      <h2>Sign in</h2>
-      <label>Email <input name="email" type="email" autocomplete="username" required></label>
-      <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
-      <button class="primary">Sign in</button>
-      <div class="small muted">
-        Demo accounts (password <strong>demo1234</strong>):
-        <span class="row" style="margin-top:6px">
-          <button type="button" class="link" data-demo="student@example.com">student</button>
-          <button type="button" class="link" data-demo="beneficiary@example.com">beneficiary</button>
-          <button type="button" class="link" data-demo="owner@example.com">store owner</button>
-          <button type="button" class="link" data-demo="admin@example.com">admin</button>
-        </span>
+<main id="main" class="container" tabindex="-1">
+
+  <!-- Sign in and create account -->
+  <section id="view-auth" class="view" aria-labelledby="authHeading" hidden>
+    <div class="auth">
+      <div class="auth-visual">
+        <img src="photos/hero-bakery-960.webp" srcset="photos/hero-bakery-480.webp 480w, photos/hero-bakery-960.webp 960w" sizes="(max-width: 960px) 100vw, 50vw" alt="" decoding="async">
+        <span class="eyebrow on-dark">Surplus food from shops near you</span>
+        <h1 id="authHeading">Good food deserves <em>a second chance.</em></h1>
+        <p>Reserve what local shops couldn't sell today at a lower price, then collect it on your way home.</p>
+        <ul class="auth-points">
+          <li><span><svg aria-hidden="true"><use href="#i-check"/></svg></span>Reserve in seconds and pay at the shop</li>
+          <li><span><svg aria-hidden="true"><use href="#i-check"/></svg></span>A 6-digit code is all you need to collect</li>
+          <li><span><svg aria-hidden="true"><use href="#i-heart"/></svg></span>Free items for verified neighbours in need</li>
+        </ul>
       </div>
-    </form>
-    <details class="card">
-      <summary>New here? Create an account</summary>
-      <form id="registerForm" class="stack" style="margin-top:12px">
-        <label>Full name <input name="fullName" required maxlength="120" autocomplete="name"></label>
-        <label>Email <input name="email" type="email" required maxlength="180" autocomplete="email"></label>
-        <label>Password (at least 8 characters) <input name="password" type="password" minlength="8" maxlength="72" required autocomplete="new-password"></label>
-        <label>I want to
-          <select name="role">
-            <option value="CONSUMER">Rescue food (consumer)</option>
-            <option value="STORE_OWNER">Offer surplus food (store owner)</option>
-          </select>
-        </label>
-        <button class="primary">Create account</button>
-      </form>
-    </details>
+
+      <div class="auth-panel">
+        <div class="auth-panel-inner">
+          <div class="auth-tabs" role="tablist" aria-label="Sign in or create an account">
+            <button type="button" role="tab" id="tabLogin" aria-controls="loginForm" aria-selected="true">Sign in</button>
+            <button type="button" role="tab" id="tabRegister" aria-controls="registerForm" aria-selected="false" tabindex="-1">Create account</button>
+          </div>
+
+          <form id="loginForm" class="auth-form" role="tabpanel" aria-labelledby="tabLogin" novalidate>
+            <h2>Welcome back</h2>
+            <p class="lede">Sign in to see what's waiting nearby.</p>
+            <div class="form-alert" id="loginAlert" role="alert"></div>
+            <div class="field">
+              <label class="field-label" for="loginEmail">Email address</label>
+              <input class="input" id="loginEmail" name="email" type="email" autocomplete="username" required data-label="Email address" aria-describedby="loginEmailError" placeholder="you@example.com">
+              <p class="field-error" id="loginEmailError"></p>
+            </div>
+            <div class="field">
+              <label class="field-label" for="loginPassword">Password</label>
+              <div class="input-group">
+                <input class="input" id="loginPassword" name="password" type="password" autocomplete="current-password" required data-label="Password" aria-describedby="loginPasswordError">
+                <button type="button" class="btn btn-ghost btn-icon btn-sm input-action" data-toggle-password="loginPassword" aria-label="Show password" aria-pressed="false"><svg aria-hidden="true"><use href="#i-eye"/></svg></button>
+              </div>
+              <p class="field-error" id="loginPasswordError"></p>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block" type="submit"><span>Sign in</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <div class="demo">
+              <p>Just looking around? Sign in with a demo account (password <strong>demo1234</strong>).</p>
+              <div class="demo-grid">
+                <button type="button" data-demo="student@example.com"><b>Customer</b><small>Find and reserve food</small></button>
+                <button type="button" data-demo="beneficiary@example.com"><b>Verified customer</b><small>Can claim free items</small></button>
+                <button type="button" data-demo="owner@example.com"><b>Store owner</b><small>Publish food, hand it over</small></button>
+                <button type="button" data-demo="admin@example.com"><b>Administrator</b><small>Verify people, manage stores</small></button>
+              </div>
+            </div>
+          </form>
+
+          <form id="registerForm" class="auth-form" role="tabpanel" aria-labelledby="tabRegister" novalidate hidden>
+            <h2>Join Food Rescue</h2>
+            <p class="lede">It takes less than a minute.</p>
+            <div class="form-alert" id="registerAlert" role="alert"></div>
+            <div class="field">
+              <label class="field-label" for="regName">Full name</label>
+              <input class="input" id="regName" name="fullName" required maxlength="120" autocomplete="name" data-label="Your name" aria-describedby="regNameError">
+              <p class="field-error" id="regNameError"></p>
+            </div>
+            <div class="field">
+              <label class="field-label" for="regEmail">Email address</label>
+              <input class="input" id="regEmail" name="email" type="email" required maxlength="180" autocomplete="email" data-label="Email address" aria-describedby="regEmailError" placeholder="you@example.com">
+              <p class="field-error" id="regEmailError"></p>
+            </div>
+            <div class="field">
+              <label class="field-label" for="regPassword">Password</label>
+              <div class="input-group">
+                <input class="input" id="regPassword" name="password" type="password" minlength="8" maxlength="72" required autocomplete="new-password" data-label="Password" aria-describedby="regPasswordHint regPasswordError">
+                <button type="button" class="btn btn-ghost btn-icon btn-sm input-action" data-toggle-password="regPassword" aria-label="Show password" aria-pressed="false"><svg aria-hidden="true"><use href="#i-eye"/></svg></button>
+              </div>
+              <p class="field-hint" id="regPasswordHint">At least 8 characters.</p>
+              <p class="field-error" id="regPasswordError"></p>
+            </div>
+            <fieldset class="role-choice">
+              <legend>I want to</legend>
+              <label class="role-option"><input type="radio" name="role" value="CONSUMER" checked><span><b>Rescue food</b><small>Find and reserve food nearby</small></span></label>
+              <label class="role-option"><input type="radio" name="role" value="STORE_OWNER"><span><b>Offer surplus food</b><small>I run a shop or restaurant</small></span></label>
+            </fieldset>
+            <button class="btn btn-primary btn-lg btn-block" type="submit"><span>Create my account</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          </form>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Consumer -->
-  <section id="view-shop" hidden>
-    <div id="eligibilityBox" class="card spread" style="margin-bottom:16px" hidden></div>
-
-    <h2>Food near <span id="locationLabel" class="location-label">Timișoara center</span></h2>
-    <div class="card" style="margin-bottom:12px">
-      <form id="placeForm" class="row">
-        <input id="placeQuery" class="grow" placeholder="Search a street, neighbourhood or city" aria-label="Search a place">
-        <button class="primary">Search</button>
-        <button type="button" id="locate">Use my location</button>
-        <label class="row" style="gap:6px">Within
-          <select id="radius" style="width:auto">
-            <option value="1">1 km</option><option value="2">2 km</option><option value="3" selected>3 km</option>
-            <option value="5">5 km</option><option value="10">10 km</option><option value="25">25 km</option>
-          </select>
-        </label>
-      </form>
-      <div id="placeSuggestions" class="suggestions"></div>
-      <div class="small muted" style="margin-top:8px">Tip: you can also click on the map to search there.</div>
+  <!-- Customer: discover food -->
+  <section id="view-shop" class="view" aria-labelledby="shopHeading" hidden>
+    <div class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow"><svg width="16" height="16" aria-hidden="true"><use href="#i-leaf"/></svg>Rescued today, near you</span>
+        <h1 id="shopHeading" tabindex="-1">Rescue something <em>delicious</em> nearby.</h1>
+        <p>Local shops list the food they couldn't sell today at a lower price. Reserve it here, collect it before closing, and keep good food out of the bin.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" type="button" id="heroLocate"><svg aria-hidden="true"><use href="#i-locate"/></svg><span>Find food near me</span></button>
+          <button class="btn btn-lg" type="button" id="heroSearch"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Choose a place</span></button>
+        </div>
+        <ol class="hero-steps">
+          <li><b>1</b>Find food nearby</li>
+          <li><b>2</b>Reserve it</li>
+          <li><b>3</b>Show your code at the shop</li>
+        </ol>
+      </div>
+      <div class="hero-media">
+        <div class="hero-photo">
+          <img src="photos/fruit-960.webp" srcset="photos/fruit-480.webp 480w, photos/fruit-960.webp 960w" sizes="(max-width: 960px) 100vw, 520px" alt="" width="960" height="768" decoding="async">
+          <span class="photo-tag">Illustrative photo</span>
+        </div>
+        <div class="hero-note" aria-live="polite">
+          <span class="hero-note-icon" aria-hidden="true"><svg><use href="#i-leaf"/></svg></span>
+          <span><strong id="heroCount">Looking…</strong><span id="heroWhere">near Timișoara center</span></span>
+        </div>
+      </div>
     </div>
-    <div id="shopMap" class="map"></div>
-    <div id="nearby" class="grid"></div>
 
-    <h2>My orders</h2>
-    <div id="myOrders"></div>
+    <div id="eligibilityBox" class="notice" hidden></div>
+
+    <form id="placeForm" class="card searchbar" role="search" novalidate>
+      <div class="searchbar-row">
+        <div class="field place-field">
+          <label class="field-label" for="placeQuery">Search a place</label>
+          <div class="input-with-icon">
+            <svg aria-hidden="true"><use href="#i-search"/></svg>
+            <input class="input" id="placeQuery" placeholder="Street, neighbourhood or city" autocomplete="off" aria-describedby="whereNow">
+          </div>
+          <div id="placeSuggestions" class="suggestions" hidden></div>
+        </div>
+        <button class="btn btn-primary btn-lg search-submit" type="submit"><span>Search</span></button>
+        <button class="btn btn-lg" type="button" id="locate"><svg aria-hidden="true"><use href="#i-locate"/></svg><span>Near me</span></button>
+      </div>
+      <div class="radius-row">
+        <span id="radiusLabel">Distance</span>
+        <div class="chips" role="radiogroup" aria-labelledby="radiusLabel">
+          <label class="chip"><input type="radio" name="radius" value="1"><span>1 km</span></label>
+          <label class="chip"><input type="radio" name="radius" value="2"><span>2 km</span></label>
+          <label class="chip"><input type="radio" name="radius" value="3"><span>3 km</span></label>
+          <label class="chip"><input type="radio" name="radius" value="5"><span>5 km</span></label>
+          <label class="chip"><input type="radio" name="radius" value="10"><span>10 km</span></label>
+          <label class="chip"><input type="radio" name="radius" value="25"><span>25 km</span></label>
+        </div>
+      </div>
+      <p class="searchbar-where" id="whereNow"><svg aria-hidden="true"><use href="#i-pin"/></svg>Showing food within <strong id="radiusText">3 km</strong> of <strong id="locationLabel">Timișoara center</strong></p>
+    </form>
+
+    <div class="results-toolbar">
+      <div>
+        <h2>Available now</h2>
+        <p class="results-summary" id="resultCount" role="status" aria-live="polite">Looking for food…</p>
+      </div>
+      <div class="toolbar-controls">
+        <label class="visually-hidden" for="sortBy">Sort results</label>
+        <select class="select sort-select" id="sortBy">
+          <option value="distance">Closest first</option>
+          <option value="price">Lowest price</option>
+          <option value="discount">Biggest discount</option>
+          <option value="deadline">Ending soonest</option>
+        </select>
+        <button class="chip-btn" type="button" id="favOnly" aria-pressed="false" hidden><svg width="14" height="14" aria-hidden="true"><use href="#i-star"/></svg>Favourites</button>
+        <button class="chip-btn" type="button" id="freeOnly" aria-pressed="false" hidden><svg width="14" height="14" aria-hidden="true"><use href="#i-heart"/></svg>Free items</button>
+        <button class="chip-btn map-toggle" type="button" id="mapToggle" aria-expanded="false" aria-controls="mapCard"><svg width="16" height="16" aria-hidden="true"><use href="#i-map"/></svg><span>Show map</span></button>
+      </div>
+    </div>
+
+    <div id="dropStrip" class="drop-strip" role="status"></div>
+    <section id="forYou" class="for-you" aria-labelledby="forYouTitle" hidden>
+      <div class="for-you-head">
+        <h2 id="forYouTitle"><svg aria-hidden="true"><use href="#i-spark"/></svg>For you</h2>
+        <button class="link-btn" type="button" data-open-inbox="settings">Why these?</button>
+      </div>
+      <div id="forYouList" class="for-you-list"></div>
+    </section>
+    <div class="browse" id="browse">
+      <div id="nearby" class="food-grid" aria-busy="true"></div>
+      <aside class="card map-card is-collapsed" id="mapCard" aria-label="Map of shops with food">
+        <div id="shopMap" class="map"></div>
+        <div class="map-caption"><span>Tap the map to search around that point.</span><span id="mapStoreCount"></span></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Customer: orders -->
+  <section id="view-orders" class="view" aria-labelledby="ordersHeading" hidden>
+    <div class="dash-head">
+      <div>
+        <span class="eyebrow">Your reservations</span>
+        <h1 id="ordersHeading" tabindex="-1">My orders</h1>
+        <p>Show the pickup code at the shop to collect your food. You pay at the shop.</p>
+      </div>
+    </div>
+    <div id="activeOrders"></div>
+    <div id="historyBlock" hidden>
+      <div class="section-head"><h2>Past orders</h2></div>
+      <div id="orderHistory" class="card history"></div>
+    </div>
   </section>
 
   <!-- Store owner -->
-  <section id="view-store" hidden>
-    <div class="spread">
-      <h2>My store</h2>
-      <label id="storeSelectLabel" hidden>Store <select id="storeSelect"></select></label>
+  <section id="view-store" class="view" aria-labelledby="storeTitle" hidden>
+    <div class="dash-head">
+      <div>
+        <span class="eyebrow">Store dashboard</span>
+        <h1 id="storeTitle" tabindex="-1">Your store</h1>
+        <p id="storeSub"></p>
+      </div>
+      <div class="dash-head-actions">
+        <label class="visually-hidden" for="storeSelect">Switch store</label>
+        <select class="select" id="storeSelect" hidden></select>
+        <button class="btn" type="button" id="editStore" hidden><svg aria-hidden="true"><use href="#i-edit"/></svg><span>Edit details</span></button>
+        <button class="btn" type="button" id="addStore" hidden><svg aria-hidden="true"><use href="#i-plus"/></svg><span>Add a store</span></button>
+      </div>
     </div>
 
-    <details id="storeFormBox" class="card" style="margin-bottom:12px">
-      <summary id="storeFormTitle">Register a store</summary>
-      <form id="storeForm" class="stack" style="margin-top:12px">
-        <input type="hidden" name="editId">
-        <label>Store name <input name="name" required maxlength="150"></label>
-        <div class="row">
-          <label class="grow">Address <input name="address" required maxlength="255" placeholder="Street and number, city"></label>
-          <button type="button" id="storeLocate" style="align-self:end">Show on map</button>
-        </div>
-        <div id="storeSuggestions" class="suggestions"></div>
-        <div id="storeMap" class="map small" hidden></div>
-        <div id="storeMapHint" class="small muted" hidden>Drag the pin if it is not exactly on your shop.</div>
-        <div class="row"><button class="primary" id="storeSubmit">Register store</button>
-          <button type="button" id="storeCancelEdit" hidden>Cancel</button></div>
-      </form>
-    </details>
+    <div id="storeSuspended" class="alert-banner" role="status" hidden>
+      <svg aria-hidden="true"><use href="#i-alert"/></svg>
+      <div><strong>This store is suspended.</strong> An administrator has hidden it from customers, so its food does not appear in search. Contact the Food Rescue team to reactivate it.</div>
+    </div>
+
+    <div id="storeEmpty" class="empty" hidden>
+      <div class="empty-icon"><svg aria-hidden="true"><use href="#i-store"/></svg></div>
+      <h3>Register your store to start</h3>
+      <p>Add your shop's name and address. Customers nearby will then see the food you publish.</p>
+      <button class="btn btn-primary" type="button" data-open-store-form><svg aria-hidden="true"><use href="#i-plus"/></svg><span>Register a store</span></button>
+    </div>
 
     <div id="storeContent" hidden>
-      <div class="row" style="margin-bottom:4px">
-        <span id="storeInfo" class="small muted"></span>
-        <button class="link" id="editStore">Edit store details</button>
+      <div class="segmented store-tabs" role="tablist" aria-label="Store dashboard">
+        <button type="button" role="tab" id="storeTabToday" aria-selected="true" aria-controls="todayPanel" data-store-tab="today">Today</button>
+        <button type="button" role="tab" id="storeTabInsights" aria-selected="false" aria-controls="insightsPanel" data-store-tab="insights" tabindex="-1">Insights</button>
+      </div>
+      <div id="todayPanel" role="tabpanel" aria-labelledby="storeTabToday">
+      <div id="reminderBanner" class="notice" role="status" hidden>
+        <span class="notice-icon" aria-hidden="true"><svg><use href="#i-clock"/></svg></span>
+        <div class="notice-text"><strong>Today's offers aren't set up yet</strong><p>Publish today's surplus so customers nearby can reserve it. It takes about a minute.</p></div>
+        <div class="notice-actions">
+          <button class="btn btn-sm btn-ghost" type="button" id="dismissReminder">Not today</button>
+          <button class="btn btn-primary btn-sm" type="button" data-setup-today><span>Set up today's offers</span></button>
+        </div>
       </div>
 
-      <h2>Hand over food</h2>
-      <form id="pickupForm" class="card row">
-        <label>Customer's pickup code
-          <input name="pickupCode" inputmode="numeric" pattern="\d{6}" maxlength="6" placeholder="6 digits" required class="code" style="width:170px">
-        </label>
-        <button class="primary" style="align-self:end">Confirm pickup</button>
-      </form>
+      <div id="storeAlerts" class="store-alerts" aria-live="polite"></div>
+      <div class="stats" id="storeStats"></div>
+      <div class="dash-grid">
+        <div class="card panel">
+          <div class="panel-head">
+            <div><h2>Hand over food</h2><p>Type the 6-digit code the customer shows you.</p></div>
+          </div>
+          <form id="pickupForm" class="pickup-form" novalidate>
+            <div class="field">
+              <label class="visually-hidden" for="pickupCode">Pickup code</label>
+              <input class="input code-input" id="pickupCode" name="pickupCode" inputmode="numeric" autocomplete="one-time-code" pattern="\d{6}" maxlength="6" required placeholder="000000" data-label="The pickup code" data-pattern-message="The code has 6 digits" aria-describedby="pickupCodeError">
+              <p class="field-error" id="pickupCodeError"></p>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block" type="submit"><span>Confirm pickup</span></button>
+          </form>
+          <div id="pickupResult" role="status" aria-live="polite"></div>
 
-      <h2>Waiting to be collected</h2>
-      <div id="storeOrders"></div>
-
-      <h2>Food on offer</h2>
-      <form id="itemForm" class="card form-grid" style="margin-bottom:12px">
-        <input type="hidden" name="editId">
-        <label>Name <input name="name" required maxlength="150"></label>
-        <label class="wide">Description <input name="description" maxlength="500"></label>
-        <label>Original price (lei) <input name="originalPrice" type="number" min="0.01" step="0.01" required></label>
-        <label>Discounted price (lei) <input name="discountedPrice" type="number" min="0" step="0.01" required></label>
-        <label>Units for sale <input name="quantityAvailable" type="number" min="0" step="1" value="1" required></label>
-        <label>Free units (Pay-It-Forward) <input name="payItForwardQuantity" type="number" min="0" step="1" value="0" required></label>
-        <label>Available until <input name="expiresAt" type="datetime-local" required></label>
-        <label>Photo (optional) <input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
-        <div class="row">
-          <button class="primary" id="itemSubmit">Publish</button>
-          <button type="button" id="itemCancelEdit" hidden>Cancel edit</button>
+          <div class="section-head" style="margin: 28px 0 8px"><h2 style="font-size: 17px">Waiting to be collected <span class="count" id="waitingCount">0</span></h2></div>
+          <div id="storeOrders" class="pickup-list"></div>
         </div>
-      </form>
-      <div id="storeItems"></div>
+
+        <div class="card panel">
+          <div class="panel-head">
+            <div><h2>Today's offers</h2><p id="todayDate">Today</p></div>
+            <div class="panel-head-actions">
+              <button class="btn btn-sm btn-drop" type="button" data-open-drop="product"><svg aria-hidden="true"><use href="#i-bolt"/></svg><span>Rescue Drop</span></button>
+              <button class="btn btn-primary btn-sm" type="button" data-setup-today><svg aria-hidden="true"><use href="#i-plus"/></svg><span>Set up today's offers</span></button>
+            </div>
+          </div>
+          <div id="todayOffers" class="listing-list"></div>
+          <div class="panel-foot">
+            <button class="link-btn" type="button" id="newItem">Add a one-off offer</button>
+            <form id="reminderForm" class="reminder-form" novalidate>
+              <label class="check"><input type="checkbox" id="reminderOn"><span>Remind me daily at</span></label>
+              <input class="input input-sm" type="time" id="reminderTime" aria-label="Reminder time" value="15:00">
+              <button class="btn btn-sm" type="submit"><span>Save</span></button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="card panel products-panel">
+        <div class="panel-head">
+          <div><h2>Your products <span class="count" id="templateCount">0</span></h2><p>Save what you sell often once. Each day you only confirm quantities.</p></div>
+          <button class="btn btn-sm" type="button" id="newTemplate"><svg aria-hidden="true"><use href="#i-plus"/></svg><span>New product</span></button>
+        </div>
+        <div id="templateList" class="template-grid"></div>
+      </div>
+      </div>
+
+      <div id="insightsPanel" role="tabpanel" aria-labelledby="storeTabInsights" hidden>
+        <div class="insights-head">
+          <div class="chips" role="radiogroup" aria-label="Period">
+            <label class="chip"><input type="radio" name="insightDays" value="7"><span>7 days</span></label>
+            <label class="chip"><input type="radio" name="insightDays" value="28" checked><span>4 weeks</span></label>
+            <label class="chip"><input type="radio" name="insightDays" value="90"><span>3 months</span></label>
+          </div>
+          <button class="btn btn-sm" type="button" id="exportCsv"><svg aria-hidden="true"><use href="#i-receipt"/></svg><span>Export CSV</span></button>
+        </div>
+        <p class="insights-note" id="insightsNote"></p>
+        <div id="insightsBody" aria-live="polite"></div>
+      </div>
     </div>
   </section>
 
-  <!-- Admin -->
-  <section id="view-admin" hidden>
-    <h2>Pay-It-Forward verification requests</h2>
-    <p class="small muted" style="margin-top:-4px">Verify the person outside the app (for example through a partner charity), then decide here. No reasons or documents are stored.</p>
-    <div id="eligibilityRequests"></div>
-    <h2>Stores</h2>
-    <div id="adminStores"></div>
+  <!-- Administrator -->
+  <section id="view-admin" class="view" aria-labelledby="adminHeading" hidden>
+    <div class="dash-head">
+      <div>
+        <span class="eyebrow">Administration</span>
+        <h1 id="adminHeading" tabindex="-1">Community overview</h1>
+        <p>Verify people for free items and keep partner stores in good standing.</p>
+      </div>
+      <button class="btn" type="button" id="adminRefresh"><svg aria-hidden="true"><use href="#i-refresh"/></svg><span>Refresh</span></button>
+    </div>
+    <div class="stats" id="adminStats"></div>
+    <div class="card panel admin-insights" id="adminInsights"></div>
+    <div class="admin-grid" style="margin-top: 24px">
+      <div class="card panel">
+        <div class="panel-head"><div><h2>Verification requests <span class="count" id="requestCount">0</span></h2><p>People asking to claim free Pay-It-Forward items.</p></div></div>
+        <p class="privacy-note"><svg aria-hidden="true"><use href="#i-lock"/></svg><span>Verify the person outside the app, for example through a partner charity, then decide here. No reasons or documents are stored.</span></p>
+        <div id="eligibilityRequests"></div>
+      </div>
+      <div class="card panel">
+        <div class="panel-head"><div><h2>Stores <span class="count" id="storeCount">0</span></h2><p>Suspended stores are hidden from customers.</p></div></div>
+        <div id="adminStores"></div>
+      </div>
+    </div>
   </section>
 </main>
 
-<div id="toast" hidden></div>
+<footer class="site-footer">
+  <div class="container">
+    <span>Food Rescue · good food, shared good.</span>
+    <button class="link-btn" type="button" id="openCredits">Photo credits</button>
+  </div>
+</footer>
 
-<script>
-const API = '/api/v1';
-const TOKEN_KEY = 'foodrescue.token';
-const LOCATION_KEY = 'foodrescue.location';
-const DEFAULT_LOCATION = { lat: 45.7537, lng: 21.2257, label: 'Timișoara center' };
-const $ = (sel) => document.querySelector(sel);
-const hasMaps = typeof window.L !== 'undefined';
+<nav class="bottom-nav" id="bottomNav" aria-label="Main" hidden></nav>
 
-let me = null;
-let token = null;
-let currentStoreId = null;
-let myStores = [];
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
-// ---------- storage, http, small helpers ----------
+<!-- Reserve or claim -->
+<dialog class="modal" id="reserveDialog" aria-labelledby="reserveTitle" data-focus-fallback="#nearby .btn"></dialog>
 
-function store(key, value) {
-  try { value === null ? localStorage.removeItem(key) : localStorage.setItem(key, JSON.stringify(value)); } catch { /* unavailable */ }
-}
-function restore(key) {
-  try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
-}
+<!-- Generic confirmation -->
+<dialog class="modal" id="confirmDialog" aria-labelledby="confirmTitle" aria-describedby="confirmBody">
+  <form method="dialog">
+    <div class="modal-head"><div><h2 id="confirmTitle"></h2></div></div>
+    <div class="modal-body"><p id="confirmBody" class="muted"></p></div>
+    <div class="modal-foot">
+      <button class="btn" value="cancel" id="confirmCancel" autofocus>Cancel</button>
+      <button class="btn btn-primary" value="confirm" id="confirmOk">Confirm</button>
+    </div>
+  </form>
+</dialog>
 
-async function api(path, { method = 'GET', body, form } = {}) {
-  const headers = {};
-  if (token) headers.Authorization = 'Bearer ' + token;
-  let payload;
-  if (form) payload = form;
-  else if (body !== undefined) { headers['Content-Type'] = 'application/json'; payload = JSON.stringify(body); }
-  const res = await fetch(API + path, { method, headers, body: payload });
-  if (res.status === 204) return null;
-  const data = await res.json().catch(() => null);
-  if (res.status === 401 && token) { signOut(); throw new Error('Your session has ended, please sign in again'); }
-  if (!res.ok) throw new Error(data?.detail || data?.title || `Request failed (${res.status})`);
-  return data;
-}
-
-let toastTimer;
-function toast(message, kind = '') {
-  const el = $('#toast');
-  el.textContent = message;
-  el.className = kind;
-  el.hidden = false;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.hidden = true; }, 4500);
-}
-const fail = (e) => toast(e.message, 'error');
-
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const money = (n) => Number(n).toFixed(2) + ' lei';
-const fmtTime = (iso) => new Date(iso).toLocaleString(undefined, { weekday: 'short', hour: '2-digit', minute: '2-digit' });
-const shortPlace = (label) => label.split(',').slice(0, 2).join(',').trim();
-
-function untilText(iso) {
-  const mins = Math.round((new Date(iso) - Date.now()) / 60000);
-  if (mins <= 0) return 'passed';
-  if (mins < 60) return `in ${mins} min`;
-  return `in ${Math.floor(mins / 60)} h ${mins % 60} min`;
-}
-
-// datetime-local works in local time without a zone; convert from an ISO instant.
-function toLocalInput(iso) {
-  const d = new Date(iso);
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  return d.toISOString().slice(0, 16);
-}
-
-/** Two clicks instead of confirm(): the first arms the button, the second runs the action. */
-function confirmClick(button, label, action) {
-  if (!button.dataset.armed) {
-    const original = button.textContent;
-    button.dataset.armed = '1';
-    button.textContent = label;
-    setTimeout(() => { if (button.isConnected) { delete button.dataset.armed; button.textContent = original; } }, 3000);
-    return;
-  }
-  action();
-}
-
-const STATUS_BADGE = { RESERVED: '', PICKED_UP: 'grey', CANCELLED: 'red', EXPIRED: 'red' };
-const STATUS_TEXT = { RESERVED: 'Reserved', PICKED_UP: 'Collected', CANCELLED: 'Cancelled', EXPIRED: 'Expired' };
-const ROLE_TEXT = { CONSUMER: 'consumer', STORE_OWNER: 'store owner', ADMIN: 'administrator' };
-
-// ---------- sign in and navigation ----------
-
-const VIEWS = {
-  CONSUMER: [['shop', 'Find food']],
-  STORE_OWNER: [['store', 'My store']],
-  ADMIN: [['admin', 'Admin']],
-};
-
-function showView(name) {
-  for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === name));
-  for (const s of document.querySelectorAll('main > section')) s.hidden = s.id !== 'view-' + name;
-  if (name === 'shop') { shopMap?.invalidateSize(); }
-  if (name === 'store') { storeMap?.invalidateSize(); }
-}
-
-async function signIn(auth) {
-  token = auth.token;
-  store(TOKEN_KEY, token);
-  await startSession();
-}
-
-function signOut() {
-  token = null; me = null; currentStoreId = null;
-  store(TOKEN_KEY, null);
-  $('#tabs').hidden = true;
-  $('#account').hidden = true;
-  showView('auth');
-}
-
-async function startSession() {
-  try {
-    me = await api('/users/me');
-  } catch {
-    signOut();
-    return;
-  }
-  $('#accountName').textContent = me.fullName;
-  $('#accountRole').textContent = '· ' + ROLE_TEXT[me.role];
-  $('#account').hidden = false;
-  const views = VIEWS[me.role];
-  $('#tabs').innerHTML = views.map(([v, label]) => `<button data-view="${v}" aria-pressed="false">${label}</button>`).join('');
-  $('#tabs').hidden = views.length < 2;
-  showView(views[0][0]);
-  if (me.role === 'CONSUMER') { initShopMap(); renderEligibility(); search(); loadMyOrders(); }
-  if (me.role === 'STORE_OWNER') { resetItemForm(); loadStores(); }
-  if (me.role === 'ADMIN') { loadAdmin(); }
-}
-
-async function login(event) {
-  event.preventDefault();
-  const f = event.target;
-  try {
-    await signIn(await api('/auth/login', { method: 'POST', body: { email: f.email.value, password: f.password.value } }));
-    f.reset();
-  } catch (e) { fail(e); }
-}
-
-async function register(event) {
-  event.preventDefault();
-  const f = event.target;
-  try {
-    const auth = await api('/users', { method: 'POST', body: {
-      fullName: f.fullName.value, email: f.email.value, password: f.password.value, role: f.role.value } });
-    f.reset();
-    toast(`Welcome, ${auth.user.fullName}!`, 'ok');
-    await signIn(auth);
-  } catch (e) { fail(e); }
-}
-
-// ---------- consumer: where am I ----------
-
-let location_ = restore(LOCATION_KEY) || DEFAULT_LOCATION;
-let shopMap, youMarker, radiusCircle, storeLayer;
-
-function initShopMap() {
-  if (!hasMaps || shopMap) { if (!hasMaps) $('#shopMap').hidden = true; return; }
-  shopMap = L.map('shopMap').setView([location_.lat, location_.lng], 14);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(shopMap);
-  storeLayer = L.layerGroup().addTo(shopMap);
-  shopMap.on('click', async (e) => {
-    const { lat, lng } = e.latlng;
-    setLocation({ lat, lng, label: 'the selected point' });
-    try { const place = await api(`/geocode/reverse?lat=${lat}&lng=${lng}`); setLocation({ lat, lng, label: shortPlace(place.label) }, false); }
-    catch { /* keep the generic label */ }
-  });
-}
-
-function setLocation(loc, refresh = true) {
-  location_ = loc;
-  store(LOCATION_KEY, loc);
-  $('#locationLabel').textContent = loc.label;
-  $('#placeSuggestions').innerHTML = '';
-  if (refresh) search();
-}
-
-async function searchPlace(event) {
-  event.preventDefault();
-  const q = $('#placeQuery').value.trim();
-  if (q.length < 3) return toast('Type at least 3 letters of a place', 'error');
-  try {
-    const places = await api('/geocode?q=' + encodeURIComponent(q));
-    if (!places.length) return toast('No place found with that name', 'error');
-    if (places.length === 1) return choosePlace(places[0]);
-    $('#placeSuggestions').innerHTML = '<div class="small muted">Did you mean:</div>' + places.map((p, i) =>
-      `<button type="button" data-place="${i}">${esc(p.label)}</button>`).join('');
-    $('#placeSuggestions').places = places;
-  } catch (e) { fail(e); }
-}
-
-function choosePlace(place) {
-  $('#placeQuery').value = '';
-  setLocation({ lat: place.latitude, lng: place.longitude, label: shortPlace(place.label) });
-}
-
-function useMyLocation() {
-  if (!navigator.geolocation) return toast('Location is not available in this browser', 'error');
-  navigator.geolocation.getCurrentPosition(async (pos) => {
-    const lat = pos.coords.latitude, lng = pos.coords.longitude;
-    setLocation({ lat, lng, label: 'your location' });
-    try { const place = await api(`/geocode/reverse?lat=${lat}&lng=${lng}`); setLocation({ lat, lng, label: shortPlace(place.label) }, false); }
-    catch { /* keep "your location" */ }
-  }, () => toast('Could not get your location. Allow location access, or search a place instead.', 'error'));
-}
-
-// ---------- consumer: food ----------
-
-async function search() {
-  $('#locationLabel').textContent = location_.label;
-  const radiusKm = $('#radius').value;
-  const params = new URLSearchParams({ lat: location_.lat, lng: location_.lng, radiusKm });
-  try {
-    const items = await api('/food-items/nearby?' + params);
-    renderNearby(items);
-    drawShopMap(items, radiusKm);
-  } catch (e) { fail(e); }
-}
-
-function drawShopMap(items, radiusKm) {
-  if (!shopMap) return;
-  const here = [location_.lat, location_.lng];
-  youMarker?.remove(); radiusCircle?.remove(); storeLayer.clearLayers();
-  youMarker = L.circleMarker(here, { radius: 8, color: '#fff', weight: 2, fillColor: '#2563eb', fillOpacity: 1 }).addTo(shopMap).bindTooltip('You');
-  radiusCircle = L.circle(here, { radius: radiusKm * 1000, color: '#2f7d4f', weight: 1, fillOpacity: 0.05 }).addTo(shopMap);
-  const byStore = new Map();
-  for (const i of items) {
-    if (!byStore.has(i.storeId)) byStore.set(i.storeId, { name: i.storeName, address: i.storeAddress, lat: i.storeLatitude, lng: i.storeLongitude, items: [] });
-    byStore.get(i.storeId).items.push(i);
-  }
-  for (const s of byStore.values()) {
-    if (s.lat == null) continue;
-    L.marker([s.lat, s.lng]).addTo(storeLayer).bindPopup(
-      `<strong>${esc(s.name)}</strong><br>${esc(s.address)}<br>${s.items.map((i) => esc(i.name) + ' · ' + money(i.discountedPrice)).join('<br>')}`);
-  }
-  shopMap.fitBounds(radiusCircle.getBounds());
-}
-
-function renderNearby(items) {
-  const box = $('#nearby');
-  if (!items.length) {
-    box.innerHTML = '<div class="empty">No food available in this area right now. Try a larger distance or another place.</div>';
-    return;
-  }
-  const canClaim = me?.freeClaimEligible;
-  box.innerHTML = items.map((i) => `
-    <div class="card">
-      ${i.photoUrl ? `<img class="photo" src="${esc(i.photoUrl)}" alt="${esc(i.name)}" loading="lazy">` : ''}
-      <div class="spread">
-        <div>
-          <strong>${esc(i.name)}</strong>
-          <div class="small muted">${esc(i.storeName)} · ${i.distanceKm} km</div>
-          <div class="small muted">${esc(i.storeAddress)}</div>
+<!-- Store owner: create or edit a listing -->
+<dialog class="modal wide" id="itemDialog" aria-labelledby="itemDialogTitle">
+  <form id="itemForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="itemDialogTitle">New one-off offer</h2><p>For something you don't sell often. Save regular items as products instead.</p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" name="editId">
+      <div class="form-alert" id="itemAlert" role="alert"></div>
+      <div class="editor-grid">
+        <div class="span-2">
+          <div class="dropzone" id="itemDropzone">
+            <div class="photo-frame" id="itemPhotoPreview"></div>
+            <div>
+              <div class="dropzone-text"><strong id="itemDropzoneTitle">Add a photo</strong><span>JPEG, PNG or WebP, up to 2 MB. Real photos help customers choose.</span></div>
+              <div class="dropzone-actions">
+                <button type="button" class="btn btn-sm" id="itemClearPhoto" hidden>Undo photo change</button>
+                <button type="button" class="btn btn-sm btn-danger" id="itemRemovePhoto" hidden>Remove current photo</button>
+              </div>
+            </div>
+            <input type="file" id="itemPhotoInput" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo">
+          </div>
+          <p class="field-error" id="itemPhotoError"></p>
         </div>
-        <span class="badge">-${i.discountPercent}%</span>
-      </div>
-      <p class="small" style="margin:8px 0">${esc(i.description)}</p>
-      <div><span class="price">${money(i.discountedPrice)}</span><span class="strike">${money(i.originalPrice)}</span></div>
-      <div class="small muted" style="margin:4px 0 10px">
-        ${i.quantityAvailable} left · until ${fmtTime(i.expiresAt)} (${untilText(i.expiresAt)})
-        ${i.payItForwardQuantity ? ` · <span class="badge amber">${i.payItForwardQuantity} free</span>` : ''}
-      </div>
-      <div class="row">
-        <input type="number" min="1" max="${Math.min(5, i.quantityAvailable)}" value="1" style="width:64px" aria-label="Quantity" id="qty-${i.id}" ${i.quantityAvailable ? '' : 'disabled'}>
-        <button class="primary" data-reserve="${i.id}" ${i.quantityAvailable ? '' : 'disabled'}>Reserve</button>
-        ${i.payItForwardQuantity && canClaim ? `<button data-claim="${i.id}">Claim free</button>` : ''}
-      </div>
-    </div>`).join('');
-}
-
-async function reserve(itemId) {
-  const quantity = Number($('#qty-' + itemId).value);
-  try {
-    const order = await api(`/food-items/${itemId}/reservations`, { method: 'POST', body: { quantity } });
-    toast(`Reserved! Your pickup code is ${order.pickupCode}`, 'ok');
-    search(); loadMyOrders();
-  } catch (e) { fail(e); }
-}
-
-async function claim(itemId) {
-  try {
-    const order = await api(`/food-items/${itemId}/free-claims`, { method: 'POST' });
-    toast(`Claimed! Your pickup code is ${order.pickupCode}`, 'ok');
-    search(); loadMyOrders();
-  } catch (e) { fail(e); }
-}
-
-function renderEligibility() {
-  const box = $('#eligibilityBox');
-  const status = me.eligibilityStatus;
-  const text = {
-    NOT_REQUESTED: ['Going through a hard time?', 'Verified people can claim one donated item for free each day.', 'Ask to be verified'],
-    REJECTED: ['Free items', 'Your last verification request was not approved. You can ask again.', 'Ask again'],
-    PENDING: ['Free items', 'Your verification request is waiting for review.', null],
-    APPROVED: ['Free items', 'You are verified: look for the "free" label and claim one item per day.', null],
-  }[status];
-  box.innerHTML = `<div><strong>${text[0]}</strong> ${status === 'APPROVED' ? '<span class="badge amber">Verified</span>' : status === 'PENDING' ? '<span class="badge grey">Pending</span>' : ''}
-      <div class="small muted">${text[1]}</div></div>
-    ${text[2] ? `<button id="requestEligibility">${text[2]}</button>` : ''}`;
-  box.hidden = false;
-}
-
-async function requestEligibility() {
-  try {
-    me = await api('/users/me/eligibility-request', { method: 'POST' });
-    toast('Request sent. An administrator will review it.', 'ok');
-    renderEligibility();
-  } catch (e) { fail(e); }
-}
-
-async function loadMyOrders() {
-  const box = $('#myOrders');
-  try {
-    const orders = await api('/orders/mine');
-    if (!orders.length) { box.innerHTML = '<div class="empty">No orders yet.</div>'; return; }
-    box.innerHTML = `<div class="grid">${orders.map((o) => `
-      <div class="card">
-        <div class="spread">
-          <div><strong>${esc(o.foodItemName)}</strong> × ${o.quantity}
-            <div class="small muted">${esc(o.storeName)}, ${esc(o.storeAddress)}</div></div>
-          <span class="badge ${STATUS_BADGE[o.status]}">${STATUS_TEXT[o.status]}</span>
+        <div class="field span-2">
+          <label class="field-label" for="itemName">Name</label>
+          <input class="input" id="itemName" name="name" required maxlength="150" placeholder="e.g. Assorted pastries bag" data-label="Name" aria-describedby="itemNameError">
+          <p class="field-error" id="itemNameError"></p>
         </div>
-        ${o.status === 'RESERVED' ? `
-          <div style="margin:10px 0 4px" class="small muted">Show this code at the store</div>
-          <div class="code">${esc(o.pickupCode)}</div>
-          <div class="small muted" style="margin:6px 0 10px">Collect by ${fmtTime(o.pickupDeadline)} (${untilText(o.pickupDeadline)})</div>
-          <div class="spread"><span>${Number(o.totalPrice) ? 'Pay at store: <strong>' + money(o.totalPrice) + '</strong>' : '<span class="badge amber">Free</span>'}</span>
-          <button class="danger" data-cancel="${o.orderId}">Cancel</button></div>`
-        : `<div class="small muted" style="margin-top:8px">${Number(o.totalPrice) ? money(o.totalPrice) : 'Free'}</div>`}
-      </div>`).join('')}</div>`;
-  } catch (e) { box.innerHTML = ''; fail(e); }
-}
+        <div class="field span-2">
+          <label class="field-label" for="itemDescription">Description <span class="muted">(optional)</span></label>
+          <input class="input" id="itemDescription" name="description" maxlength="500" placeholder="What's inside, allergens, anything good to know" data-label="Description" aria-describedby="itemDescriptionError">
+          <p class="field-error" id="itemDescriptionError"></p>
+        </div>
+        <p class="editor-section-title">Price</p>
+        <div class="field">
+          <label class="field-label" for="itemOriginal">Original price</label>
+          <div class="input-suffix"><input class="input" id="itemOriginal" name="originalPrice" type="number" inputmode="decimal" min="0.01" step="0.01" required data-label="Original price" aria-describedby="itemOriginalError"><span>lei</span></div>
+          <p class="field-error" id="itemOriginalError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="itemDiscounted">Your price</label>
+          <div class="input-suffix"><input class="input" id="itemDiscounted" name="discountedPrice" type="number" inputmode="decimal" min="0" step="0.01" required data-label="Your price" aria-describedby="discountPreview itemDiscountedError"><span>lei</span></div>
+          <p class="discount-preview" id="discountPreview" aria-live="polite"></p>
+          <p class="field-error" id="itemDiscountedError"></p>
+        </div>
+        <p class="editor-section-title">Quantity and timing</p>
+        <div class="field">
+          <label class="field-label" for="itemQty">Units for sale</label>
+          <input class="input" id="itemQty" name="quantityAvailable" type="number" inputmode="numeric" min="0" step="1" required data-label="Units for sale" aria-describedby="itemQtyError">
+          <p class="field-error" id="itemQtyError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="itemFree">Free units (Pay-It-Forward)</label>
+          <input class="input" id="itemFree" name="payItForwardQuantity" type="number" inputmode="numeric" min="0" step="1" required data-label="Free units" aria-describedby="itemFreeHint itemFreeError">
+          <p class="field-hint" id="itemFreeHint">Given away to verified people in need.</p>
+          <p class="field-error" id="itemFreeError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="itemFrom">Pickup from <span class="muted">(optional)</span></label>
+          <input class="input" id="itemFrom" name="pickupFrom" type="datetime-local" data-label="Pickup start" aria-describedby="itemFromError">
+          <p class="field-error" id="itemFromError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="itemUntil">Available until</label>
+          <input class="input" id="itemUntil" name="expiresAt" type="datetime-local" required data-label="End time" aria-describedby="itemUntilHint itemUntilError">
+          <p class="field-hint" id="itemUntilHint">End of pickup. After this, customers can no longer reserve or collect it.</p>
+          <p class="field-error" id="itemUntilError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="itemWeight">Weight per unit <span class="optional">optional, approx.</span></label>
+          <div class="input-suffix"><input class="input" id="itemWeight" name="unitWeightKg" type="number" inputmode="decimal" min="0.01" max="50" step="0.01" placeholder="e.g. 0.8" data-label="Weight" aria-describedby="itemWeightHint itemWeightError"><span>kg</span></div>
+          <p class="field-hint" id="itemWeightHint">Shows how much food you rescue.</p>
+          <p class="field-error" id="itemWeightError"></p>
+        </div>
+        <fieldset class="field span-2 tag-field">
+          <legend class="field-label">Food type <span class="optional">optional</span></legend>
+          <div class="chips" id="itemTags"></div>
+          <p class="field-hint">Choose vegetarian or vegan only if it is true for everything inside; it is shown as your statement.</p>
+        </fieldset>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary" id="itemSubmit"><span>Publish</span></button>
+    </div>
+  </form>
+</dialog>
 
-async function cancelOrder(orderId) {
-  try {
-    await api(`/orders/${orderId}/cancel`, { method: 'POST' });
-    toast('Reservation cancelled, the food is available again', 'ok');
-    loadMyOrders(); search();
-  } catch (e) { fail(e); }
-}
+<!-- Store owner: register or edit a store -->
+<dialog class="modal wide" id="storeDialog" aria-labelledby="storeDialogTitle">
+  <form id="storeForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="storeDialogTitle">Register a store</h2><p>Customers see the name and address on every listing.</p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" name="editId">
+      <div class="form-alert" id="storeAlert" role="alert"></div>
+      <div class="field">
+        <label class="field-label" for="storeName">Store name</label>
+        <input class="input" id="storeName" name="name" required maxlength="150" data-label="Store name" aria-describedby="storeNameError">
+        <p class="field-error" id="storeNameError"></p>
+      </div>
+      <div class="field">
+        <label class="field-label" for="storeAddress">Address</label>
+        <div class="searchbar-row" style="grid-template-columns: minmax(0,1fr) auto">
+          <input class="input" id="storeAddress" name="address" required maxlength="255" placeholder="Street and number, city" data-label="Address" aria-describedby="storeAddressHint storeAddressError">
+          <button type="button" class="btn" id="storeLocate"><svg aria-hidden="true"><use href="#i-pin"/></svg><span>Show on map</span></button>
+        </div>
+        <p class="field-hint" id="storeAddressHint">Check the pin on the map so customers find you easily.</p>
+        <p class="field-error" id="storeAddressError"></p>
+      </div>
+      <div id="storeSuggestions" class="suggestions inline" hidden></div>
+      <div id="storeMap" class="map" style="height: 260px; min-height: 0" hidden></div>
+      <p id="storeMapHint" class="field-hint" hidden>Drag the pin if it is not exactly on your shop.</p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary" id="storeSubmit"><span>Register store</span></button>
+    </div>
+  </form>
+</dialog>
 
-// ---------- store owner: the store itself ----------
+<!-- Store owner: today's offers from saved products -->
+<dialog class="modal wide" id="setupDialog" aria-labelledby="setupTitle">
+  <form id="setupForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="setupTitle">Set up today's offers</h2><p id="setupSub">Enter what is really left today. Nothing is copied from yesterday.</p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-alert" id="setupAlert" role="alert"></div>
+      <div id="autopilotBar" class="autopilot-bar" hidden>
+        <span class="autopilot-icon" aria-hidden="true"><svg><use href="#i-spark"/></svg></span>
+        <div class="autopilot-text"><strong>Autopilot</strong><p id="autopilotText">Suggestions from your last 4 weeks.</p></div>
+        <button type="button" class="btn btn-sm" id="autopilotFill"><span>Fill in suggestions</span></button>
+      </div>
+      <div id="setupList" class="setup-list"></div>
+    </div>
+    <div class="modal-foot setup-foot">
+      <p class="setup-summary" id="setupSummary" aria-live="polite">Enter quantities for the products you have today.</p>
+      <label class="check"><input type="checkbox" id="setupConfirm"><span>I checked these quantities are available today</span></label>
+      <div class="setup-buttons">
+        <button type="button" class="btn" id="setupDraft" disabled><span>Save as draft</span></button>
+        <button type="submit" class="btn btn-primary" id="setupPublish" disabled><span>Publish</span></button>
+      </div>
+    </div>
+  </form>
+</dialog>
 
-let storeMap, storePin;
-let storePinMoved = false;
+<!-- Store owner: launch a Rescue Drop (a saved product, or leftovers bundled into surprise bags) -->
+<dialog class="modal wide" id="dropDialog" aria-labelledby="dropTitle">
+  <form id="dropForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="dropTitle">Launch a Rescue Drop</h2><p>Live right away, for a short time. It ends by itself when sold out or when time runs out.</p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-alert" id="dropAlert" role="alert"></div>
+      <div class="segmented" role="tablist" aria-label="What to drop">
+        <button type="button" role="tab" id="dropTabProduct" aria-selected="true" aria-controls="dropProduct" data-drop-mode="product">A saved product</button>
+        <button type="button" role="tab" id="dropTabBundle" aria-selected="false" aria-controls="dropBundle" data-drop-mode="bundle" tabindex="-1">Bundle leftovers</button>
+      </div>
 
-async function loadStores() {
-  try {
-    myStores = await api('/stores/mine');
-    const select = $('#storeSelect');
-    select.innerHTML = myStores.map((s) => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
-    $('#storeSelectLabel').hidden = myStores.length < 2;
-    $('#storeContent').hidden = !myStores.length;
-    $('#storeFormBox').open = !myStores.length;
-    resetStoreForm();
-    if (!myStores.length) { currentStoreId = null; return; }
-    if (!myStores.some((s) => s.id === currentStoreId)) currentStoreId = myStores[0].id;
-    select.value = currentStoreId;
-    loadStoreDetails();
-  } catch (e) { fail(e); }
-}
+      <div id="dropProduct" role="tabpanel" aria-labelledby="dropTabProduct" class="drop-panel">
+        <div class="editor-grid">
+          <div class="field span-2">
+            <label class="field-label" for="dropTemplate">Product</label>
+            <select class="select" id="dropTemplate"></select>
+          </div>
+          <div class="field">
+            <label class="field-label" id="dropQtyLabel">On the shelf now</label>
+            <div class="stepper"><button type="button" data-bump="-1" data-target="dropQty" aria-label="One less">
+              <svg aria-hidden="true"><use href="#i-minus"/></svg></button><input id="dropQty" type="number" inputmode="numeric" min="0" max="500" step="1" value="3" aria-labelledby="dropQtyLabel"><button type="button" data-bump="1" data-target="dropQty" aria-label="One more"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
+          </div>
+          <div class="field">
+            <label class="field-label" id="dropFreeLabel">Free units <span class="optional">optional</span></label>
+            <div class="stepper"><button type="button" data-bump="-1" data-target="dropFree" aria-label="One less free unit">
+              <svg aria-hidden="true"><use href="#i-minus"/></svg></button><input id="dropFree" type="number" inputmode="numeric" min="0" max="500" step="1" value="0" aria-labelledby="dropFreeLabel"><button type="button" data-bump="1" data-target="dropFree" aria-label="One more free unit"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
+          </div>
+          <div class="field span-2">
+            <label class="field-label" for="dropPrice">Drop price</label>
+            <div class="input-suffix"><input class="input" id="dropPrice" type="number" inputmode="decimal" min="0.01" step="0.01"><span>lei</span></div>
+            <p class="field-hint" id="dropPriceHint"></p>
+          </div>
+        </div>
+      </div>
 
-function currentStore() { return myStores.find((s) => s.id === currentStoreId); }
+      <div id="dropBundle" role="tabpanel" aria-labelledby="dropTabBundle" class="drop-panel" hidden>
+        <p class="muted small">Units you add here are taken out of today's offers and sold as surprise bags.</p>
+        <div id="bundleList" class="bundle-list"></div>
+        <div class="editor-grid">
+          <div class="field">
+            <label class="field-label" id="bundleBagsLabel">Surprise bags</label>
+            <div class="stepper"><button type="button" data-bump="-1" data-target="bundleBags" aria-label="One bag less">
+              <svg aria-hidden="true"><use href="#i-minus"/></svg></button><input id="bundleBags" type="number" inputmode="numeric" min="1" max="100" step="1" value="1" aria-labelledby="bundleBagsLabel"><button type="button" data-bump="1" data-target="bundleBags" aria-label="One bag more"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="bundlePrice">Price per bag</label>
+            <div class="input-suffix"><input class="input" id="bundlePrice" type="number" inputmode="decimal" min="0.01" step="0.01"><span>lei</span></div>
+          </div>
+          <p class="field-hint span-2" id="bundleValue" aria-live="polite"></p>
+          <div class="field span-2">
+            <label class="field-label" for="bundleName">Name <span class="optional">optional</span></label>
+            <input class="input" id="bundleName" maxlength="150" placeholder="Rescue surprise bag">
+          </div>
+        </div>
+      </div>
 
-function loadStoreDetails() {
-  const s = currentStore();
-  $('#storeInfo').textContent = `${s.name} · ${s.address}${s.active ? '' : ' · SUSPENDED by an administrator: not shown to customers'}`;
-  loadStoreOrders();
-  loadStoreItems();
-}
+      <fieldset class="field drop-duration">
+        <legend class="field-label">Runs for</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="dropMinutes" value="30"><span>30 min</span></label>
+          <label class="chip"><input type="radio" name="dropMinutes" value="60" checked><span>1 hour</span></label>
+          <label class="chip"><input type="radio" name="dropMinutes" value="90"><span>1½ hours</span></label>
+          <label class="chip"><input type="radio" name="dropMinutes" value="120"><span>2 hours</span></label>
+        </div>
+      </fieldset>
+      <label class="check"><input type="checkbox" id="dropAlertCustomers" checked><span>Alert customers nearby <span class="muted" id="dropAudience"></span></span></label>
+    </div>
+    <div class="modal-foot setup-foot">
+      <p class="setup-summary" id="dropSummary" aria-live="polite"></p>
+      <label class="check"><input type="checkbox" id="dropConfirm"><span>These units are on the shelf now</span></label>
+      <div class="setup-buttons">
+        <button type="button" class="btn" data-close>Cancel</button>
+        <button type="submit" class="btn btn-drop-solid" id="dropSubmit"><svg aria-hidden="true"><use href="#i-bolt"/></svg><span>Launch drop</span></button>
+      </div>
+    </div>
+  </form>
+</dialog>
 
-function placeStorePin(lat, lng) {
-  if (!hasMaps) return;
-  $('#storeMap').hidden = false;
-  $('#storeMapHint').hidden = false;
-  if (!storeMap) {
-    storeMap = L.map('storeMap');
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(storeMap);
-  }
-  storeMap.invalidateSize();
-  storeMap.setView([lat, lng], 17);
-  storePin?.remove();
-  storePin = L.marker([lat, lng], { draggable: true }).addTo(storeMap);
-  storePin.on('dragend', () => { storePinMoved = true; });
-}
+<!-- Customer: Rescue Drop alerts inbox and settings -->
+<dialog class="modal" id="inboxDialog" aria-labelledby="inboxTitle">
+  <div class="modal-head">
+    <div><h2 id="inboxTitle">Alerts</h2><p>Rescue Drops, favourites and your daily summary.</p></div>
+    <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="modal-body">
+    <div class="segmented" role="tablist" aria-label="Alerts">
+      <button type="button" role="tab" id="inboxTabList" aria-selected="true" aria-controls="inboxPanelList" data-inbox-tab="list">Alerts</button>
+      <button type="button" role="tab" id="inboxTabSettings" aria-selected="false" aria-controls="alertsForm" data-inbox-tab="settings" tabindex="-1">Settings</button>
+    </div>
+    <div id="inboxPanelList" role="tabpanel" aria-labelledby="inboxTabList">
+      <div id="inboxList" class="inbox-list"></div>
+    </div>
+    <form id="alertsForm" class="alerts-form" role="tabpanel" aria-labelledby="inboxTabSettings" novalidate hidden>
+      <p class="notice-inline" id="throttledNote" hidden>You haven't opened recent alerts, so we're sending fewer for now. Opening them brings the usual number back.</p>
 
-async function locateStoreAddress() {
-  const address = $('#storeForm').address.value.trim();
-  if (address.length < 3) return toast('Type the address first', 'error');
-  try {
-    const places = await api('/geocode?q=' + encodeURIComponent(address));
-    if (!places.length) return toast('Address not found. Add the city, or check the spelling.', 'error');
-    const box = $('#storeSuggestions');
-    if (places.length > 1) {
-      box.innerHTML = '<div class="small muted">Pick the right one:</div>' + places.map((p, i) =>
-        `<button type="button" data-store-place="${i}">${esc(p.label)}</button>`).join('');
-      box.places = places;
-    } else {
-      box.innerHTML = '';
-    }
-    storePinMoved = true; // the pin now reflects a confirmed lookup, so send its position
-    placeStorePin(places[0].latitude, places[0].longitude);
-  } catch (e) { fail(e); }
-}
+      <section class="settings-block" aria-labelledby="pushHeading">
+        <h3 id="pushHeading">On this device</h3>
+        <p class="field-hint" id="pushStatus">Checking…</p>
+        <div class="settings-actions">
+          <button type="button" class="btn btn-sm btn-primary" id="pushEnable"><svg aria-hidden="true"><use href="#i-bell"/></svg><span>Turn on notifications</span></button>
+          <button type="button" class="btn btn-sm" id="pushTest" hidden><span>Send a test</span></button>
+          <button type="button" class="link-btn" id="pushDisable" hidden>Turn off on this device</button>
+        </div>
+      </section>
 
-function resetStoreForm() {
-  const f = $('#storeForm');
-  f.reset();
-  f.editId.value = '';
-  $('#storeFormTitle').textContent = 'Register a store';
-  $('#storeSubmit').textContent = 'Register store';
-  $('#storeCancelEdit').hidden = true;
-  $('#storeSuggestions').innerHTML = '';
-  $('#storeMap').hidden = true;
-  $('#storeMapHint').hidden = true;
-  storePinMoved = false;
-}
+      <section class="settings-block" aria-labelledby="dropsHeading">
+        <h3 id="dropsHeading">Rescue Drops nearby</h3>
+        <label class="check"><input type="checkbox" id="alertsOn"><span>Tell me about drops near <strong id="alertsPlace">this place</strong></span></label>
+        <div class="editor-grid">
+          <div class="field">
+            <label class="field-label" for="alertsRadius">Within</label>
+            <select class="select" id="alertsRadius"><option value="1">1 km</option><option value="2">2 km</option><option value="3">3 km</option><option value="5">5 km</option><option value="10">10 km</option></select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="alertsMax">At most</label>
+            <select class="select" id="alertsMax"><option value="1">1 alert a day</option><option value="3">3 alerts a day</option><option value="5">5 alerts a day</option><option value="10">10 alerts a day</option></select>
+          </div>
+        </div>
+        <button type="button" class="link-btn" id="alertsUseHere">Use the place I'm searching</button>
+      </section>
 
-function editStore() {
-  const s = currentStore();
-  const f = $('#storeForm');
-  f.editId.value = s.id;
-  f.name.value = s.name;
-  f.address.value = s.address;
-  $('#storeFormTitle').textContent = 'Edit store details';
-  $('#storeSubmit').textContent = 'Save changes';
-  $('#storeCancelEdit').hidden = false;
-  $('#storeFormBox').open = true;
-  storePinMoved = false;
-  placeStorePin(s.latitude, s.longitude);
-  f.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
+      <section class="settings-block" aria-labelledby="favHeading">
+        <h3 id="favHeading">Favourites</h3>
+        <label class="check"><input type="checkbox" id="notifyFavourites"><span>Tell me when my favourites are on offer, and when shops I follow launch a drop</span></label>
+        <div id="favList" class="fav-list"></div>
+      </section>
 
-async function saveStore(event) {
-  event.preventDefault();
-  const f = event.target;
-  const body = { name: f.name.value, address: f.address.value };
-  if (storePinMoved && storePin) {
-    const { lat, lng } = storePin.getLatLng();
-    body.latitude = lat; body.longitude = lng;
-  }
-  try {
-    const id = f.editId.value;
-    const saved = id
-      ? await api(`/stores/${id}`, { method: 'PUT', body })
-      : await api('/stores', { method: 'POST', body });
-    toast(id ? 'Store updated' : `Store "${saved.name}" registered`, 'ok');
-    $('#storeFormBox').open = false;
-    currentStoreId = saved.id;
-    loadStores();
-  } catch (e) { fail(e); }
-}
+      <section class="settings-block" aria-labelledby="remindHeading">
+        <h3 id="remindHeading">Pickup reminders</h3>
+        <label class="check"><input type="checkbox" id="pickupReminders" checked><span>Remind me 30 minutes before a reservation's pickup closes</span></label>
+      </section>
 
-// ---------- store owner: orders and items ----------
+      <section class="settings-block" aria-labelledby="digestHeading">
+        <h3 id="digestHeading">Daily summary</h3>
+        <div class="inline-setting">
+          <label class="check"><input type="checkbox" id="digestOn"><span>Send me what's near my place every day at</span></label>
+          <input class="input input-sm" type="time" id="digestTime" value="17:00" aria-label="Daily summary time">
+        </div>
+      </section>
 
-async function loadStoreOrders() {
-  const box = $('#storeOrders');
-  try {
-    const orders = await api(`/stores/${currentStoreId}/orders?status=RESERVED`);
-    if (!orders.length) { box.innerHTML = '<div class="empty">No open reservations.</div>'; return; }
-    box.innerHTML = `<div class="card table-wrap"><table>
-      <tr><th>Item</th><th>Units</th><th>To collect</th><th>Collect by</th></tr>
-      ${orders.map((o) => `<tr>
-        <td>${esc(o.foodItemName)}</td><td>${o.quantity}</td>
-        <td>${Number(o.totalPrice) ? money(o.totalPrice) : '<span class="badge amber">Free</span>'}</td>
-        <td>${fmtTime(o.pickupDeadline)} <span class="small muted">(${untilText(o.pickupDeadline)})</span></td>
-      </tr>`).join('')}
-    </table></div>`;
-  } catch (e) { box.innerHTML = ''; fail(e); }
-}
+      <section class="settings-block" aria-labelledby="quietHeading">
+        <h3 id="quietHeading">Quiet hours</h3>
+        <div class="inline-setting">
+          <label class="check"><input type="checkbox" id="quietOn"><span>No notifications from</span></label>
+          <input class="input input-sm" type="time" id="quietStart" value="22:00" aria-label="Quiet hours start">
+          <span aria-hidden="true">to</span>
+          <input class="input input-sm" type="time" id="quietEnd" value="08:00" aria-label="Quiet hours end">
+        </div>
+        <p class="field-hint">Alerts still wait for you here. At most one alert per shop every 2 hours.</p>
+      </section>
 
-let storeItems = [];
-async function loadStoreItems() {
-  const box = $('#storeItems');
-  try {
-    storeItems = await api(`/stores/${currentStoreId}/food-items`);
-    if (!storeItems.length) { box.innerHTML = '<div class="empty">Nothing published yet. Use the form above.</div>'; return; }
-    const now = Date.now();
-    box.innerHTML = `<div class="card table-wrap"><table>
-      <tr><th></th><th>Item</th><th>Price</th><th>For sale</th><th>Free</th><th>Until</th><th></th></tr>
-      ${storeItems.map((i) => {
-        const expired = new Date(i.expiresAt) <= now;
-        const soldOut = !i.quantityAvailable && !i.payItForwardQuantity;
-        return `<tr>
-          <td>${i.photoUrl ? `<img class="thumb" src="${esc(i.photoUrl)}" alt="">` : '<div class="thumb"></div>'}</td>
-          <td><strong>${esc(i.name)}</strong>
-            ${expired ? ' <span class="badge red">Expired</span>' : soldOut ? ' <span class="badge grey">Sold out</span>' : ''}
-            <div class="small muted">${esc(i.description)}</div></td>
-          <td>${money(i.discountedPrice)} <span class="small strike">${money(i.originalPrice)}</span></td>
-          <td>${i.quantityAvailable}</td><td>${i.payItForwardQuantity}</td>
-          <td>${fmtTime(i.expiresAt)}</td>
-          <td><div class="row" style="flex-wrap:nowrap">
-            <button data-edit="${i.id}">Edit</button>
-            ${i.photoUrl ? `<button data-remove-photo="${i.id}">Remove photo</button>` : ''}
-            <button class="danger" data-delete="${i.id}">Remove</button></div></td>
-        </tr>`;
-      }).join('')}
-    </table></div>`;
-  } catch (e) { box.innerHTML = ''; fail(e); }
-}
+      <section class="settings-block" aria-labelledby="likesHeading">
+        <h3 id="likesHeading">What you like</h3>
+        <div class="chips" id="interestChips" role="group" aria-labelledby="likesHeading"></div>
+        <label class="check"><input type="checkbox" id="personalised"><span>Show picks for me, based on my favourites, interests and what I collected before</span></label>
+        <p class="field-hint">This stays between you and Food Rescue. Shops never see it.</p>
+      </section>
 
-function resetItemForm() {
-  const f = $('#itemForm');
-  f.reset();
-  f.editId.value = '';
-  f.expiresAt.value = toLocalInput(new Date(Date.now() + 4 * 3600 * 1000).toISOString());
-  $('#itemSubmit').textContent = 'Publish';
-  $('#itemCancelEdit').hidden = true;
-}
+      <div class="alerts-actions">
+        <button type="submit" class="btn btn-primary"><span>Save settings</span></button>
+      </div>
+    </form>
+  </div>
+</dialog>
 
-function editItem(id) {
-  const item = storeItems.find((i) => i.id === id);
-  const f = $('#itemForm');
-  for (const key of ['id', 'name', 'description', 'originalPrice', 'discountedPrice', 'quantityAvailable', 'payItForwardQuantity']) {
-    f[key].value = item[key] ?? '';
-  }
-  f.expiresAt.value = toLocalInput(item.expiresAt);
-  $('#itemSubmit').textContent = 'Save changes';
-  $('#itemCancelEdit').hidden = false;
-  f.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
+<!-- Store owner: quick change of an offer -->
+<dialog class="modal" id="offerDialog" aria-labelledby="offerTitle">
+  <form id="offerForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="offerTitle">Edit today's offer</h2><p id="offerSub"></p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-alert" id="offerAlert" role="alert"></div>
+      <div class="editor-grid">
+        <div class="field">
+          <label class="field-label" for="offerQty">Units for sale</label>
+          <input class="input" id="offerQty" name="quantityAvailable" type="number" inputmode="numeric" min="0" max="10000" step="1" required data-label="Units for sale" aria-describedby="offerQtyError">
+          <p class="field-error" id="offerQtyError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="offerFree">Free units</label>
+          <input class="input" id="offerFree" name="payItForwardQuantity" type="number" inputmode="numeric" min="0" max="10000" step="1" required data-label="Free units" aria-describedby="offerFreeError">
+          <p class="field-error" id="offerFreeError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="offerStart">Pickup from</label>
+          <input class="input" id="offerStart" name="pickupStart" type="time" required data-label="Pickup start" aria-describedby="offerStartError">
+          <p class="field-error" id="offerStartError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="offerEnd">Pickup until</label>
+          <input class="input" id="offerEnd" name="pickupEnd" type="time" required data-label="Pickup end" aria-describedby="offerEndError">
+          <p class="field-error" id="offerEndError"></p>
+        </div>
+      </div>
+      <p class="field-hint">These are the units still on the shelf. Units customers already reserved stay reserved.</p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary" id="offerSubmit"><span>Save changes</span></button>
+    </div>
+  </form>
+</dialog>
 
-async function saveItem(event) {
-  event.preventDefault();
-  const f = event.target;
-  const body = {
-    name: f.name.value,
-    description: f.description.value || null,
-    originalPrice: Number(f.originalPrice.value),
-    discountedPrice: Number(f.discountedPrice.value),
-    quantityAvailable: Number(f.quantityAvailable.value),
-    payItForwardQuantity: Number(f.payItForwardQuantity.value),
-    expiresAt: new Date(f.expiresAt.value).toISOString(),
-  };
-  const photo = f.photo.files[0];
-  try {
-    const id = f.editId.value;
-    const saved = id
-      ? await api(`/stores/${currentStoreId}/food-items/${id}`, { method: 'PUT', body })
-      : await api(`/stores/${currentStoreId}/food-items`, { method: 'POST', body });
-    if (photo) {
-      const form = new FormData();
-      form.append('file', photo);
-      try {
-        await api(`/stores/${currentStoreId}/food-items/${saved.id}/photo`, { method: 'POST', form });
-      } catch (e) {
-        toast('Saved, but the photo was not accepted: ' + e.message, 'error');
-        resetItemForm(); loadStoreItems();
-        return;
-      }
-    }
-    toast(id ? 'Changes saved' : 'Published! Customers nearby can see it now', 'ok');
-    resetItemForm();
-    loadStoreItems();
-  } catch (e) { fail(e); }
-}
+<!-- Store owner: reusable product -->
+<dialog class="modal wide" id="templateDialog" aria-labelledby="templateTitle">
+  <form id="templateForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="templateTitle">New product</h2><p>Saved once and reused every day. You confirm quantities each day.</p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" name="editId">
+      <div class="form-alert" id="templateAlert" role="alert"></div>
+      <div class="editor-grid">
+        <div class="span-2">
+          <div class="dropzone" id="tplDropzone">
+            <div class="photo-frame" id="tplPhotoPreview"></div>
+            <div>
+              <div class="dropzone-text"><strong id="tplDropzoneTitle">Add a photo</strong><span>JPEG, PNG or WebP, up to 2 MB. It is copied to each day's offer.</span></div>
+              <div class="dropzone-actions">
+                <button type="button" class="btn btn-sm" id="tplClearPhoto" hidden>Undo photo change</button>
+                <button type="button" class="btn btn-sm btn-danger" id="tplRemovePhoto" hidden>Remove current photo</button>
+              </div>
+            </div>
+            <input type="file" id="tplPhotoInput" accept="image/jpeg,image/png,image/webp" aria-label="Choose a product photo">
+          </div>
+          <p class="field-error" id="tplPhotoError"></p>
+        </div>
+        <fieldset class="role-choice span-2">
+          <legend>Type</legend>
+          <label class="role-option"><input type="radio" name="kind" value="PRODUCT" checked><span><b>Single product</b><small>Always the same item, e.g. a loaf</small></span></label>
+          <label class="role-option"><input type="radio" name="kind" value="SURPRISE_BAG"><span><b>Surprise bag</b><small>A mix of whatever is left</small></span></label>
+        </fieldset>
+        <div class="field span-2">
+          <label class="field-label" for="tplName">Name</label>
+          <input class="input" id="tplName" name="name" required maxlength="150" placeholder="e.g. Bakery surprise bag" data-label="Name" aria-describedby="tplNameError">
+          <p class="field-error" id="tplNameError"></p>
+        </div>
+        <div class="field span-2">
+          <label class="field-label" for="tplDescription">Description <span class="muted">(optional)</span></label>
+          <input class="input" id="tplDescription" name="description" maxlength="500" placeholder="What's usually inside, allergens" data-label="Description" aria-describedby="tplDescriptionError">
+          <p class="field-error" id="tplDescriptionError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="tplOriginal">Original price</label>
+          <div class="input-suffix"><input class="input" id="tplOriginal" name="originalPrice" type="number" inputmode="decimal" min="0.01" step="0.01" required data-label="Original price" aria-describedby="tplOriginalError"><span>lei</span></div>
+          <p class="field-error" id="tplOriginalError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="tplDiscounted">Your price</label>
+          <div class="input-suffix"><input class="input" id="tplDiscounted" name="discountedPrice" type="number" inputmode="decimal" min="0" step="0.01" required data-label="Your price" aria-describedby="tplDiscountPreview tplDiscountedError"><span>lei</span></div>
+          <p class="discount-preview" id="tplDiscountPreview" aria-live="polite"></p>
+          <p class="field-error" id="tplDiscountedError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="tplStart">Usual pickup from</label>
+          <input class="input" id="tplStart" name="pickupStart" type="time" required value="18:00" data-label="Pickup start" aria-describedby="tplStartError">
+          <p class="field-error" id="tplStartError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="tplEnd">Usual pickup until</label>
+          <input class="input" id="tplEnd" name="pickupEnd" type="time" required value="20:00" data-label="Pickup end" aria-describedby="tplEndError">
+          <p class="field-error" id="tplEndError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="tplWeight">Weight per unit <span class="optional">optional, approx.</span></label>
+          <div class="input-suffix"><input class="input" id="tplWeight" name="unitWeightKg" type="number" inputmode="decimal" min="0.01" max="50" step="0.01" placeholder="e.g. 0.8" data-label="Weight" aria-describedby="tplWeightHint tplWeightError"><span>kg</span></div>
+          <p class="field-hint" id="tplWeightHint">Shows how much food you rescue.</p>
+          <p class="field-error" id="tplWeightError"></p>
+        </div>
+        <fieldset class="field span-2 tag-field">
+          <legend class="field-label">Food type <span class="optional">optional</span></legend>
+          <div class="chips" id="tplTags"></div>
+          <p class="field-hint">Helps customers who are looking for this kind of food. Choose vegetarian or vegan only if it is true for everything inside; it is shown as your statement.</p>
+        </fieldset>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary" id="templateSubmit"><span>Save product</span></button>
+    </div>
+  </form>
+</dialog>
 
-async function deleteItem(id) {
-  try {
-    await api(`/stores/${currentStoreId}/food-items/${id}`, { method: 'DELETE' });
-    toast('Removed from offer', 'ok');
-    loadStoreItems();
-  } catch (e) { fail(e); }
-}
-
-async function removePhoto(id) {
-  try {
-    await api(`/stores/${currentStoreId}/food-items/${id}/photo`, { method: 'DELETE' });
-    loadStoreItems();
-  } catch (e) { fail(e); }
-}
-
-async function confirmPickup(event) {
-  event.preventDefault();
-  const f = event.target;
-  try {
-    const order = await api(`/stores/${currentStoreId}/pickups`, { method: 'POST', body: { pickupCode: f.pickupCode.value } });
-    const toPay = Number(order.totalPrice) ? `collect ${money(order.totalPrice)}` : 'free, nothing to pay';
-    toast(`Hand over ${order.quantity} × ${order.foodItemName} (${toPay})`, 'ok');
-    f.reset();
-    loadStoreOrders();
-  } catch (e) { fail(e); }
-}
-
-// ---------- admin ----------
-
-async function loadAdmin() {
-  try {
-    const [requests, stores] = await Promise.all([api('/admin/eligibility-requests'), api('/admin/stores')]);
-    $('#eligibilityRequests').innerHTML = !requests.length ? '<div class="empty">No requests waiting.</div>' :
-      `<div class="card table-wrap"><table><tr><th>Name</th><th>Email</th><th>Member since</th><th></th></tr>
-        ${requests.map((u) => `<tr><td>${esc(u.fullName)}</td><td>${esc(u.email)}</td>
-          <td>${new Date(u.createdAt).toLocaleDateString()}</td>
-          <td><div class="row" style="flex-wrap:nowrap"><button class="primary" data-approve="${u.id}">Approve</button>
-          <button class="danger" data-reject="${u.id}">Reject</button></div></td></tr>`).join('')}
-      </table></div>`;
-    $('#adminStores').innerHTML = !stores.length ? '<div class="empty">No stores yet.</div>' :
-      `<div class="card table-wrap"><table><tr><th>Store</th><th>Owner</th><th>Status</th><th></th></tr>
-        ${stores.map((s) => `<tr><td><strong>${esc(s.name)}</strong><div class="small muted">${esc(s.address)}</div></td>
-          <td>${esc(s.ownerName)}<div class="small muted">${esc(s.ownerEmail)}</div></td>
-          <td>${s.active ? '<span class="badge">Active</span>' : '<span class="badge red">Suspended</span>'}</td>
-          <td>${s.active ? `<button class="danger" data-suspend="${s.id}">Suspend</button>` : `<button data-reactivate="${s.id}">Reactivate</button>`}</td></tr>`).join('')}
-      </table></div>`;
-  } catch (e) { fail(e); }
-}
-
-async function decideEligibility(userId, approved) {
-  try {
-    const user = await api(`/admin/users/${userId}/eligibility`, { method: 'PUT', body: { approved } });
-    toast(`${user.fullName} ${approved ? 'approved' : 'rejected'}`, 'ok');
-    loadAdmin();
-  } catch (e) { fail(e); }
-}
-
-async function setStoreActive(storeId, active) {
-  try {
-    const s = await api(`/admin/stores/${storeId}/status`, { method: 'PUT', body: { active } });
-    toast(`${s.name} ${active ? 'reactivated' : 'suspended'}`, 'ok');
-    loadAdmin();
-  } catch (e) { fail(e); }
-}
-
-// ---------- wiring ----------
-
-document.addEventListener('click', (e) => {
-  const t = e.target.closest('button');
-  if (!t) return;
-  const d = t.dataset;
-  if (d.view) showView(d.view);
-  else if (d.demo) { $('#loginForm').email.value = d.demo; $('#loginForm').password.value = 'demo1234'; }
-  else if (d.place) choosePlace($('#placeSuggestions').places[Number(d.place)]);
-  else if (d.storePlace) { const p = $('#storeSuggestions').places[Number(d.storePlace)]; placeStorePin(p.latitude, p.longitude); }
-  else if (d.reserve) reserve(Number(d.reserve));
-  else if (d.claim) claim(Number(d.claim));
-  else if (d.cancel) confirmClick(t, 'Click again to cancel', () => cancelOrder(Number(d.cancel)));
-  else if (d.edit) editItem(Number(d.edit));
-  else if (d.removePhoto) removePhoto(Number(d.removePhoto));
-  else if (d.delete) confirmClick(t, 'Click again', () => deleteItem(Number(d.delete)));
-  else if (d.approve) decideEligibility(Number(d.approve), true);
-  else if (d.reject) confirmClick(t, 'Click again', () => decideEligibility(Number(d.reject), false));
-  else if (d.suspend) confirmClick(t, 'Click again', () => setStoreActive(Number(d.suspend), false));
-  else if (d.reactivate) setStoreActive(Number(d.reactivate), true);
-  else if (t.id === 'requestEligibility') requestEligibility();
-});
-
-$('#loginForm').addEventListener('submit', login);
-$('#registerForm').addEventListener('submit', register);
-$('#logout').addEventListener('click', signOut);
-$('#placeForm').addEventListener('submit', searchPlace);
-$('#locate').addEventListener('click', useMyLocation);
-$('#radius').addEventListener('change', search);
-$('#storeSelect').addEventListener('change', (e) => { currentStoreId = Number(e.target.value); resetItemForm(); loadStoreDetails(); });
-$('#storeForm').addEventListener('submit', saveStore);
-$('#storeLocate').addEventListener('click', locateStoreAddress);
-$('#storeCancelEdit').addEventListener('click', () => { resetStoreForm(); $('#storeFormBox').open = false; });
-$('#editStore').addEventListener('click', editStore);
-$('#itemForm').addEventListener('submit', saveItem);
-$('#itemCancelEdit').addEventListener('click', resetItemForm);
-$('#pickupForm').addEventListener('submit', confirmPickup);
-
-token = restore(TOKEN_KEY);
-if (token) startSession(); else signOut();
-</script>
+<!-- Photo credits -->
+<dialog class="modal" id="creditsDialog" aria-labelledby="creditsTitle">
+  <div class="modal-head">
+    <div><h2 id="creditsTitle">Photo credits</h2><p>Illustrative photos are shown when a shop hasn't added its own. They come from Wikimedia Commons.</p></div>
+    <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="modal-body"><ul class="credits-list" id="creditsList"></ul></div>
+</dialog>
 </body>
 </html>

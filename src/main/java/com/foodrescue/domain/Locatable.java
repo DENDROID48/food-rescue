@@ -3,8 +3,9 @@ package com.foodrescue.domain;
 import com.foodrescue.util.GeoUtils;
 
 /**
- * Something with a position on the map: a {@link Store}, or the place a consumer searches
- * from ({@link GeoPoint}). Coordinates are in degrees (WGS84, the system GPS uses).
+ * Something with a position on the map: a {@link Store}, a customer's Rescue Drop alert area
+ * ({@link DropAlertPreference}), or the place a customer searches from ({@link GeoPoint}).
+ * Coordinates are in degrees (WGS84, the system GPS uses).
  */
 public interface Locatable {
 

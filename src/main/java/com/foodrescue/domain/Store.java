@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 
 /**
  * A local shop (bakery, supermarket, restaurant) that publishes surplus food.
@@ -55,4 +58,25 @@ public class Store implements Locatable {
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
+
+    /** Used when the client does not send a time zone; the platform currently serves Romania. */
+    public static final String DEFAULT_TIME_ZONE = "Europe/Bucharest";
+
+    /**
+     * IANA time zone of the shop, for example "Europe/Bucharest". "Today", pickup times such as
+     * 18:00 and the daily figures are all calculated in this zone, whatever zone the server or
+     * the owner's phone uses.
+     */
+    @Column(nullable = false, length = 40)
+    private String timeZone = DEFAULT_TIME_ZONE;
+
+    /** Time of day after which the dashboard reminds the owner to publish; null means off. */
+    private LocalTime reminderTime;
+
+    /** Day (in the store's zone) on which the owner dismissed the reminder. */
+    private LocalDate reminderDismissedOn;
+
+    public ZoneId zone() {
+        return ZoneId.of(timeZone);
+    }
 }

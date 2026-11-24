@@ -1,6 +1,5 @@
 package com.foodrescue.dto;
 
-import com.foodrescue.domain.ConsumerCategory;
 import com.foodrescue.domain.EligibilityStatus;
 import com.foodrescue.domain.User;
 import com.foodrescue.domain.UserRole;
@@ -13,7 +12,6 @@ public record UserResponse(
         String fullName,
         String email,
         UserRole role,
-        ConsumerCategory category,
         EligibilityStatus eligibilityStatus,
         boolean freeClaimEligible,
         Instant createdAt) {
@@ -24,7 +22,6 @@ public record UserResponse(
                 user.getFullName(),
                 user.getEmail(),
                 user.getRole(),
-                user.getCategory(),
                 user.getEligibilityStatus(),
                 user.isFreeClaimEligible(),
                 user.getCreatedAt());

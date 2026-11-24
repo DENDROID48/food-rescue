@@ -2,7 +2,7 @@ package com.foodrescue.service;
 
 import com.foodrescue.config.FoodRescueProperties;
 import com.foodrescue.domain.FoodItem;
-import com.foodrescue.domain.GeoPoint;
+import com.foodrescue.domain.OfferStatus;
 import com.foodrescue.domain.Order;
 import com.foodrescue.domain.OrderStatus;
 import com.foodrescue.domain.OrderType;
@@ -14,6 +14,7 @@ import com.foodrescue.exception.ResourceNotFoundException;
 import com.foodrescue.repository.FoodItemRepository;
 import com.foodrescue.repository.OrderRepository;
 import com.foodrescue.repository.UserRepository;
+import com.foodrescue.domain.GeoPoint;
 import com.foodrescue.util.GeoUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,12 +83,12 @@ public class FoodItemService {
         }
 
         Instant now = clock.instant();
-        GeoPoint searchFrom = new GeoPoint(lat, lng);
         GeoUtils.BoundingBox box = GeoUtils.boundingBox(lat, lng, radiusKm);
 
         List<FoodItem> candidates = foodItemRepository.findAvailableInBoundingBox(
                 now, box.minLat(), box.maxLat(), box.minLng(), box.maxLng());
 
+        GeoPoint searchFrom = new GeoPoint(lat, lng);
         return candidates.stream()
                 // Pair every item with its exact distance so it is calculated only once.
                 .map(item -> new ItemWithDistance(item, searchFrom.distanceKmTo(item.getStore())))
@@ -219,23 +220,30 @@ public class FoodItemService {
     }
 
     private void assertNotExpired(FoodItem item, Instant now) {
-        if (!item.isNotExpired(now)) {
+        if (item.isExpiredAt(now)) {
             // 410 Gone: the resource existed but is no longer available.
             throw new BusinessRuleException(HttpStatus.GONE, "This item has expired");
         }
         if (!item.getStore().isActive()) {
             throw new BusinessRuleException(HttpStatus.CONFLICT, "This store is currently not active");
         }
+        // Drafts and paused offers are invisible in search; refuse them here too, for old links.
+        if (item.getStatus() != OfferStatus.ACTIVE) {
+            throw new BusinessRuleException(HttpStatus.CONFLICT, "This offer is not available right now");
+        }
     }
 
     /**
-     * Creates the order. The pickup deadline is the earlier of "reservation window from now"
-     * and "item expiry", so a consumer can never be told to collect expired food.
+     * Creates the order. With a pickup window set by the store (for example 18:00 to 20:00) the
+     * reservation is held until the window ends. Without one, the deadline is the earlier of
+     * "reservation window from now" and "item expiry". Either way a consumer is never told to
+     * collect expired food.
      */
     private Order buildOrder(User user, FoodItem item, int quantity, BigDecimal total,
                              OrderType type, Instant now) {
         Instant windowEnd = now.plus(Duration.ofMinutes(properties.reservationWindowMinutes()));
-        Instant deadline = windowEnd.isBefore(item.getExpiresAt()) ? windowEnd : item.getExpiresAt();
+        Instant deadline = item.getPickupStartsAt() != null || item.getExpiresAt().isBefore(windowEnd)
+                ? item.getExpiresAt() : windowEnd;
 
         Order order = new Order();
         order.setUser(user);

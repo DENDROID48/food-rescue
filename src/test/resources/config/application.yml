@@ -1,0 +1,5 @@
+# Added on top of src/main/resources/application.yml while the tests run:
+# test photos go to the build folder instead of the real uploads folder.
+foodrescue:
+  uploads:
+    dir: target/test-uploads

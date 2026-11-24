@@ -19,6 +19,13 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+    private final com.foodrescue.service.AnalyticsService analyticsService;
+
+    /** GET /api/v1/admin/insights   the platform over the last 28 days, quiet stores and stores needing attention. */
+    @GetMapping("/insights")
+    public com.foodrescue.dto.AdminInsights insights() {
+        return analyticsService.adminOverview();
+    }
 
     /** GET /api/v1/admin/eligibility-requests   consumers waiting for verification, oldest first. */
     @GetMapping("/eligibility-requests")

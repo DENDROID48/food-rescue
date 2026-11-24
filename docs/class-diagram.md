@@ -1,14 +1,15 @@
 # Food Rescue: class diagram
 
-Classes, interfaces and the relationships between them. Spring's generated repository
-interfaces and the JSON request/response records are left out to keep the picture readable.
-(Opens as a picture in IntelliJ's Markdown preview, on GitHub, or at https://mermaid.live.)
+The application's own classes, interfaces and the relationships between them. Spring's generated
+repository interfaces, the JSON request/response records and configuration classes are left out
+so the picture stays readable. (Opens as a picture in IntelliJ's Markdown preview, on GitHub, or
+when pasted into https://mermaid.live, which can also export it as PNG or SVG.)
 
 ```mermaid
 classDiagram
     direction TB
 
-    %% ---------- Interfaces ----------
+    %% ---------------- Interfaces ----------------
     class Locatable {
         <<interface>>
         +getLatitude() double
@@ -20,17 +21,23 @@ classDiagram
         +expiryMoment() Instant
         +isExpiredAt(Instant now) boolean
     }
+    class PhotoStorage {
+        <<interface>>
+        +save(PhotoFolder folder, long id, byte[] data)
+        +load(PhotoFolder folder, long id) byte[]
+        +copy(PhotoFolder from, long fromId, PhotoFolder to, long toId) boolean
+        +delete(PhotoFolder folder, long id)
+    }
 
-    %% ---------- Domain ----------
+    %% ---------------- Domain ----------------
     class User {
         -Long id
         -String fullName
         -String email
         -String passwordHash
         -UserRole role
-        -ConsumerCategory category
         -EligibilityStatus eligibilityStatus
-        -Instant createdAt
+        +isFreeClaimEligible() boolean
     }
     class Store {
         -Long id
@@ -39,60 +46,91 @@ classDiagram
         -double latitude
         -double longitude
         -boolean active
-        -User owner
+        -String timeZone
+        +zone() ZoneId
     }
     class GeoPoint {
         <<record>>
         +double latitude
         +double longitude
     }
+    class ProductTemplate {
+        -Long id
+        -String name
+        -OfferKind kind
+        -BigDecimal originalPrice
+        -BigDecimal discountedPrice
+        -LocalTime pickupStart
+        -LocalTime pickupEnd
+        -Integer unitWeightGrams
+        -Set~FoodTag~ tags
+        -boolean archived
+    }
     class FoodItem {
         -Long id
-        -Store store
         -String name
         -BigDecimal originalPrice
         -BigDecimal discountedPrice
         -int quantityAvailable
         -int payItForwardQuantity
+        -Instant pickupStartsAt
         -Instant expiresAt
-        -boolean hasPhoto
+        -OfferKind kind
+        -OfferStatus status
+        -boolean rescueDrop
+        -Set~FoodTag~ tags
+        +expiryMoment() Instant
         +returnStock(OrderType type, int quantity)
-        +isNotExpired(Instant now) boolean
+        +state(Instant now) OfferState
         +discountPercent() int
     }
-    class FoodItemPhoto {
-        -Long foodItemId
-        -String contentType
-        -byte[] data
+    class BundleComponent {
+        -Long id
+        -int units
     }
     class Order {
         -Long id
-        -User user
-        -FoodItem foodItem
         -int quantity
         -BigDecimal totalPrice
         -OrderType type
         -OrderStatus status
         -String pickupCode
         -Instant pickupDeadline
+        -Instant reminderSentAt
+        +expiryMoment() Instant
     }
+    class DropAlertPreference {
+        -Long userId
+        -boolean enabled
+        -double latitude
+        -double longitude
+        -double radiusKm
+        -int maxPerDay
+    }
+    class RadarProfile {
+        -Long userId
+        -boolean personalised
+        -Set~FoodTag~ interests
+        -boolean pickupReminders
+        -LocalTime quietStart
+        -LocalTime quietEnd
+        +isQuietAt(Instant now) boolean
+    }
+    class Notification {
+        -Long id
+        -Long userId
+        -NotificationKind kind
+        -String title
+        -String body
+        -Instant readAt
+    }
+
+    %% ---------------- Enums ----------------
     class UserRole {
         <<enumeration>>
         CONSUMER
         STORE_OWNER
         ADMIN
-    }
-    class EligibilityStatus {
-        <<enumeration>>
-        NOT_REQUESTED
-        PENDING
-        APPROVED
-        REJECTED
-    }
-    class OrderType {
-        <<enumeration>>
-        PURCHASE
-        PAY_IT_FORWARD
     }
     class OrderStatus {
         <<enumeration>>
@@ -101,115 +139,118 @@ classDiagram
         CANCELLED
         EXPIRED
     }
+    class OfferStatus {
+        <<enumeration>>
+        DRAFT
+        ACTIVE
+        PAUSED
+    }
+    class FoodTag {
+        <<enumeration>>
+        BAKERY
+        FRUIT_VEG
+        READY_MEALS
+        DAIRY
+        MEAT_FISH
+        SWEETS
+        GROCERIES
+        VEGETARIAN
+        VEGAN
+        +isDietary() boolean
+    }
+    class PhotoFolder {
+        <<enumeration>>
+        FOOD_ITEMS
+        TEMPLATES
+        +folderName() String
+    }
 
-    %% ---------- Services ----------
+    %% ---------------- Services ----------------
     class FoodItemService {
-        +findAvailableNearby(lat, lng, radiusKm) List~NearbyFoodItemResponse~
-        +reserve(userId, itemId, quantity) OrderResponse
-        +claimPayItForward(userId, itemId) OrderResponse
+        +findAvailableNearby(double lat, double lng, double radiusKm) List~NearbyFoodItemResponse~
+        +reserve(Long userId, Long itemId, int quantity) OrderResponse
+        +claimPayItForward(Long userId, Long itemId) OrderResponse
     }
     class OrderService {
-        +listOwnOrders(userId) List~OrderResponse~
-        +cancel(userId, orderId) OrderResponse
-        +confirmPickup(ownerId, storeId, code) OrderResponse
+        +cancel(Long userId, Long orderId) OrderResponse
+        +confirmPickup(Long ownerId, Long storeId, String code) OrderResponse
     }
-    class ReservationExpiryJob {
-        +releaseExpiredReservations()
+    class AlertService {
+        +sendPickupReminders()
+        -nearby(Store store) List~DropAlertPreference~
     }
-    class GeocodingService {
-        -Map~String, List~ cache
-        +search(String query) List~PlaceResponse~
-        +locateAddress(String address) PlaceResponse
+    class FoodItemPhotoService {
+        +upload(Long ownerId, Long storeId, Long itemId, byte[] data)
+        +get(Long itemId) PhotoFile
+        +delete(Long ownerId, Long storeId, Long itemId)
     }
-
-    %% ---------- Files and start-up ----------
-    class FileDataStore {
-        -Map~String, String~ writtenFiles
-        -Map~Long, Integer~ writtenPhotos
-        +load()
-        +save()
+    class FilePhotoStorage {
+        -Path root
     }
-    class CsvFormat {
-        +line(List values)$ String
-        +parse(String text, String fileName)$ List~Row~
-    }
-    class CsvRecord {
-        -Map~String, Integer~ columns
-        +text(column, maxLength) String
-        +money(column) BigDecimal
-        +instant(column) Instant
-        +enumValue(column, type) Enum
-    }
-    class StorageProperties {
-        <<record>>
-        +StorageMode mode
-        +String dataDir
-        +int autosaveSeconds
-    }
-    class LaunchOptions {
-        <<record>>
-        +List~String~ springArguments
-        +boolean helpRequested
-        +parse(String... args)$ LaunchOptions
+    class AnalyticsService {
+        +insights(Long ownerId, Long storeId, int days) StoreInsights
+        +exportCsv(Long ownerId, Long storeId, int days, Writer out)
     }
 
-    %% ---------- Exceptions ----------
+    %% ---------------- Exceptions ----------------
     class BusinessRuleException {
         -HttpStatus status
     }
     class ResourceNotFoundException
-    class DataFileException {
-        -String fileName
-        -int line
-    }
-    class InvalidLaunchOptionException
     class RuntimeException
 
-    %% ---------- Relationships ----------
+    %% ---------------- Relationships ----------------
     Locatable <|.. Store
     Locatable <|.. GeoPoint
+    Locatable <|.. DropAlertPreference
     Expirable <|.. FoodItem
     Expirable <|.. Order
+    PhotoStorage <|.. FilePhotoStorage
 
-    Store "0..*" --> "1" User : owner
-    FoodItem "0..*" --> "1" Store : offered by
-    Order "0..*" --> "1" User : placed by
-    Order "0..*" --> "1" FoodItem : reserves
-    FoodItemPhoto "0..1" --> "1" FoodItem : shows
+    User "1" <-- "0..*" Store : owner
+    Store "1" <-- "0..*" ProductTemplate : store
+    Store "1" <-- "0..*" FoodItem : store
+    ProductTemplate "0..1" <-- "0..*" FoodItem : made from
+    FoodItem "1" <-- "0..*" BundleComponent : bundle
+    FoodItem "1" <-- "0..*" BundleComponent : source
+    User "1" <-- "0..*" Order : customer
+    FoodItem "1" <-- "0..*" Order : reserves
+    Store "0..1" <-- "0..*" Notification : about
 
     User --> UserRole
-    User --> EligibilityStatus
-    Order --> OrderType
     Order --> OrderStatus
+    FoodItem --> OfferStatus
+    FoodItem --> FoodTag : Set
+    ProductTemplate --> FoodTag : Set
+    RadarProfile --> FoodTag : Set
 
-    FoodItemService ..> GeoPoint : searches from
-    FoodItemService ..> Order : creates
-    OrderService ..> Order : cancels / hands over
-    ReservationExpiryJob ..> Order : expires
-    FileDataStore ..> CsvFormat : uses
-    FileDataStore ..> CsvRecord : reads rows as
-    FileDataStore --> StorageProperties
-    LaunchOptions ..> StorageProperties : sets mode and folder
+    FoodItemService ..> GeoPoint : search point
+    FoodItemService ..> FoodItem : reserves
+    OrderService ..> Expirable : deadline check
+    AlertService ..> Locatable : distance
+    AlertService ..> RadarProfile
+    FoodItemPhotoService --> PhotoStorage
+    FilePhotoStorage ..> PhotoFolder
+    AnalyticsService ..> Order : JDBC queries
 
-    BusinessRuleException --|> RuntimeException
-    ResourceNotFoundException --|> RuntimeException
-    DataFileException --|> RuntimeException
-    InvalidLaunchOptionException --|> RuntimeException
+    RuntimeException <|-- BusinessRuleException
+    RuntimeException <|-- ResourceNotFoundException
     FoodItemService ..> BusinessRuleException : throws
-    OrderService ..> ResourceNotFoundException : throws
-    CsvRecord ..> DataFileException : throws
-    LaunchOptions ..> InvalidLaunchOptionException : throws
+    FilePhotoStorage ..> ResourceNotFoundException : throws
 ```
 
-## Where each requirement is met
+## Reading guide
 
-| Requirement | In the code |
-|---|---|
-| ≥ 4 classes | `User`, `Store`, `FoodItem`, `Order`, `FoodItemPhoto`, `GeoPoint`, the services, `FileDataStore`, ... |
-| ≥ 2 interfaces | `Locatable` (`Store`, `GeoPoint`), `Expirable` (`FoodItem`, `Order`) |
-| ≥ 2 collections | `GeocodingService.cache` (`LinkedHashMap` of `List`), `FileDataStore.writtenFiles` / `writtenPhotos` (`HashMap`), the `HashSet`s of known ids in `FileDataStore.load()`, `LaunchOptions.springArguments` (`List`) |
-| Files | `FileDataStore` writes `data/*.csv` + `data/photos/` and reads them back at startup |
-| Config / arguments | `application.yml`, `application-files.yml`, `application-postgres.yml`; `--mode=demo/files`, `--data-dir=`, `--port=` (`LaunchOptions`) |
-| Java exceptions handled | `IOException`, `NoSuchFileException`, `MalformedInputException`, `AtomicMoveNotSupportedException`, `InvalidPathException` (`FileDataStore`, `LaunchOptions`); `NumberFormatException`, `DateTimeParseException`, `IllegalArgumentException` (`CsvRecord`, `LaunchOptions`); `InterruptedException` (`GeocodingService`) |
-| Custom exceptions | `BusinessRuleException`, `ResourceNotFoundException`, `DataFileException`, `InvalidLaunchOptionException` |
-| Input validation | Bean Validation on every request body (`dto/*Request`) and query parameter; settings checked at startup (`@Validated` on `FoodRescueProperties`, `StorageProperties`); program arguments (`LaunchOptions`); every value read from a file (`CsvRecord`, `FileDataStore`) |
+| Arrow | Meaning | Example |
+|---|---|---|
+| `<\|..` dashed, hollow head | implements an interface | `Store` implements `Locatable` |
+| `<\|--` solid, hollow head | extends a class | `BusinessRuleException` extends `RuntimeException` |
+| `<--` with numbers | association (a field), with multiplicity | many `Order`s point to one `FoodItem` |
+| `-->` | has a field of that type | `Order` has an `OrderStatus` |
+| `..>` dashed | uses / depends on | `FoodItemService` creates a `GeoPoint` to measure distances |
+
+**Interfaces (3, all specific to this app):** `Locatable`, `Expirable`, `PhotoStorage`.
+
+**Collections:** `Set<FoodTag>` (an `EnumSet`) in `FoodItem`, `ProductTemplate` and `RadarProfile`;
+`List<...>` results from the services; the address cache `Map<String, List<PlaceResponse>>` in
+`GeocodingService`.

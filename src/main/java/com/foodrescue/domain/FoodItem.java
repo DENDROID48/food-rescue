@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * A batch of surplus food offered by a store.
@@ -65,12 +67,54 @@ public class FoodItem implements Expirable {
     @Column(nullable = false)
     private int payItForwardQuantity;
 
+    /** Approximate weight of one unit in grams, as the shop estimates it; null when unknown. */
+    private Integer unitWeightGrams;
+
+    /**
+     * Units for sale and free units this offer was published with, adjusted when the owner
+     * changes the shelf count. Used for sell-through figures; null on offers older than this field.
+     */
+    private Integer quantityPublished;
+    private Integer freePublished;
+
     /**
      * Moment after which the item must no longer be reserved or collected.
      * Stored as {@link Instant} (UTC) so that time zones never cause bugs on the server.
      */
     @Column(nullable = false)
     private Instant expiresAt;
+
+    /** The reusable product this offer was created from, or null for a one-off offer. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "template_id")
+    private ProductTemplate template;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private OfferKind kind = OfferKind.PRODUCT;
+
+    /** Only ACTIVE offers are shown to customers and can be reserved. */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private OfferStatus status = OfferStatus.ACTIVE;
+
+    /**
+     * Start of the pickup window, or null when the food can be collected straight away. The end
+     * of the window is {@link #expiresAt}.
+     */
+    private Instant pickupStartsAt;
+
+    /**
+     * True for a Rescue Drop: a short offer that starts the moment the store launches it and
+     * that opted-in customers nearby are alerted about.
+     */
+    @Column(nullable = false)
+    private boolean rescueDrop;
+
+    /** Food types chosen by the shop, for example BAKERY and VEGETARIAN. */
+    @Convert(converter = FoodTagsConverter.class)
+    @Column(nullable = false, length = 200)
+    private Set<FoodTag> tags = EnumSet.noneOf(FoodTag.class);
 
     /** True when a photo exists in {@link FoodItemPhoto}, so lists can link it without loading it. */
     @Column(nullable = false)
@@ -95,6 +139,7 @@ public class FoodItem implements Expirable {
         }
     }
 
+    /** An offer can no longer be reserved from its expiry time on. */
     @Override
     public Instant expiryMoment() {
         return expiresAt;
@@ -103,6 +148,23 @@ public class FoodItem implements Expirable {
     /** True while the item has not expired at the given moment. */
     public boolean isNotExpired(Instant now) {
         return !isExpiredAt(now);
+    }
+
+    /** What the store owner sees: expiry wins over everything, then the store's own decision, then stock. */
+    public OfferState state(Instant now) {
+        if (isExpiredAt(now)) {
+            return OfferState.EXPIRED;
+        }
+        if (status == OfferStatus.DRAFT) {
+            return OfferState.DRAFT;
+        }
+        if (status == OfferStatus.PAUSED) {
+            return OfferState.PAUSED;
+        }
+        if (quantityAvailable == 0 && payItForwardQuantity == 0) {
+            return OfferState.SOLD_OUT;
+        }
+        return OfferState.ACTIVE;
     }
 
     /** Percentage saved by the consumer, rounded for display (for example 60 means 60 percent off). */
@@ -120,7 +182,25 @@ public class FoodItem implements Expirable {
      * Business rule enforced before every insert and update: prices must be positive and the
      * discount must be a real discount. JPA calls this automatically.
      */
+    /**
+     * The owner corrects the units still on the shelf. The published totals move by the same
+     * amount, so "offered" stays equal to "reserved so far + still on the shelf".
+     */
+    public void setShelf(int forSale, int free) {
+        if (quantityPublished != null) quantityPublished = Math.max(0, quantityPublished + forSale - quantityAvailable);
+        if (freePublished != null) freePublished = Math.max(0, freePublished + free - payItForwardQuantity);
+        quantityAvailable = forSale;
+        payItForwardQuantity = free;
+    }
+
+    /** Before the first save: check the prices and remember what the offer was published with. */
     @PrePersist
+    void beforeInsert() {
+        validatePrices();
+        if (quantityPublished == null) quantityPublished = quantityAvailable;
+        if (freePublished == null) freePublished = payItForwardQuantity;
+    }
+
     @PreUpdate
     void validatePrices() {
         if (originalPrice == null || discountedPrice == null

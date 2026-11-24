@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * The photo of one food item, kept in its own table so that searching and listing items never
- * loads image bytes. Storing photos in the database needs no extra file storage to deploy; move
- * them to object storage (S3 or similar) if the database grows too large.
+ * Records that a food item has a photo, and its image type. The picture itself is a file in the
+ * uploads folder (see {@link com.foodrescue.storage.FilePhotoStorage}).
  */
 @Entity
 @Table(name = "food_item_photo")
@@ -26,7 +25,4 @@ public class FoodItemPhoto {
 
     @Column(nullable = false, length = 50)
     private String contentType;
-
-    @Column(nullable = false)
-    private byte[] data;
 }

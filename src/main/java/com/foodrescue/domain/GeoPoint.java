@@ -1,6 +1,6 @@
 package com.foodrescue.domain;
 
-/** A bare position, for example where a consumer is searching from. */
+/** A bare position, for example where a customer is searching from. */
 public record GeoPoint(double latitude, double longitude) implements Locatable {
 
     @Override

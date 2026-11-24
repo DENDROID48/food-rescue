@@ -2,6 +2,7 @@ package com.foodrescue.service;
 
 import com.foodrescue.config.FoodRescueProperties;
 import com.foodrescue.domain.EligibilityStatus;
+import com.foodrescue.domain.OfferStatus;
 import com.foodrescue.domain.FoodItem;
 import com.foodrescue.domain.Order;
 import com.foodrescue.domain.OrderType;
@@ -111,6 +112,33 @@ class FoodItemServiceTest {
         assertThatThrownBy(() -> service.reserve(1L, 1L, 1))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessageContaining("expired");
+    }
+
+    @Test
+    void pausedAndDraftOffersCannotBeReservedOrClaimed() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(userRepository.findByIdForUpdate(anyLong())).thenReturn(Optional.of(user));
+        when(foodItemRepository.findByIdForUpdate(anyLong())).thenReturn(Optional.of(item));
+        for (OfferStatus status : new OfferStatus[]{OfferStatus.PAUSED, OfferStatus.DRAFT}) {
+            item.setStatus(status);
+            assertThatThrownBy(() -> service.reserve(1L, 1L, 1)).hasMessageContaining("not available");
+            assertThatThrownBy(() -> service.claimPayItForward(1L, 1L)).hasMessageContaining("not available");
+        }
+        assertThat(item.getQuantityAvailable()).isEqualTo(3);
+        assertThat(item.getPayItForwardQuantity()).isEqualTo(1);
+    }
+
+    @Test
+    void reservationIsHeldUntilTheEndOfThePickupWindow() {
+        givenUserAndItemExist();
+        item.setPickupStartsAt(NOW.plus(Duration.ofHours(2)));
+        item.setExpiresAt(NOW.plus(Duration.ofHours(4)));
+
+        OrderResponse response = service.reserve(1L, 1L, 1);
+
+        // Not "60 minutes from now", which would end before the window even opens.
+        assertThat(response.pickupDeadline()).isEqualTo(NOW.plus(Duration.ofHours(4)));
+        assertThat(response.pickupOpensAt()).isEqualTo(NOW.plus(Duration.ofHours(2)));
     }
 
     private void givenLockedUserAndItemExist() {

@@ -5,6 +5,9 @@ import com.foodrescue.domain.FoodItemPhoto;
 import com.foodrescue.exception.BusinessRuleException;
 import com.foodrescue.exception.ResourceNotFoundException;
 import com.foodrescue.repository.FoodItemPhotoRepository;
+import com.foodrescue.storage.PhotoFile;
+import com.foodrescue.storage.PhotoFolder;
+import com.foodrescue.storage.PhotoStorage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
@@ -31,27 +34,19 @@ public class FoodItemPhotoService {
     private final FoodItemPhotoRepository photoRepository;
     private final StoreService storeService;
     private final EntityManager entityManager;
+    private final PhotoStorage photoStorage;
 
     @Transactional
     public void upload(Long ownerId, Long storeId, Long itemId, byte[] data) {
         storeService.requireOwnedStore(ownerId, storeId);
-        if (data.length == 0) {
-            throw new BusinessRuleException(HttpStatus.BAD_REQUEST, "The file is empty");
-        }
-        if (data.length > MAX_BYTES) {
-            throw new BusinessRuleException(HttpStatus.PAYLOAD_TOO_LARGE, "Photos may be at most 2 MB");
-        }
-        String contentType = detectImageType(data);
-        if (contentType == null) {
-            throw new BusinessRuleException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Upload a JPEG, PNG or WebP image");
-        }
+        String contentType = checkImage(data);
 
         FoodItem item = storeService.loadItemOfStoreForUpdate(storeId, itemId);
         FoodItemPhoto photo = photoRepository.findById(itemId).orElseGet(FoodItemPhoto::new);
         photo.setFoodItemId(itemId);
         photo.setContentType(contentType);
-        photo.setData(data);
         photoRepository.save(photo);
+        photoStorage.save(PhotoFolder.FOOD_ITEMS, itemId, data);
 
         item.setHasPhoto(true);
         // Raise the item's version even when only the photo bytes changed (hasPhoto was already
@@ -65,18 +60,35 @@ public class FoodItemPhotoService {
         storeService.requireOwnedStore(ownerId, storeId);
         FoodItem item = storeService.loadItemOfStoreForUpdate(storeId, itemId);
         photoRepository.deleteById(itemId);
+        photoStorage.delete(PhotoFolder.FOOD_ITEMS, itemId);
         item.setHasPhoto(false);
         log.info("Store {} removed the photo of item {}", storeId, itemId);
     }
 
     @Transactional(readOnly = true)
-    public FoodItemPhoto get(Long itemId) {
-        return photoRepository.findById(itemId)
+    public PhotoFile get(Long itemId) {
+        FoodItemPhoto photo = photoRepository.findById(itemId)
                 .orElseThrow(() -> new ResourceNotFoundException("Photo of food item", itemId));
+        return new PhotoFile(photo.getContentType(), photoStorage.load(PhotoFolder.FOOD_ITEMS, itemId));
+    }
+
+    /** Checks size and real image type; returns the content type. Also used for product photos. */
+    static String checkImage(byte[] data) {
+        if (data.length == 0) {
+            throw new BusinessRuleException(HttpStatus.BAD_REQUEST, "The file is empty");
+        }
+        if (data.length > MAX_BYTES) {
+            throw new BusinessRuleException(HttpStatus.PAYLOAD_TOO_LARGE, "Photos may be at most 2 MB");
+        }
+        String contentType = detectImageType(data);
+        if (contentType == null) {
+            throw new BusinessRuleException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Upload a JPEG, PNG or WebP image");
+        }
+        return contentType;
     }
 
     /** JPEG, PNG or WebP from the file signature, or null for anything else. */
-    public static String detectImageType(byte[] data) {
+    static String detectImageType(byte[] data) {
         if (startsWith(data, 0xFF, 0xD8, 0xFF)) {
             return "image/jpeg";
         }

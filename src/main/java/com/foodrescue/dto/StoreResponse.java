@@ -9,7 +9,8 @@ public record StoreResponse(
         String address,
         double latitude,
         double longitude,
-        boolean active) {
+        boolean active,
+        String timeZone) {
 
     public static StoreResponse from(Store store) {
         return new StoreResponse(
@@ -18,6 +19,7 @@ public record StoreResponse(
                 store.getAddress(),
                 store.getLatitude(),
                 store.getLongitude(),
-                store.isActive());
+                store.isActive(),
+                store.getTimeZone());
     }
 }

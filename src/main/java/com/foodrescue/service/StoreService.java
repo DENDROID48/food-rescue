@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DateTimeException;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -56,6 +58,7 @@ public class StoreService {
         Store store = new Store();
         store.setOwner(owner);
         applyStore(store, request);
+        store.setTimeZone(request.timeZone() == null ? Store.DEFAULT_TIME_ZONE : checkZone(request.timeZone()));
 
         Store saved = storeRepository.save(store);
         log.info("User {} registered store {}", ownerId, saved.getId());
@@ -71,6 +74,9 @@ public class StoreService {
             applyStore(store, request);
         } else {
             store.setName(request.name().trim());
+        }
+        if (request.timeZone() != null) {
+            store.setTimeZone(checkZone(request.timeZone()));
         }
         log.info("User {} updated store {}", ownerId, storeId);
         return StoreResponse.from(store);
@@ -95,6 +101,18 @@ public class StoreService {
         }
         store.setName(request.name().trim());
         store.setAddress(address);
+    }
+
+    /** Accepts IANA names such as "Europe/Bucharest"; fixed offsets like "+02:00" would ignore summer time. */
+    private static String checkZone(String timeZone) {
+        try {
+            if (!timeZone.contains("/")) {
+                throw new DateTimeException(timeZone);
+            }
+            return ZoneId.of(timeZone.trim()).getId();
+        } catch (DateTimeException e) {
+            throw new BusinessRuleException(HttpStatus.BAD_REQUEST, "Unknown time zone: " + timeZone);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -203,6 +221,9 @@ public class StoreService {
             throw new BusinessRuleException(HttpStatus.BAD_REQUEST,
                     "discountedPrice must be lower than originalPrice");
         }
+        if (request.pickupStartsAt() != null && !request.pickupStartsAt().isBefore(request.expiresAt())) {
+            throw new BusinessRuleException(HttpStatus.BAD_REQUEST, "The pickup window must start before it ends");
+        }
     }
 
     private void apply(FoodItem item, FoodItemRequest request) {
@@ -210,8 +231,16 @@ public class StoreService {
         item.setDescription(request.description());
         item.setOriginalPrice(request.originalPrice());
         item.setDiscountedPrice(request.discountedPrice());
-        item.setQuantityAvailable(request.quantityAvailable());
-        item.setPayItForwardQuantity(request.payItForwardQuantity());
+        item.setShelf(request.quantityAvailable(), request.payItForwardQuantity());
+        item.setUnitWeightGrams(request.unitWeightGrams());
         item.setExpiresAt(request.expiresAt());
+        item.setPickupStartsAt(request.pickupStartsAt());
+        if (request.kind() != null) {
+            item.setKind(request.kind());
+        }
+        if (request.tags() != null) {
+            item.setTags(request.tags().isEmpty() ? java.util.EnumSet.noneOf(com.foodrescue.domain.FoodTag.class)
+                    : java.util.EnumSet.copyOf(request.tags()));
+        }
     }
 }

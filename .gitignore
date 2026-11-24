@@ -5,12 +5,12 @@ target/
 .idea/
 *.iml
 
-# Data files written with --mode=files
-data/
-
 # macOS
 .DS_Store
 
 # Local environment files with secrets
 .env
 *.env
+
+# Uploaded photos (FilePhotoStorage)
+uploads/

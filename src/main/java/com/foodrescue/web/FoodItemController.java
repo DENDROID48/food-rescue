@@ -1,6 +1,6 @@
 package com.foodrescue.web;
 
-import com.foodrescue.domain.FoodItemPhoto;
+import com.foodrescue.storage.PhotoFile;
 import com.foodrescue.dto.NearbyFoodItemResponse;
 import com.foodrescue.dto.OrderResponse;
 import com.foodrescue.dto.ReserveRequest;
@@ -58,11 +58,11 @@ public class FoodItemController {
      */
     @GetMapping("/{id}/photo")
     public ResponseEntity<byte[]> photo(@PathVariable Long id) {
-        FoodItemPhoto photo = photoService.get(id);
+        PhotoFile photo = photoService.get(id);
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(photo.getContentType()))
+                .contentType(MediaType.parseMediaType(photo.contentType()))
                 .cacheControl(CacheControl.maxAge(Duration.ofDays(1)).cachePublic())
-                .body(photo.getData());
+                .body(photo.data());
     }
 
     /**

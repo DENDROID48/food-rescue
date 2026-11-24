@@ -5,6 +5,8 @@ import com.foodrescue.domain.OrderStatus;
 import com.foodrescue.domain.OrderType;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
 import java.util.List;
@@ -40,6 +42,58 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      */
     long countByUserIdAndTypeAndStatusNotAndCreatedAtAfter(Long userId, OrderType type,
                                                            OrderStatus excludedStatus, Instant since);
+
+    /** Units in orders of one store with the given status, for example everything still to be collected. */
+    @Query("select coalesce(sum(o.quantity), 0) from Order o where o.foodItem.store.id = :storeId and o.status = :status")
+    long sumUnitsByStatus(@Param("storeId") Long storeId, @Param("status") OrderStatus status);
+
+    /** Units handed over by a store between two moments (for example the store's local day). */
+    @Query("""
+            select coalesce(sum(o.quantity), 0) from Order o
+            where o.foodItem.store.id = :storeId and o.status = com.foodrescue.domain.OrderStatus.PICKED_UP
+              and o.pickedUpAt >= :from and o.pickedUpAt < :to
+            """)
+    long sumCollectedUnits(@Param("storeId") Long storeId, @Param("from") Instant from, @Param("to") Instant to);
+
+    /** Like {@link #sumCollectedUnits} for one order type, for example donated Pay-It-Forward units. */
+    @Query("""
+            select coalesce(sum(o.quantity), 0) from Order o
+            where o.foodItem.store.id = :storeId and o.status = com.foodrescue.domain.OrderStatus.PICKED_UP
+              and o.type = :type and o.pickedUpAt >= :from and o.pickedUpAt < :to
+            """)
+    long sumCollectedUnitsOfType(@Param("storeId") Long storeId, @Param("type") OrderType type,
+                                 @Param("from") Instant from, @Param("to") Instant to);
+
+    /**
+     * Units per offer, order type and status, for a set of offers: one row is
+     * [foodItemId, OrderType, OrderStatus, units]. Feeds the Autopilot and the stock alerts.
+     */
+    @Query("""
+            select o.foodItem.id, o.type, o.status, sum(o.quantity) from Order o
+            where o.foodItem.id in :itemIds
+            group by o.foodItem.id, o.type, o.status
+            """)
+    List<Object[]> unitsByItem(@Param("itemIds") java.util.Collection<Long> itemIds);
+
+    /**
+     * What a customer collected since a moment, per shop and saved product: rows of
+     * [storeId, templateId or null, number of orders]. Feeds the Rescue Radar.
+     */
+    @Query("""
+            select s.id, t.id, count(o) from Order o join o.foodItem f join f.store s left join f.template t
+            where o.user.id = :userId and o.status = com.foodrescue.domain.OrderStatus.PICKED_UP and o.createdAt >= :since
+            group by s.id, t.id
+            """)
+    List<Object[]> collectedBy(@Param("userId") Long userId, @Param("since") Instant since);
+
+    /** Open reservations whose pickup closes in a time range and that got no reminder yet. */
+    @EntityGraph(attributePaths = {"foodItem", "foodItem.store"})
+    @Query("""
+            select o from Order o
+            where o.status = com.foodrescue.domain.OrderStatus.RESERVED and o.reminderSentAt is null
+              and o.pickupDeadline > :from and o.pickupDeadline <= :to
+            """)
+    List<Order> dueForReminder(@Param("from") Instant from, @Param("to") Instant to);
 
     /** Reservations that were never collected before their deadline (input for the cleanup job). */
     List<Order> findByStatusAndPickupDeadlineBefore(OrderStatus status, Instant deadline);

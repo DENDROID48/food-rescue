@@ -87,6 +87,32 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Web Push (VAPID signing and RFC 8291 payload encryption) for alerts while the app is closed.
+             Free and open source (MIT); it talks directly to the browsers' own push services. -->
+        <dependency>
+            <groupId>nl.martijndwars</groupId>
+            <artifactId>web-push</artifactId>
+            <version>5.1.1</version>
+            <exclusions>
+                <!-- Only needed by its async client (Netty), which is not used. -->
+                <exclusion>
+                    <groupId>org.asynchttpclient</groupId>
+                    <artifactId>async-http-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Newer than the version web-push declares, which has known (unrelated) advisories. -->
+        <dependency>
+            <groupId>org.bitbucket.b_c</groupId>
+            <artifactId>jose4j</artifactId>
+            <version>0.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.78.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

@@ -45,10 +45,6 @@ public class User {
     @Column(nullable = false, length = 20)
     private UserRole role = UserRole.CONSUMER;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private ConsumerCategory category = ConsumerCategory.GENERAL;
-
     /** Verification for free Pay-It-Forward items; only APPROVED users may claim them. */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

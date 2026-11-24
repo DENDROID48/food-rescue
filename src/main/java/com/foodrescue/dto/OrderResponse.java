@@ -19,7 +19,9 @@ public record OrderResponse(
         OrderType type,
         OrderStatus status,
         String pickupCode,
-        Instant pickupDeadline) {
+        Instant pickupDeadline,
+        /** The food can be collected from this moment; null means straight away. */
+        Instant pickupOpensAt) {
 
     /**
      * Must be called while the transaction is still open, because it touches lazily loaded
@@ -37,6 +39,7 @@ public record OrderResponse(
                 order.getType(),
                 order.getStatus(),
                 order.getPickupCode(),
-                order.getPickupDeadline());
+                order.getPickupDeadline(),
+                order.getFoodItem().getPickupStartsAt());
     }
 }

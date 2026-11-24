@@ -5,6 +5,21 @@ food for free to verified people in need through Pay-It-Forward.
 
 Spring Boot 3.3 backend (Java 21+) with a web page served from the same application.
 
+## Interface
+
+The web client is in `src/main/resources/static/` and needs no build step:
+
+- `index.html` — page structure for the sign-in, customer, store owner and admin screens, plus the dialogs.
+- `styles.css` — the design system (colour, type, spacing, radius, shadow and motion tokens) and all styles.
+- `app.js` — the client logic. It only uses the existing REST API.
+- `photos/` — freely licensed illustrative food photos (WebP, 480 and 960 px), credited in
+  `photos/CREDITS.md` and under "Photo credits" in the app.
+
+A listing shows the store's own photo when it has one. Otherwise the app picks an illustrative photo
+from words in the item's name (for example "croissant", "salad", "vegetable box") and labels it
+"Illustrative photo"; if nothing matches it shows a neutral placeholder. Maps use Leaflet and
+OpenStreetMap; without them, food search still works as a list.
+
 ## Run it locally
 
 ```bash
@@ -24,42 +39,149 @@ Open http://localhost:8080/ and sign in with a demo account. Every one uses the 
 | `admin@example.com` | administrator | Approve the pending verification request, suspend a store |
 | `applicant@example.com` | consumer | Has a verification request waiting for the admin |
 
-By default the demo data is recreated on every start. The H2 database console is at http://localhost:8080/h2-console
+The demo data is recreated on every start. The H2 database console is at http://localhost:8080/h2-console
 (JDBC URL `jdbc:h2:mem:foodrescue`, user `sa`, no password).
-
-## Ways to start
-
-| Command | What happens |
-|---|---|
-| `mvn spring-boot:run` | Demo mode: demo data in memory, lost when the program stops |
-| `mvn spring-boot:run -Dspring-boot.run.arguments="--mode=files"` | Data is kept in CSV files in `data/` and read back on the next start (demo accounts are added the first time) |
-| `... -Dspring-boot.run.arguments="--mode=files --data-dir=other-folder --port=8081"` | Another data folder and port |
-| `... -Dspring-boot.run.arguments="--spring.profiles.active=dev,files"` | The same as `--mode=files`, chosen through the `application-files.yml` config file |
-| `... -Dspring-boot.run.arguments="--help"` | Lists the options |
-
-With a built jar the same options follow `java -jar target/food-rescue-*.jar`. In IntelliJ put them in
-**Run → Edit Configurations → Program arguments**. A wrong value (`--port=abc`, `--mode=cloud`) stops
-the program with a one-line message.
-
-In files mode the data is saved every 10 seconds and when the program stops (Ctrl+C), to
-`users.csv`, `stores.csv`, `food-items.csv`, `photos.csv`, `orders.csv` and the `photos/` folder.
-They open in a spreadsheet. If a file is edited by hand and a value is wrong, the program refuses
-to start and names the file, line and column. Delete the folder to start over with the demo data.
-
-The class diagram is in [docs/class-diagram.md](docs/class-diagram.md).
 
 ## How it works
 
 - **Finding food:** consumers search by place name ("Iulius Town", "Strada Paris 5") or use their
   location, choose a distance, and see results in a list and on a map. Nobody types coordinates.
-- **Reserving:** a reservation holds the units for 60 minutes (or until the food expires) and
-  gives a 6-digit pickup code. Uncollected reservations are released automatically.
+- **Reserving:** a reservation gives a 6-digit pickup code. It holds the units until the end of the
+  offer's pickup window, or for 60 minutes (at most until the food expires) when the offer has no
+  window. Uncollected reservations are released automatically.
 - **Pickup:** the store types the customer's code and hands the food over. Payment happens at the store.
 - **Pay-It-Forward:** stores set aside free units. A consumer asks to be verified, an administrator
   approves them after checking outside the app, and verified people can claim one free item per day.
   Only the outcome is stored, never the reason.
 - **Stores:** an owner registers a store by its address. The server finds it on the map, and the
   owner can drag the pin if it's slightly off.
+- **Daily inventory:** see below.
+
+## Daily inventory
+
+Store owners publish the day's surplus in about a minute:
+
+1. **Products, saved once.** A product (template) holds the name, description, photo, prices, kind
+   (single product or Surprise Bag) and usual pickup window. It has **no quantity**.
+2. **Set up today's offers.** The dashboard lists the saved products. The owner enters today's
+   units for sale and free (Pay-It-Forward) units, checks the pickup times, confirms the quantities
+   are really available, and publishes everything in one request (or saves drafts).
+3. **During the day.** Offers can be edited (units still on the shelf, pickup window), paused,
+   resumed or removed. Reservations made earlier stay valid when an offer is paused or removed.
+
+Rules:
+
+- **Nothing is carried over.** Quantities are always typed in for the day. An offer ends with its
+  pickup window; from then on it is no longer listed, reservable or part of "today".
+- **Time zones.** Every store has a time zone (`Europe/Bucharest` by default; new stores take the
+  owner's device zone). "Today", pickup times like 18:00 and the daily figures use that zone,
+  whatever zone the server or a phone is in.
+- **States.** Draft, Live, Paused (decided by the store), Sold out and Expired (worked out from the
+  stock and the clock, so they are never out of date).
+- **Concurrency.** Reservations, cancellations, pickups, edits and the cleanup job lock the offer's
+  row, so units are never sold twice (`ConcurrentReservationTest` runs 8 simultaneous reservations
+  for 3 units). Publishing locks the product, so the same product cannot be published twice a day.
+- **Figures.** Available, reserved, collected today and donated today are computed from the
+  offers and orders in the database. Collected units are counted from the pickup time, which is
+  recorded since this feature was added.
+- **Reminder.** Optional, per store: after the chosen local time, the dashboard shows a reminder
+  when nothing was published or drafted today. It is calculated when the dashboard loads, so it
+  needs no background job or messaging service. The same rule can later drive email or push.
+
+## Store Autopilot and Rescue Drops
+
+- **Autopilot suggestions.** In "Set up today's offers", the Autopilot shows each product's suggested
+  quantity, pickup window and, if a lot usually goes unsold, a lower price. Suggestions come from that
+  product's offers over the last 28 days, and days on the same weekday count double. They are simple,
+  explained statistics, such as "Sold out on 3 of the last 4 days", with no external AI service.
+  "Fill in suggestions" only fills the form. A price changes only when the owner taps the suggestion,
+  and only for today. Publishing still needs the confirmation tick.
+- **Alerts on the dashboard.** Computed when the dashboard loads:
+  - an offer is selling fast (low stock);
+  - an offer sold out well before its pickup window ended;
+  - drafts are not yet published;
+  - leftovers end within 2 hours.
+- **Rescue Drops.** A short offer (10 to 240 minutes) that starts the moment it is launched. It can
+  be made from a saved product, or with **Smart Bundle**, which moves leftover units of today's offers
+  into surprise bags. The source offers are locked and reduced in the same transaction. A drop is an
+  ordinary offer, so reservations, pickup codes and Pay-It-Forward work unchanged. It ends by itself
+  when it sells out or its time is up.
+- **Drop alerts.** Customers opt in from the bell icon, choosing a place, a radius of up to 10 km and
+  a daily maximum. Alerts are saved in the same transaction as the drop. Each customer gets at most
+  one alert per shop every 2 hours and never more than their own daily maximum. Alerts go to an
+  in-app inbox, checked every minute while the app is open. With the browser's permission, they also
+  show as system notifications while the tab is in the background. No paid messaging service is used.
+
+## Rescue Radar
+
+- **Favourites.** Customers tap ☆ on a product or "Follow" on a shop. A favourite product follows the
+  shop's saved product, so it carries over to every day's offer. A "Favourites" filter shows only those.
+- **Food types.** Shops tag products, for example bakery, fruit & veg, vegetarian or vegan. The tags
+  are shown as the shop's own statement, and the app never adds allergen or food-safety claims. A
+  Smart Bundle is vegetarian or vegan only if every part of it is.
+- **"For you".** A row of up to 6 picks, each with its reason, such as "One of your favourites",
+  "You've had this 3 times before" or "Matches your interest in bakery". Scoring uses favourites,
+  pickups in the last 120 days and interests, then distance, discount, how soon it ends, live drops
+  and free units for verified customers. An offer is picked only for a personal reason. It can be
+  turned off. Shops never see any of it.
+- **Alerts.** These come on top of nearby Rescue Drop alerts, and all are opt-in:
+  - favourite products on offer; several from one shop are merged into one alert;
+  - drops from shops the customer follows, wherever the customer is;
+  - a daily summary at a chosen time.
+
+  The anti-spam rules apply to every alert:
+  - at most one alert per shop every 2 hours;
+  - a daily maximum, halved while 5 or more alerts from the last week are unopened;
+  - quiet hours, which can run overnight; during them alerts wait silently in the inbox.
+- **Web Push.** Alerts reach the device even when the app is closed. Messages go straight to the
+  browsers' push services (Google, Mozilla, Apple, Microsoft) with VAPID keys and end-to-end
+  encryption (RFC 8291). This is free and needs no account.
+  - **Security:** the server only accepts https addresses of those services, so it can't be tricked
+    into calling other addresses.
+  - **Cleanup:** dead subscriptions are removed automatically.
+  - **Shared devices:** signing out removes the device's subscription.
+  - **Installing:** the site has a web-app manifest, so it can be installed. On iPhone and iPad, push
+    only works after "Add to Home Screen".
+
+## Smart Analytics
+
+- **Insights tab** (store dashboard, last 7 days, 4 weeks or 3 months). Shows:
+  - food rescued, in units and kg;
+  - collected of offered, left over and not collected;
+  - takings and customers' savings;
+  - a daily chart with a table view;
+  - a per-product table;
+  - when customers come;
+  - Rescue Drop results;
+  - audience counts, hidden below 5 for privacy.
+
+  Figures count only offers that have ended, by day in the store's time zone. The quantity each
+  offer was published with is recorded and adjusted when the owner corrects the shelf. Older offers
+  rebuild it from their orders.
+- **Forecast:** expected demand per product for the next 7 days, with a range. It is weighted to the
+  same weekday, uses 8 weeks of history, and shows its own track record ("right on 11 of the last 11
+  days"). With too little history it says so.
+- **Recommendations:** explained rules, for example:
+  - a product sells out;
+  - much is left over;
+  - pickups bunch at the end of the window;
+  - many no-shows;
+  - missing weights;
+  - days without offers.
+
+  Each comes with its evidence and a button that opens the right screen. Nothing changes
+  automatically.
+- **Pickup reminders:** customers get a reminder 30 minutes before their pickup closes. It is on by
+  default, can be turned off in Alerts → Settings, and stays silent during quiet hours. The pickup
+  code is never put in the message.
+- **CSV export:** one line per ended offer. Cells that could run as spreadsheet formulas are
+  neutralised.
+- **Admin overview:** platform totals for 28 days, stores quiet for 7 days, and stores with high waste
+  or no-show rates.
+- **Weights:** products and one-off offers can have an optional approximate weight per unit.
+- **JDBC:** the aggregate figures are read with plain SQL through `NamedParameterJdbcTemplate`
+  (`AnalyticsService`). Each pickup reminder is claimed with one SQL `UPDATE … where
+  reminder_sent_at is null`, so it can never be sent twice, even with several servers.
 
 ## Production
 
@@ -85,7 +207,8 @@ FOODRESCUE_JWT_SECRET=... java -jar target/food-rescue-0.1.0-SNAPSHOT.jar
 | `FOODRESCUE_JWT_SECRET` | yes | Signs login tokens; at least 32 random characters. Changing it signs everyone out. |
 | `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | yes | PostgreSQL connection |
 | `FOODRESCUE_ADMIN_EMAIL`, `FOODRESCUE_ADMIN_PASSWORD` | first start | Creates the first administrator (password at least 12 characters). Nothing happens if the account exists. |
-| `FOODRESCUE_CONTACT_EMAIL` | recommended | Sent to OpenStreetMap's geocoder as a contact, as its usage policy asks |
+| `FOODRESCUE_CONTACT_EMAIL` | recommended | Contact for OpenStreetMap's geocoder and for push services (VAPID subject) |
+| `FOODRESCUE_PUSH_PUBLIC_KEY`, `FOODRESCUE_PUSH_PRIVATE_KEY` | for push | VAPID key pair, for example from `npx web-push generate-vapid-keys`. Keep them fixed: browsers must subscribe again when they change. Without them, temporary keys are used. Push also needs HTTPS. |
 
 The production profile starts with an empty database and no demo accounts.
 
@@ -118,6 +241,34 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 | `GET/POST /api/v1/stores/{storeId}/food-items` | store owner | List or publish food |
 | `PUT/DELETE /api/v1/stores/{storeId}/food-items/{itemId}` | store owner | Edit, or take off the market |
 | `POST/DELETE /api/v1/stores/{storeId}/food-items/{itemId}/photo` | store owner | Upload (multipart field `file`, JPEG/PNG/WebP, max 2 MB) or remove a photo |
+| `GET/POST /api/v1/stores/{storeId}/templates` | store owner | List or create saved products (pickup times like `"18:00"`) |
+| `PUT/DELETE /api/v1/stores/{storeId}/templates/{templateId}` | store owner | Edit, or archive a product |
+| `POST/DELETE /api/v1/stores/{storeId}/templates/{templateId}/photo` | store owner | Product photo (copied to each day's offer) |
+| `GET /api/v1/template-photos/{templateId}` | anyone | Photo of a product |
+| `GET /api/v1/stores/{storeId}/today` | store owner | Today's offers, products, figures and reminder, in the store's time zone |
+| `POST /api/v1/stores/{storeId}/offers` | store owner | Publish (or draft) today's offers from products, all or nothing |
+| `PATCH /api/v1/stores/{storeId}/offers/{itemId}` | store owner | Change today's units and pickup window |
+| `PUT /api/v1/stores/{storeId}/offers/{itemId}/status` | store owner | `{"status": "ACTIVE"}` publishes or resumes, `"PAUSED"` hides |
+| `PUT /api/v1/stores/{storeId}/reminder` | store owner | `{"enabled": true, "time": "15:00"}` |
+| `POST /api/v1/stores/{storeId}/reminder/dismiss` | store owner | Hide today's reminder |
+| `GET /api/v1/stores/{storeId}/autopilot` | store owner | Suggested quantities, windows and prices for today (publishes nothing) |
+| `GET /api/v1/stores/{storeId}/drops/audience` | store owner | How many opted-in customers a drop would reach |
+| `POST /api/v1/stores/{storeId}/drops` | store owner | Launch a Rescue Drop of a saved product, starting now |
+| `POST /api/v1/stores/{storeId}/drops/bundle` | store owner | Bundle leftovers of today's offers into surprise bags, as a drop |
+| `GET /api/v1/me/notifications` | consumer | Newest alerts and the unread count |
+| `POST /api/v1/me/notifications/read` | consumer | Mark all alerts as read |
+| `GET/PUT /api/v1/me/drop-alerts` | consumer | Drop alert settings: place, radius, daily maximum |
+| `GET /api/v1/me/radar?lat=&lng=&radiusKm=` | consumer | "For you" picks with reasons, plus favourite ids |
+| `GET /api/v1/me/favourites` | consumer | Favourite products and followed shops |
+| `PUT/DELETE /api/v1/me/favourites/stores/{storeId}` | consumer | Follow or unfollow a shop |
+| `PUT/DELETE /api/v1/me/favourites/products/{templateId}` | consumer | Add or remove a favourite product |
+| `GET/PUT /api/v1/me/radar-profile` | consumer | Interests, favourite alerts, quiet hours, daily summary, personalisation |
+| `GET /api/v1/stores/{storeId}/insights?days=28` | store owner | Results, forecast and recommendations (7–90 days) |
+| `GET /api/v1/stores/{storeId}/insights/export.csv?days=28` | store owner | One line per ended offer |
+| `GET /api/v1/admin/insights` | admin | Platform totals, quiet stores, stores needing attention |
+| `GET /api/v1/push/public-key` | anyone | VAPID key for subscribing a browser |
+| `POST/DELETE /api/v1/me/push-subscriptions` | consumer | Save or remove this browser's push subscription |
+| `POST /api/v1/me/push-subscriptions/test` | consumer | Send a test push to this customer's browsers |
 | `GET /api/v1/stores/{storeId}/orders?status=RESERVED` | store owner | Reservations to prepare |
 | `POST /api/v1/stores/{storeId}/pickups` | store owner | Hand over food: `{"pickupCode": "048213"}` |
 | `GET /api/v1/admin/eligibility-requests` | admin | Verification requests waiting |
@@ -142,7 +293,7 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 ## Not built yet
 
 - **Online payment:** customers pay at the store. Adding Stripe or a local provider needs an account with them.
-- **Notifications:** for example email or push for "your pickup expires soon". This needs an email or push provider.
+- **Email or SMS alerts:** they need a provider. Web Push covers alerts outside the app for free.
 - **Password reset:** this also needs an email provider.
 - **Several servers:** add ShedLock so only one server runs the reservation cleanup job.
 - **Address lookup at scale:** OpenStreetMap's free geocoder allows about one request per second.

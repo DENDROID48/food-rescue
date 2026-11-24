@@ -61,6 +61,12 @@ public class Order implements Expirable {
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
+    /** When the store handed the food over; null until then (and for orders collected before this was recorded). */
+    private Instant pickedUpAt;
+
+    /** When the pickup reminder was sent; null until then. Set once, so it is never sent twice. */
+    private Instant reminderSentAt;
+
     /**
      * Optimistic locking counter. A consumer cancelling, a store confirming the pickup and the
      * expiry job may touch the same order at the same moment; only the first change wins and
@@ -69,7 +75,7 @@ public class Order implements Expirable {
     @Version
     private Long version;
 
-    /** A reservation expires at its pickup deadline. */
+    /** A reservation must be collected before its pickup deadline. */
     @Override
     public Instant expiryMoment() {
         return pickupDeadline;

@@ -108,6 +108,7 @@ public class OrderService {
         }
 
         order.setStatus(OrderStatus.PICKED_UP);
+        order.setPickedUpAt(clock.instant());
         log.info("Store {} handed over order {}", storeId, order.getId());
         return OrderResponse.from(order);
     }

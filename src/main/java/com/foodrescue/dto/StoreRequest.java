@@ -16,5 +16,11 @@ public record StoreRequest(
         @NotBlank @Size(max = 150) String name,
         @NotBlank @Size(max = 255) String address,
         @DecimalMin("-90") @DecimalMax("90") Double latitude,
-        @DecimalMin("-180") @DecimalMax("180") Double longitude) {
+        @DecimalMin("-180") @DecimalMax("180") Double longitude,
+        /** Optional IANA time zone such as "Europe/Bucharest"; checked in StoreService. */
+        @Size(max = 40) String timeZone) {
+
+    public StoreRequest(String name, String address, Double latitude, Double longitude) {
+        this(name, address, latitude, longitude, null);
+    }
 }

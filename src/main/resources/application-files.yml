@@ -1,7 +1,0 @@
-# Second way to start: keep the data in CSV files instead of only in memory.
-# Activate with:  --spring.profiles.active=dev,files   (or simply --mode=files)
-# "dev" adds the demo accounts the first time, when the data folder is still empty.
-foodrescue:
-  storage:
-    mode: files
-    data-dir: data
