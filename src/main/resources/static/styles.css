@@ -486,7 +486,19 @@ main { padding: var(--s-6) 0 var(--s-16); flex: 1 0 auto; }
 .dropzone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .dropzone-text strong { display: block; font-weight: 600; }
 .dropzone-text span { font-size: var(--text-sm); color: var(--muted); }
-.dropzone-actions { display: flex; gap: var(--s-2); margin-top: var(--s-2); position: relative; z-index: 1; }
+.dropzone-actions { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-2); position: relative; z-index: 1; }
+.ai-suggest { margin-top: var(--s-3); padding: var(--s-4); border-radius: var(--r-lg); background: var(--paper); border: 1px solid #f2e0b3; box-shadow: var(--shadow-sm); display: grid; gap: var(--s-3); font-size: var(--text-sm); }
+.ai-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ai-head svg { width: 18px; height: 18px; color: var(--sun-ink); }
+.ai-fields { display: grid; gap: 8px; margin: 0; }
+.ai-fields div { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: var(--s-3); }
+.ai-fields dt { color: var(--muted); font-weight: 600; }
+.ai-fields dd { margin: 0; }
+.ai-note { color: var(--muted); font-size: var(--text-xs); }
+.ai-status { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.ai-status svg { width: 16px; height: 16px; color: var(--forest-600); }
+.ai-actions { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+@media (max-width: 720px) { .ai-fields div { grid-template-columns: 1fr; gap: 2px; } }
 .discount-preview { font-size: var(--text-sm); font-weight: 600; color: var(--forest-700); min-height: 20px; }
 .discount-preview.is-bad { color: var(--tomato); }
 
@@ -698,6 +710,39 @@ dialog.modal::backdrop { background: rgba(13, 30, 23, .5); backdrop-filter: blur
 .alerts-form h3 { font-size: var(--text-lg); }
 .alerts-actions { display: flex; justify-content: space-between; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
 
+/* Tablet widths: three customer tabs, the avatar and Sign out must share the header. */
+@media (max-width: 960px) {
+  .account-text { display: none; }
+  .main-nav button { white-space: nowrap; padding: 8px 10px; gap: 4px; }
+  #logout span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* ---------- impact, streaks and achievements ---------- */
+.impact-note { margin-top: var(--s-3); }
+.impact-stats .stat small { display: block; margin: 4px 0 0; }
+.impact-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); margin-top: var(--s-6); }
+.impact-card { padding: var(--s-6); display: grid; gap: var(--s-3); align-content: start; }
+.impact-card h2 { font-size: var(--text-lg); }
+.streak-number { font: 500 var(--text-lg) var(--font-display); color: var(--forest-700); }
+.streak-number strong { font-size: 44px; line-height: 1; letter-spacing: -.03em; margin-right: 4px; }
+.meter { height: 10px; border-radius: var(--r-pill); background: var(--sage-100); overflow: hidden; }
+.meter span { display: block; height: 100%; min-width: 4px; border-radius: inherit; background: var(--forest-600); transition: width var(--t-base) var(--ease); }
+.achievements { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s-4); }
+.achievement { display: flex; gap: var(--s-4); padding: var(--s-5); background: var(--paper); border: 1px solid var(--line-soft); border-radius: var(--r-lg); }
+.achievement > div { display: grid; gap: 6px; flex: 1; min-width: 0; }
+.achievement h3 { font-size: var(--text-md); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.achievement p { color: var(--muted); font-size: var(--text-sm); }
+.achievement-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: var(--sage-50); color: var(--sage-600); border: 1px dashed var(--sage-200); }
+.achievement-icon svg { width: 20px; height: 20px; }
+.achievement.is-unlocked { border-color: #f2e0b3; box-shadow: var(--shadow-sm); }
+.achievement.is-unlocked .achievement-icon { background: var(--sun-100); color: var(--sun-ink); border: 1px solid var(--sun-300); }
+.achievement-when { display: flex; align-items: center; gap: 6px; font-size: var(--text-xs) !important; font-weight: 600; }
+.achievement-when svg { width: 14px; height: 14px; color: var(--forest-600); }
+@media (max-width: 720px) {
+  .impact-grid { grid-template-columns: 1fr; }
+  .impact-card { padding: var(--s-5); }
+}
+
 @media (max-width: 720px) {
   .panel-head { flex-wrap: wrap; }
   .panel-head-actions { justify-content: flex-start; }
@@ -872,7 +917,7 @@ dialog.modal::backdrop { background: rgba(13, 30, 23, .5); backdrop-filter: blur
   body[data-role="CONSUMER"] .site-footer { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
   body[data-role="CONSUMER"] .toasts { bottom: calc(84px + env(safe-area-inset-bottom)); }
   .bottom-nav {
-    display: grid; grid-template-columns: 1fr 1fr; position: fixed; left: 0; right: 0; bottom: 0; z-index: 950;
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 950;
     background: rgba(255, 255, 255, .96); backdrop-filter: blur(14px); border-top: 1px solid var(--line);
     padding: 6px 12px calc(6px + env(safe-area-inset-bottom));
   }

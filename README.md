@@ -24,7 +24,7 @@ OpenStreetMap; without them, food search still works as a list.
 
 ```bash
 mvn spring-boot:run      # http://localhost:8080, in-memory database with demo data
-mvn test                 # 144 unit and integration tests
+mvn test                 # 157 unit and integration tests
 ```
 
 Browser tests that drive the real page are in [`e2e/`](e2e/README.md).
@@ -192,6 +192,37 @@ Rules:
   (`AnalyticsService`). Each pickup reminder is claimed with one SQL `UPDATE … where
   reminder_sent_at is null`, so it can never be sent twice, even with several servers.
 
+## AI-assisted listings
+
+- **Suggest details from a photo:** in the product editor and the one-off offer editor, after
+  choosing a photo, the owner can ask for a suggested name, description and food types.
+- **Free and private:** a free image model (MobileNet, via TensorFlow.js from cdn.jsdelivr.net)
+  runs in the owner's browser. No paid service is used and the photo is not sent anywhere for this.
+  The model is downloaded the first time it is used (about 14 MB), then comes from the browser cache.
+- **The server decides what the labels mean** (`ListingSuggestionService`). It maps the model's
+  ImageNet labels (for example "French loaf") to a food type and a plain description, and ignores
+  guesses under 10%.
+- **Human approval:** nothing is filled in until the owner presses "Use these", and the panel shows
+  what the model saw and how sure it was. The model can be wrong, so the owner always checks.
+- **No invented food-safety facts:** dietary labels (vegetarian, vegan) are never suggested, because
+  a photo cannot show what food is free of. The description never mentions allergens, ingredients or
+  freshness, and tells customers to ask the shop.
+
+## Gamification
+
+- **My impact** (customers): food rescued in items and kg, money saved compared with full prices,
+  number of rescues and shops supported. Only collected orders count.
+- **Rescue streak:** weeks in a row (Monday to Sunday) with at least one collected order. Weeks rather
+  than days, so the app never pushes people to buy food they don't need. A streak stays alive until
+  a whole week is missed.
+- **Achievements:** nine milestones (first rescue, 10 and 50 rescues, 5 and 25 kg, 100 lei saved,
+  3 different shops, a Rescue Drop, 4 weeks in a row) with progress bars. Each unlocked one shows the
+  day it was reached. New ones are marked "New" and announced once.
+- **Community challenge:** a monthly target for everyone together, set in `application.yml`
+  (`foodrescue.gamification.monthly-challenge-units`, default 400), with the customer's own share.
+- **Nothing extra is stored:** `GamificationService` works everything out from the order history,
+  so the figures always match it. The `Achievement` enum holds each milestone's figure and target.
+
 ## Production
 
 Production uses PostgreSQL. Run it with Docker:
@@ -278,6 +309,8 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 | `GET /api/v1/admin/insights` | admin | Platform totals, quiet stores, stores needing attention |
 | `GET /api/v1/push/public-key` | anyone | VAPID key for subscribing a browser |
 | `GET /api/v1/settings` | anyone | rules the page shows, read from configuration (max units per reservation) |
+| `GET /api/v1/me/impact` | consumer | Personal impact, weekly streak, achievements and the monthly community challenge |
+| `POST /api/v1/stores/listing-suggestions` | store owner | Body: the image model's labels and the typed name. Returns a suggestion; saves nothing |
 | `POST/DELETE /api/v1/me/push-subscriptions` | consumer | Save or remove this browser's push subscription |
 | `POST /api/v1/me/push-subscriptions/test` | consumer | Send a test push to this customer's browsers |
 | `GET /api/v1/stores/{storeId}/orders?status=RESERVED` | store owner | Reservations to prepare |

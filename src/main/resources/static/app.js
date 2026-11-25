@@ -69,7 +69,7 @@ const money = (n) => Number(n).toFixed(2) + ' lei';
 const isFree = (amount) => !Number(amount);
 const shortPlace = (label) => label.split(',').slice(0, 2).join(',').trim();
 const initials = (name) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((p) => p[0].toUpperCase()).join('');
-const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;
 const spacedDigits = (code) => String(code).split('').join(' ');
 const distanceText = (km) => (km < 0.1 ? 'under 100 m away' : `${km} km away`);
 
@@ -258,11 +258,11 @@ function setAlert(selector, message) { $(selector).textContent = message || ''; 
 
 const ROLE_TEXT = { CONSUMER: 'Customer', STORE_OWNER: 'Store owner', ADMIN: 'Administrator' };
 const VIEWS = {
-  CONSUMER: [['shop', 'Discover', 'search'], ['orders', 'My orders', 'receipt']],
+  CONSUMER: [['shop', 'Discover', 'search'], ['orders', 'My orders', 'receipt'], ['impact', 'My impact', 'star']],
   STORE_OWNER: [['store', 'My store', 'store']],
   ADMIN: [['admin', 'Admin', 'shield']],
 };
-const VIEW_TITLES = { auth: 'Welcome', shop: 'Discover', orders: 'My orders', store: 'My store', admin: 'Admin' };
+const VIEW_TITLES = { auth: 'Welcome', shop: 'Discover', orders: 'My orders', impact: 'My impact', store: 'My store', admin: 'Admin' };
 let currentView = null;
 
 function showView(name, { focus = false } = {}) {
@@ -276,6 +276,7 @@ function showView(name, { focus = false } = {}) {
   if (changed) window.scrollTo({ top: 0 });
   if (name === 'shop') shopMap?.invalidateSize();
   if (name === 'orders') loadMyOrders();
+  if (name === 'impact') loadImpact();
   if (focus) $(`#view-${name} h1`)?.focus({ preventScroll: true });
 }
 
@@ -1264,6 +1265,84 @@ async function loadMyOrders() {
   } catch (e) { fail(e); }
 }
 
+// ---------- customer: impact, streaks and achievements ----------
+
+const SEEN_ACHIEVEMENTS_KEY = 'foodrescue.seenAchievements';
+
+async function loadImpact() {
+  if (me?.role !== 'CONSUMER') return;
+  const body = $('#impactBody');
+  body.setAttribute('aria-busy', 'true');
+  try {
+    renderImpact(await api('/me/impact'));
+  } catch (e) {
+    body.innerHTML = `<div class="empty"><h3>Your impact could not be loaded</h3><p>${esc(e.message)}</p>
+      <button class="btn" type="button" onclick="loadImpact()">${icon('refresh')}<span>Try again</span></button></div>`;
+  } finally { body.setAttribute('aria-busy', 'false'); }
+}
+
+const meter = (percent, label) => `<div class="meter" role="progressbar" aria-label="${esc(label)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><span style="width:${percent}%"></span></div>`;
+
+function streakText(s) {
+  if (s.rescuedThisWeek) return 'This week already counts. Collect something next week to keep it going.';
+  if (s.currentWeeks) return 'Collect something by Sunday to keep your streak.';
+  return 'Collect rescued food this week to start a streak.';
+}
+
+function renderImpact(r) {
+  // Achievements unlocked since this person last looked are marked as new.
+  const seenKey = `${SEEN_ACHIEVEMENTS_KEY}.${me.id}`;
+  const seen = new Set(restore(seenKey) || []);
+  const firstVisit = restore(seenKey) === null;
+  const unlocked = r.achievements.filter((a) => a.unlocked).map((a) => a.code);
+  const fresh = firstVisit ? [] : unlocked.filter((c) => !seen.has(c));
+  save(seenKey, unlocked);
+
+  const kg = r.kgRescued ? `<small>${r.kgRescued.toLocaleString(undefined, { maximumFractionDigits: 1 })} kg</small>` : '';
+  const tile = (label, value, accent = false) => `<div class="card stat${accent ? ' is-accent' : ''}"><span>${label}</span><strong>${value}</strong></div>`;
+  const c = r.challenge;
+  const achievements = r.achievements.map((a) => `
+    <li class="achievement${a.unlocked ? ' is-unlocked' : ''}">
+      <span class="achievement-icon" aria-hidden="true">${icon(a.unlocked ? 'star' : 'lock')}</span>
+      <div>
+        <h3>${esc(a.title)}${fresh.includes(a.code) ? ' <span class="badge badge-sun">New</span>' : ''}</h3>
+        <p>${esc(a.description)}</p>
+        ${a.unlocked ? `<p class="achievement-when">${icon('check')}Unlocked ${dayLabel(a.unlockedOn, { day: 'numeric', month: 'long', year: 'numeric' })}</p>`
+          : `${meter(a.percent, a.title + ' progress')}<p class="achievement-when">${esc(a.progressText)}</p>`}
+      </div>
+    </li>`).join('');
+
+  $('#impactBody').innerHTML = `
+    ${r.rescues ? '' : `<div class="notice"><span class="notice-icon">${icon('leaf')}</span><div><strong>No rescues yet</strong>
+      <p>Collect your first reservation and your savings, streak and achievements start here.</p></div>
+      <button class="btn btn-primary btn-sm" type="button" data-view="shop">${icon('search')}<span>Find food</span></button></div>`}
+    <div class="stats impact-stats">
+      ${tile('Food rescued', `${r.units} items${kg}`, true)}
+      ${tile('Money saved', money(r.moneySaved))}
+      ${tile('Rescues', r.rescues)}
+      ${tile('Shops supported', r.shops)}
+    </div>
+    ${r.unitsWithoutWeight ? `<p class="muted small impact-note">${plural(r.unitsWithoutWeight, 'item')} had no weight from the shop, so ${r.unitsWithoutWeight === 1 ? 'it is' : 'they are'} not in the kg figure.</p>` : ''}
+    <div class="impact-grid">
+      <article class="card impact-card streak-card">
+        <span class="eyebrow">Rescue streak</span>
+        <p class="streak-number"><strong>${r.streak.currentWeeks}</strong> ${r.streak.currentWeeks === 1 ? 'week' : 'weeks'} in a row</p>
+        <p>${streakText(r.streak)}</p>
+        <p class="muted small">Best so far: ${plural(r.streak.bestWeeks, 'week')}. Weeks run Monday to Sunday.</p>
+      </article>
+      <article class="card impact-card">
+        <span class="eyebrow">Community challenge</span>
+        <h2>${esc(c.title)}</h2>
+        ${meter(c.percent, 'Community challenge progress')}
+        <p><strong>${c.communityUnits} of ${c.targetUnits}</strong> rescued so far · ${c.daysLeft ? plural(c.daysLeft, 'day') + ' left' : 'last day'}</p>
+        <p class="muted small">${c.yourUnits ? `You rescued ${plural(c.yourUnits, 'item')} of them this month.` : 'Collect something this month to add to it.'}</p>
+      </article>
+    </div>
+    <div class="section-head"><div><h2>Achievements</h2><p>${unlocked.length} of ${r.achievements.length} unlocked</p></div></div>
+    <ul class="achievements">${achievements}</ul>`;
+  if (fresh.length) toast(fresh.length === 1 ? `New achievement: ${r.achievements.find((a) => a.code === fresh[0]).title}` : `${fresh.length} new achievements`);
+}
+
 function renderOrders() {
   const active = myOrders.filter((o) => o.status === 'RESERVED').sort((a, b) => new Date(a.pickupDeadline) - new Date(b.pickupDeadline));
   const past = myOrders.filter((o) => o.status !== 'RESERVED');
@@ -1626,12 +1705,16 @@ function photoPicker(prefix, onRemove) {
   const preview = (html) => { el('PhotoPreview').innerHTML = html; settleImages(el('PhotoPreview')); };
   const picker = {
     reset(url) { currentUrl = url || null; el('PhotoInput').value = ''; picker.error(''); picker.showCurrent(); },
+    /** Hides any photo suggestion: it belonged to the photo that was there before. */
+    clearSuggestion() { el('Suggestion').hidden = true; el('Suggestion').innerHTML = ''; },
     setCurrent(url) { currentUrl = url || null; picker.showCurrent(); },
     showCurrent() {
       preview(currentUrl ? `<img src="${esc(currentUrl)}" alt="Current photo">` : fallbackTile(''));
       el('DropzoneTitle').textContent = currentUrl ? 'Replace the photo' : 'Add a photo';
       el('RemovePhoto').hidden = !currentUrl;
       el('ClearPhoto').hidden = true;
+      el('Suggest').hidden = !currentUrl;
+      picker.clearSuggestion();
     },
     choose(file) {
       const input = el('PhotoInput');
@@ -1645,6 +1728,8 @@ function photoPicker(prefix, onRemove) {
       el('DropzoneTitle').textContent = 'New photo ready';
       el('ClearPhoto').hidden = false;
       el('RemovePhoto').hidden = true;
+      el('Suggest').hidden = false;
+      picker.clearSuggestion();
     },
     file: () => el('PhotoInput').files[0],
     error(message) { el('PhotoError').textContent = message || ''; },
@@ -1653,9 +1738,104 @@ function photoPicker(prefix, onRemove) {
   el('PhotoInput').addEventListener('change', (e) => picker.choose(e.target.files[0]));
   el('ClearPhoto').addEventListener('click', () => { el('PhotoInput').value = ''; picker.choose(null); });
   el('RemovePhoto').addEventListener('click', (e) => onRemove(e.currentTarget));
+  el('Suggest').addEventListener('click', (e) => suggestFromPhoto(prefix, e.currentTarget));
+  el('Suggestion').addEventListener('click', (e) => {
+    const t = e.target.closest('button');
+    if (t?.dataset.useSuggestion !== undefined) useSuggestion(prefix);
+    else if (t?.dataset.dismissSuggestion !== undefined) picker.clearSuggestion();
+  });
   for (const type of ['dragenter', 'dragover']) el('Dropzone').addEventListener(type, () => el('Dropzone').classList.add('is-dragover'));
   for (const type of ['dragleave', 'drop']) el('Dropzone').addEventListener(type, () => el('Dropzone').classList.remove('is-dragover'));
   return picker;
+}
+
+// ---------- AI-assisted listings ----------
+// A free image model (MobileNet) runs in the owner's browser; nothing is sent to a paid service.
+// The server turns what it saw into a suggestion, and the owner decides whether to use it.
+
+const TFJS_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
+const MOBILENET_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js';
+let imageModel = null;
+const suggestions = {};
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.crossOrigin = 'anonymous';
+    script.onload = resolve;
+    script.onerror = () => { script.remove(); reject(new Error('The image model could not be downloaded. Check your connection and try again.')); };
+    document.head.append(script);
+  });
+}
+
+/** Downloads the model once per page load (about 14 MB the first time, then from the browser cache). */
+async function getImageModel() {
+  imageModel ??= (async () => {
+    if (!window.tf) await loadScript(TFJS_URL);
+    if (!window.mobilenet) await loadScript(MOBILENET_URL);
+    return window.mobilenet.load({ version: 2, alpha: 1.0 });
+  })();
+  try { return await imageModel; } catch (e) { imageModel = null; throw e; }
+}
+
+async function suggestFromPhoto(prefix, button) {
+  const panel = $(`#${prefix}Suggestion`);
+  const img = $(`#${prefix}PhotoPreview img`);
+  if (!img) return;
+  panel.hidden = false;
+  panel.innerHTML = `<p class="ai-status">${imageModel ? 'Looking at the photo…' : 'Loading the free image model. The first time takes a few seconds (about 14 MB).'}</p>`;
+  await withLoading(button, async () => {
+    try {
+      // The model reads an image at its displayed size, and the preview is a small thumbnail,
+      // so it gets a full-size copy that is not on the page.
+      const full = new Image();
+      full.src = img.currentSrc || img.src;
+      await full.decode();
+      const model = await getImageModel();
+      const guesses = await model.classify(full, 5);
+      const s = await api('/stores/listing-suggestions', { method: 'POST', body: {
+        name: $(`#${prefix}Name`).value,
+        labels: guesses.map((g) => ({ className: g.className.slice(0, 200), probability: Math.min(1, Math.max(0, g.probability)) })) } });
+      suggestions[prefix] = s;
+      renderPhotoSuggestion(prefix, s);
+    } catch (e) {
+      panel.innerHTML = `<p class="form-alert">${esc(e.message)}</p>`;
+    }
+  });
+}
+
+function renderPhotoSuggestion(prefix, s) {
+  const seen = s.seen.length ? `What the model saw: ${esc(s.seen.join(', '))}.` : 'The model was not sure about anything in this photo.';
+  const head = `<div class="ai-head">${icon('spark')}<strong>Suggestion from the photo</strong><span class="badge badge-sun plain">Check before using</span></div>`;
+  $(`#${prefix}Suggestion`).innerHTML = s.recognised ? `${head}
+    <dl class="ai-fields">
+      <div><dt>Name</dt><dd>${esc(s.name)}</dd></div>
+      <div><dt>Food types</dt><dd>${s.tags.map((t) => `<span class="badge plain">${esc(TAG_LABEL[t] || t)}</span>`).join(' ')}</dd></div>
+      <div><dt>Description</dt><dd>${esc(s.description)}</dd></div>
+    </dl>
+    <p class="ai-note">${seen} It can be wrong. It never fills in allergens or labels like vegetarian or vegan: add those yourself.</p>
+    <div class="ai-actions">
+      <button type="button" class="btn btn-sm btn-primary" data-use-suggestion>${icon('check')}<span>Use these</span></button>
+      <button type="button" class="btn btn-sm" data-dismiss-suggestion>Dismiss</button>
+    </div>`
+    : `${head}<p>This doesn't look like a food the model knows. Fill in the details yourself.</p>
+    <p class="ai-note">${seen}</p>
+    <div class="ai-actions"><button type="button" class="btn btn-sm" data-dismiss-suggestion>Dismiss</button></div>`;
+}
+
+/** Fills the form only when the owner says so. Food types are added; ones already ticked stay ticked. */
+function useSuggestion(prefix) {
+  const s = suggestions[prefix];
+  if (!s?.recognised) return;
+  $(`#${prefix}Name`).value = s.name;
+  $(`#${prefix}Description`).value = s.description;
+  for (const tag of s.tags) {
+    const box = $(`#${prefix}Tags input[value="${tag}"]`);
+    if (box) box.checked = true;
+  }
+  $(`#${prefix}Suggestion`).innerHTML = `<p class="ai-status">${icon('check')}Filled in. Check the details and edit them before saving.</p>`;
+  $(`#${prefix}Name`).focus();
 }
 
 async function uploadPhoto(path, file) {

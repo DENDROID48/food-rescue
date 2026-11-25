@@ -276,6 +276,17 @@
     </div>
   </section>
 
+  <section id="view-impact" class="view" aria-labelledby="impactHeading" hidden>
+    <div class="dash-head">
+      <div>
+        <span class="eyebrow">Your impact</span>
+        <h1 id="impactHeading" tabindex="-1">My impact</h1>
+        <p>Everything here counts food you actually collected.</p>
+      </div>
+    </div>
+    <div id="impactBody" aria-busy="true"></div>
+  </section>
+
   <!-- Store owner -->
   <section id="view-store" class="view" aria-labelledby="storeTitle" hidden>
     <div class="dash-head">
@@ -455,11 +466,13 @@
               <div class="dropzone-actions">
                 <button type="button" class="btn btn-sm" id="itemClearPhoto" hidden>Undo photo change</button>
                 <button type="button" class="btn btn-sm btn-danger" id="itemRemovePhoto" hidden>Remove current photo</button>
+                <button type="button" class="btn btn-sm" id="itemSuggest" hidden><svg aria-hidden="true"><use href="#i-spark"/></svg><span>Suggest details</span></button>
               </div>
             </div>
             <input type="file" id="itemPhotoInput" accept="image/jpeg,image/png,image/webp" aria-label="Choose a photo">
           </div>
           <p class="field-error" id="itemPhotoError"></p>
+          <div class="ai-suggest" id="itemSuggestion" aria-live="polite" hidden></div>
         </div>
         <div class="field span-2">
           <label class="field-label" for="itemName">Name</label>
@@ -815,11 +828,13 @@
               <div class="dropzone-actions">
                 <button type="button" class="btn btn-sm" id="tplClearPhoto" hidden>Undo photo change</button>
                 <button type="button" class="btn btn-sm btn-danger" id="tplRemovePhoto" hidden>Remove current photo</button>
+                <button type="button" class="btn btn-sm" id="tplSuggest" hidden><svg aria-hidden="true"><use href="#i-spark"/></svg><span>Suggest details</span></button>
               </div>
             </div>
             <input type="file" id="tplPhotoInput" accept="image/jpeg,image/png,image/webp" aria-label="Choose a product photo">
           </div>
           <p class="field-error" id="tplPhotoError"></p>
+          <div class="ai-suggest" id="tplSuggestion" aria-live="polite" hidden></div>
         </div>
         <fieldset class="role-choice span-2">
           <legend>Type</legend>

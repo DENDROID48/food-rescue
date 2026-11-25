@@ -15,6 +15,7 @@ npm run drops        # Autopilot set-up sheet, Rescue Drops, drop alerts
 npm run radar        # Rescue Radar picks, favourites, quiet hours
 npm run insights     # Smart Analytics: chart, forecast, CSV export
 npm run photos       # photo upload saved as a file, distances
+npm run ai-impact    # photo suggestions (needs internet for the image model), My impact page
 ```
 
 Each script prints `PASS` or `FAIL` per check and saves screenshots in `screenshots/`.

@@ -39,6 +39,11 @@ foodrescue:
   # How often the daily-digest job looks for customers whose digest time has come.
   digest-job-delay-ms: 300000
 
+  # Streaks, achievements and the community challenge, bound to GamificationProperties.
+  gamification:
+    # Items the whole community tries to rescue each month (the challenge on the Impact page).
+    monthly-challenge-units: 400
+
   # Uploaded photos are saved as files here, bound to UploadProperties. Relative to the folder the
   # program is started from; set FOODRESCUE_UPLOADS_DIR to keep them somewhere else.
   uploads:

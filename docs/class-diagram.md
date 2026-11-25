@@ -158,6 +158,20 @@ classDiagram
         VEGAN
         +isDietary() boolean
     }
+    class Achievement {
+        <<enumeration>>
+        FIRST_RESCUE
+        REGULAR
+        HERO
+        FIVE_KG
+        TWENTY_FIVE_KG
+        SMART_SAVER
+        LOCAL_EXPLORER
+        DROP_CATCHER
+        STEADY_STREAK
+        +metric() Metric
+        +target() long
+    }
     class PhotoFolder {
         <<enumeration>>
         FOOD_ITEMS
@@ -190,6 +204,14 @@ classDiagram
     class AnalyticsService {
         +insights(Long ownerId, Long storeId, int days) StoreInsights
         +exportCsv(Long ownerId, Long storeId, int days, Writer out)
+    }
+    class GamificationService {
+        +impact(Long userId) ImpactResponse
+        ~compute(List~Rescue~ rescues, ZoneId zone, LocalDate today, long community, long target) ImpactResponse$
+    }
+    class ListingSuggestionService {
+        ~Map FOODS$
+        +suggest(ListingSuggestionRequest request) ListingSuggestion
     }
 
     %% ---------------- Exceptions ----------------
@@ -232,6 +254,9 @@ classDiagram
     FoodItemPhotoService --> PhotoStorage
     FilePhotoStorage ..> PhotoFolder
     AnalyticsService ..> Order : JDBC queries
+    GamificationService ..> Order : collected orders
+    GamificationService ..> Achievement : checks each
+    ListingSuggestionService ..> FoodTag : suggests (never dietary)
 
     RuntimeException <|-- BusinessRuleException
     RuntimeException <|-- ResourceNotFoundException
@@ -253,4 +278,5 @@ classDiagram
 
 **Collections:** `Set<FoodTag>` (an `EnumSet`) in `FoodItem`, `ProductTemplate` and `RadarProfile`;
 `List<...>` results from the services; the address cache `Map<String, List<PlaceResponse>>` in
-`GeocodingService`.
+`GeocodingService`; the label table `Map<String, Food>` in `ListingSuggestionService`; the
+`EnumMap<Achievement, LocalDate>` of unlock days in `GamificationService`.

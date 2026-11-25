@@ -93,6 +93,45 @@ class ApiIntegrationTest {
     // ---------- authentication ----------
 
     @Test
+    void customerSeesTheirImpactStreakAchievementsAndChallenge() throws Exception {
+        String student = login("student@example.com");
+        mvc.perform(get("/api/v1/me/impact").header("Authorization", "Bearer " + student))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rescues").value(org.hamcrest.Matchers.greaterThan(0)))
+                .andExpect(jsonPath("$.kgRescued").value(org.hamcrest.Matchers.greaterThan(0.0)))
+                .andExpect(jsonPath("$.achievements.length()").value(9))
+                .andExpect(jsonPath("$.achievements[0].code").value("FIRST_RESCUE"))
+                .andExpect(jsonPath("$.achievements[0].unlocked").value(true))
+                .andExpect(jsonPath("$.challenge.targetUnits").value(400));
+
+        mvc.perform(get("/api/v1/me/impact").header("Authorization", "Bearer " + login("owner@example.com")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void ownerGetsAListingSuggestionFromImageLabelsButNothingIsSaved() throws Exception {
+        String owner = login("owner@example.com");
+        Map<String, Object> body = Map.of("name", "", "labels", java.util.List.of(
+                Map.of("className", "French loaf", "probability", 0.78), Map.of("className", "plate", "probability", 0.12)));
+        mvc.perform(post("/api/v1/stores/listing-suggestions").header("Authorization", "Bearer " + owner)
+                        .contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.recognised").value(true))
+                .andExpect(jsonPath("$.name").value("Bread"))
+                .andExpect(jsonPath("$.tags[0]").value("BAKERY"))
+                .andExpect(jsonPath("$.seen[1]").value("Plate (12%)"));
+
+        // Customers cannot use it, and the labels are validated.
+        mvc.perform(post("/api/v1/stores/listing-suggestions").header("Authorization", "Bearer " + login("student@example.com"))
+                        .contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(body)))
+                .andExpect(status().isForbidden());
+        Map<String, Object> bad = Map.of("labels", java.util.List.of(Map.of("className", "French loaf", "probability", 1.5)));
+        mvc.perform(post("/api/v1/stores/listing-suggestions").header("Authorization", "Bearer " + owner)
+                        .contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(bad)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void settingsTellThePageTheReservationLimitWithoutSigningIn() throws Exception {
         mvc.perform(get("/api/v1/settings"))
                 .andExpect(status().isOk())

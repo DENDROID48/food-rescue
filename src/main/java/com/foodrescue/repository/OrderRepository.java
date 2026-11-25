@@ -97,4 +97,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     /** Reservations that were never collected before their deadline (input for the cleanup job). */
     List<Order> findByStatusAndPickupDeadlineBefore(OrderStatus status, Instant deadline);
+
+    /** A customer's collected orders, oldest first, with the offer and shop (input for the Impact page). */
+    @EntityGraph(attributePaths = {"foodItem", "foodItem.store"})
+    List<Order> findByUserIdAndStatusOrderByPickedUpAtAsc(Long userId, OrderStatus status);
+
+    /** Units every customer together collected in a time range (the community challenge). */
+    @Query("""
+            select coalesce(sum(o.quantity), 0) from Order o
+            where o.status = com.foodrescue.domain.OrderStatus.PICKED_UP and o.pickedUpAt >= :from and o.pickedUpAt < :to
+            """)
+    long sumCollectedBetween(@Param("from") Instant from, @Param("to") Instant to);
 }
