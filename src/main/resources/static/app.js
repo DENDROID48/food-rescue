@@ -2707,13 +2707,14 @@ document.addEventListener('click', (e) => {
 document.addEventListener('load', (e) => {
   if (e.target.tagName === 'IMG' && e.target.closest('.photo-frame')) e.target.classList.add('is-loaded');
 }, true);
-document.addEventListener('error', (e) => {
-  const img = e.target;
-  if (img.tagName !== 'IMG') return;
+function replaceBrokenImage(img) {
   const frame = img.closest('.photo-frame');
   if (frame) { frame.querySelector('.photo-tag')?.remove(); img.replaceWith(document.createRange().createContextualFragment(fallbackTile('Photo unavailable'))); }
-  else if (img.closest('.hero-photo, .auth-visual')) img.remove();
-}, true);
+  else if (img.closest('.hero-photo, .auth-visual')) { img.parentElement.querySelector('.photo-tag')?.remove(); img.remove(); }
+}
+document.addEventListener('error', (e) => { if (e.target.tagName === 'IMG') replaceBrokenImage(e.target); }, true);
+// Images written in index.html can fail before this deferred script runs, so check those too.
+for (const img of [...document.images]) if (img.complete && !img.naturalWidth && img.getAttribute('src')) replaceBrokenImage(img);
 
 $('#tabLogin').addEventListener('click', () => setAuthTab('login'));
 $('#tabRegister').addEventListener('click', () => setAuthTab('register'));

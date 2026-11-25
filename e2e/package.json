@@ -1,0 +1,16 @@
+{
+  "name": "food-rescue-browser-tests",
+  "private": true,
+  "description": "Browser checks for the Food Rescue web client. Needs the app running on localhost:8080 with fresh dev data.",
+  "scripts": {
+    "e2e": "node e2e.js",
+    "drops": "node drops.js",
+    "radar": "node radar.js",
+    "insights": "node insights.js",
+    "photos": "node today-changes.js"
+  },
+  "devDependencies": {
+    "axe-core": "4.10.2",
+    "playwright": "1.49.1"
+  }
+}

@@ -27,6 +27,8 @@ mvn spring-boot:run      # http://localhost:8080, in-memory database with demo d
 mvn test                 # 144 unit and integration tests
 ```
 
+Browser tests that drive the real page are in [`e2e/`](e2e/README.md).
+
 Settings come from `src/main/resources/application.yml`. Any of them can be changed for one run
 with a program argument, for example `--server.port=9090` or
 `--foodrescue.max-quantity-per-reservation=2`.
