@@ -69,7 +69,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/food-items/nearby", "/api/v1/food-items/*/photo",
                                 "/api/v1/geocode", "/api/v1/geocode/**", "/api/v1/template-photos/*",
-                                "/api/v1/push/public-key").permitAll()
+                                "/api/v1/push/public-key", "/api/v1/settings").permitAll()
                         .requestMatchers("/api/v1/food-items/*/reservations", "/api/v1/food-items/*/free-claims",
                                 "/api/v1/orders/**", "/api/v1/users/me/eligibility-request", "/api/v1/me/**").hasRole("CONSUMER")
                         .requestMatchers("/api/v1/stores/**").hasRole("STORE_OWNER")

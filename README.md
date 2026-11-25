@@ -24,7 +24,7 @@ OpenStreetMap; without them, food search still works as a list.
 
 ```bash
 mvn spring-boot:run      # http://localhost:8080, in-memory database with demo data
-mvn test                 # 143 unit and integration tests
+mvn test                 # 144 unit and integration tests
 ```
 
 Settings come from `src/main/resources/application.yml`. Any of them can be changed for one run
@@ -275,6 +275,7 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 | `GET /api/v1/stores/{storeId}/insights/export.csv?days=28` | store owner | One line per ended offer |
 | `GET /api/v1/admin/insights` | admin | Platform totals, quiet stores, stores needing attention |
 | `GET /api/v1/push/public-key` | anyone | VAPID key for subscribing a browser |
+| `GET /api/v1/settings` | anyone | rules the page shows, read from configuration (max units per reservation) |
 | `POST/DELETE /api/v1/me/push-subscriptions` | consumer | Save or remove this browser's push subscription |
 | `POST /api/v1/me/push-subscriptions/test` | consumer | Send a test push to this customer's browsers |
 | `GET /api/v1/stores/{storeId}/orders?status=RESERVED` | store owner | Reservations to prepare |

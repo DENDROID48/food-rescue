@@ -13,8 +13,8 @@ const TOKEN_KEY = 'foodrescue.token';
 const LOCATION_KEY = 'foodrescue.location';
 const PREFS_KEY = 'foodrescue.prefs';
 const DEFAULT_LOCATION = { lat: 45.7537, lng: 21.2257, label: 'Timișoara center' };
-/** Mirrors foodrescue.max-quantity-per-reservation in application.yml. The server enforces it. */
-const MAX_PER_RESERVATION = 5;
+/** foodrescue.max-quantity-per-reservation, loaded from GET /settings at start-up. The server enforces it. */
+let maxPerReservation = 5;
 /** Mirrors FoodItemPhotoService.MAX_BYTES, so people learn about a too-large photo before uploading. */
 const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -1117,7 +1117,7 @@ function openReserve(itemId, mode) {
   openDialog($('#reserveDialog'));
 }
 
-function maxQty(item) { return Math.max(1, Math.min(MAX_PER_RESERVATION, item.quantityAvailable)); }
+function maxQty(item) { return Math.max(1, Math.min(maxPerReservation, item.quantityAvailable)); }
 
 function renderReserveForm() {
   const { item, qty, mode } = reserving;
@@ -2818,5 +2818,6 @@ setInterval(() => {
 }, 30000);
 
 updateWhere();
+api('/settings').then((s) => { maxPerReservation = s.maxQuantityPerReservation; }).catch(() => {});
 token = restore(TOKEN_KEY);
 if (token) startSession(); else signOut();

@@ -93,6 +93,13 @@ class ApiIntegrationTest {
     // ---------- authentication ----------
 
     @Test
+    void settingsTellThePageTheReservationLimitWithoutSigningIn() throws Exception {
+        mvc.perform(get("/api/v1/settings"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.maxQuantityPerReservation").value(5));
+    }
+
+    @Test
     void wrongPasswordIsRejectedWithoutRevealingWhetherTheEmailExists() throws Exception {
         for (String email : new String[]{"student@example.com", "nobody@example.com"}) {
             mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON)
