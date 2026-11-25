@@ -298,7 +298,7 @@ async function signIn(auth) {
 async function signOut() {
   // A shared phone or computer must not keep receiving the previous person's alerts.
   if (me?.role === 'CONSUMER') await Promise.race([releasePush(), new Promise((r) => setTimeout(r, 1500))]);
-  token = null; me = null; currentStoreId = null; myOrders = []; nearbyItems = [];
+  token = null; me = null; currentStoreId = null; myOrders = []; historyShown = HISTORY_PAGE; nearbyItems = [];
   radar = null; favStores = new Set(); favProducts = new Set(); radarProfile = null;
   $('#forYou').hidden = true;
   stopInbox();
@@ -1274,6 +1274,9 @@ async function copyCode(button) {
 // ---------- customer: orders ----------
 
 let myOrders = [];
+/** Past orders come in pages, so a long history doesn't make the page endless. */
+const HISTORY_PAGE = 10;
+let historyShown = HISTORY_PAGE;
 const STATUS = {
   RESERVED: ['Reserved', ''],
   PICKED_UP: ['Collected', ''],
@@ -1370,6 +1373,7 @@ function renderImpact(r) {
 function renderOrders() {
   const active = myOrders.filter((o) => o.status === 'RESERVED').sort((a, b) => new Date(a.pickupDeadline) - new Date(b.pickupDeadline));
   const past = myOrders.filter((o) => o.status !== 'RESERVED');
+  $('#view-shop .hero').classList.toggle('is-compact', myOrders.length > 0);
   for (const dot of $$('[data-orders-dot]')) { dot.textContent = active.length; dot.hidden = !active.length; }
 
   $('#activeOrders').innerHTML = active.length ? active.map((o, idx) => {
@@ -1398,14 +1402,25 @@ function renderOrders() {
       <button class="btn btn-primary" type="button" data-view="shop">${icon('search')}<span>Find food nearby</span></button></div>`;
 
   $('#historyBlock').hidden = !past.length;
-  $('#orderHistory').innerHTML = past.map((o) => {
+  const older = past.length - historyShown;
+  $('#orderHistory').innerHTML = past.slice(0, historyShown).map((o) => {
     const [text, cls] = STATUS[o.status];
     return `<div class="history-row">
       <div><strong>${esc(o.foodItemName)} × ${o.quantity}</strong><p class="order-meta">${esc(o.storeName)} · ${fmtTime(o.pickupDeadline)}</p></div>
       <span class="history-price">${isFree(o.totalPrice) ? 'Free' : money(o.totalPrice)}</span>
       <span class="badge ${cls}">${text}</span>
     </div>`;
-  }).join('');
+  }).join('') + (older > 0 ? `<div class="history-more"><button class="btn btn-sm" type="button" id="historyMore">
+      Show older orders (${older})</button></div>` : '');
+}
+
+function showMoreHistory() {
+  const firstNew = historyShown;
+  historyShown += HISTORY_PAGE;
+  renderOrders();
+  // Keep keyboard users in place: focus the first newly shown order.
+  const row = $$('#orderHistory .history-row')[firstNew];
+  if (row) { row.tabIndex = -1; row.focus(); }
 }
 
 async function cancelOrder(orderId) {
@@ -2759,7 +2774,7 @@ async function loadAdmin() {
   $('#eligibilityRequests').innerHTML = adminRequests.length ? adminRequests.map((u) => `
     <div class="person-row">
       <span class="avatar" aria-hidden="true">${esc(initials(u.fullName))}</span>
-      <div class="row-text"><strong>${esc(u.fullName)}</strong><span>${esc(u.email)} · member since ${new Date(u.createdAt).toLocaleDateString()}</span></div>
+      <div class="row-text"><strong>${esc(u.fullName)}</strong><span>${esc(u.email)} · member since ${new Date(u.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
       <div class="row-actions">
         <button class="btn btn-sm btn-danger" type="button" data-reject="${u.id}">Reject</button>
         <button class="btn btn-sm btn-primary" type="button" data-approve="${u.id}">${icon('check')}<span>Approve</span></button>
@@ -2906,6 +2921,7 @@ document.addEventListener('click', (e) => {
   else if (d.reactivate) setStoreActive(Number(d.reactivate), true, t);
   else if (t.id === 'requestEligibility') requestEligibility(t);
   else if (t.id === 'hideEligibility') hideEligibility();
+  else if (t.id === 'historyMore') showMoreHistory();
 });
 
 // Photos fade in once loaded; a broken image becomes the branded tile instead.

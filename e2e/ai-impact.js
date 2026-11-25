@@ -214,6 +214,17 @@ async function impactFigures(page) {
     await noOverflow(ph, 'phone impact');
     await shot(ph, '94-impact-phone', true);
   });
+  await step(ph, 'returning customer on a phone: short heading, and past orders come 10 at a time', async () => {
+    await ph.click('#bottomNav [data-view="shop"]');
+    expect(await ph.locator('#view-shop .hero.is-compact').count() === 1, 'hero is not compact');
+    expect(await ph.isHidden('#heroLocate'), 'big welcome buttons still shown');
+    await ph.click('#bottomNav [data-view="orders"]');
+    await ph.waitForSelector('#historyMore');
+    expect(await ph.locator('#orderHistory .history-row').count() === 10, 'not 10 past orders');
+    await ph.click('#historyMore');
+    expect(await ph.locator('#orderHistory .history-row').count() === 20, 'not 20 after "Show older orders"');
+    await noOverflow(ph, 'phone orders');
+  });
 
   const owner = await newPage(1280, 900);
   await step(owner, 'impact is for customers: shop owners do not get the page', async () => {

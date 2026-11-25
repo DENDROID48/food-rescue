@@ -325,6 +325,16 @@ main { padding: var(--s-6) 0 var(--s-16); flex: 1 0 auto; }
 .hero-note-icon svg { width: 22px; height: 22px; }
 .hero-note strong { display: block; font: 600 var(--text-lg)/1.15 var(--font-display); }
 .hero-note span { font-size: var(--text-xs); color: var(--muted); }
+/* Customers who have rescued food before know how it works: a short heading, then straight to the food. */
+.hero.is-compact { grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-4); align-items: end; padding: var(--s-4) 0 var(--s-5); }
+.hero.is-compact h1 { font-size: clamp(26px, 4.4vw, 40px); }
+.hero.is-compact .hero-copy > p, .hero.is-compact .hero-actions, .hero.is-compact .hero-steps, .hero.is-compact .hero-photo { display: none; }
+.hero.is-compact .hero-media { max-width: none; }
+.hero.is-compact .hero-note { position: static; box-shadow: none; border: 1px solid var(--line); }
+@media (max-width: 720px) {
+  .hero.is-compact { grid-template-columns: 1fr; gap: var(--s-3); padding-top: var(--s-2); }
+  .hero.is-compact .hero-note { max-width: none; }
+}
 
 .notice { display: flex; gap: var(--s-4); align-items: center; padding: var(--s-4) var(--s-5); border-radius: var(--r-lg); background: var(--sun-100); border: 1px solid #f2e0b3; margin-bottom: var(--s-6); }
 .notice-icon { width: 42px; height: 42px; border-radius: 50%; background: var(--paper); color: var(--sun-ink); display: grid; place-items: center; flex-shrink: 0; }
@@ -526,6 +536,14 @@ main { padding: var(--s-6) 0 var(--s-16); flex: 1 0 auto; }
 .template-body p { font-size: var(--text-sm); color: var(--muted); }
 .template-actions { display: flex; gap: var(--s-2); margin-top: var(--s-2); }
 .template-actions .btn:first-child { flex: 1; }
+/* Phones: a compact row (photo on the left) so a few products don't fill several screens. */
+@media (max-width: 720px) {
+  .template-card { flex-direction: row; align-items: stretch; }
+  .template-card .photo-frame { width: 92px; aspect-ratio: 1; flex-shrink: 0; margin: var(--s-3) 0 var(--s-3) var(--s-3); border-radius: var(--r-md); align-self: flex-start; }
+  .template-card .photo-fallback b { display: none; }
+  .template-body { padding: var(--s-3) var(--s-3) var(--s-3) var(--s-4); }
+}
+.history-more { display: flex; justify-content: center; padding: var(--s-4) 0 var(--s-2); }
 
 .setup-list { display: grid; gap: var(--s-3); }
 .setup-row { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: var(--s-3) var(--s-4); align-items: center; padding: var(--s-3); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper); transition: border-color var(--t-fast), box-shadow var(--t-fast), background-color var(--t-fast); }
@@ -952,7 +970,8 @@ dialog.modal::backdrop { background: rgba(13, 30, 23, .5); backdrop-filter: blur
   .order-side { justify-items: stretch; text-align: left; }
   .order-side .code-box { justify-items: start; }
   .order-side-actions .btn { flex: 1; }
-  .history-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .history-row { grid-template-columns: minmax(0, 1fr) auto; gap: 6px var(--s-4); padding: 12px var(--s-4); }
+  .history-row > div { grid-row: span 2; }
   .history-row .history-price { grid-column: 2; grid-row: 1; }
   .history-row .badge { grid-column: 2; grid-row: 2; justify-self: end; }
   .stats { gap: var(--s-3); }
