@@ -332,6 +332,7 @@ main { padding: var(--s-6) 0 var(--s-16); flex: 1 0 auto; }
 .notice-text { flex: 1; min-width: 0; }
 .notice-text strong { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-weight: 600; }
 .notice-text p { font-size: var(--text-sm); color: #5c4a22; margin-top: 2px; }
+.notice-actions { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
 .notice.is-verified { background: var(--sage-50); border-color: var(--sage-200); }
 .notice.is-verified .notice-icon { color: var(--forest-600); }
 .notice.is-verified .notice-text p { color: var(--ink-2); }
@@ -935,7 +936,8 @@ dialog.modal::backdrop { background: rgba(13, 30, 23, .5); backdrop-filter: blur
   .hero-steps { display: none; }
   .hero-photo { aspect-ratio: 16 / 9; }
   .notice { flex-wrap: wrap; align-items: flex-start; }
-  .notice > .btn { flex-basis: 100%; }
+  .notice > .btn, .notice-actions { flex-basis: 100%; }
+  .notice-actions .btn { width: 100%; }
   .searchbar { padding: var(--s-4); }
   .searchbar-row { grid-template-columns: 1fr 1fr; }
   .searchbar-row .place-field { grid-column: 1 / -1; }

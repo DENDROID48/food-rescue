@@ -329,7 +329,9 @@ async function startSession() {
   $('#inboxBtn').hidden = me.role !== 'CONSUMER';
   if (me.role === 'CONSUMER') {
     initShopMap(); renderEligibility(); search(); loadMyOrders(); startInbox(); syncPush();
-    api('/me/radar-profile').then((p) => { radarProfile = p; }).catch(() => {});
+    api('/me/radar-profile').then((p) => { radarProfile = p; })
+      .catch(() => { radarProfile = { freeItemsOffer: true }; }) // can't tell, so show it as before
+      .finally(() => { if (me?.role === 'CONSUMER') renderEligibility(); });
     openLinkedAlert();
   }
   if (me.role === 'STORE_OWNER') loadStores();
@@ -673,9 +675,16 @@ function toggleMap() {
   if (show) { shopMap?.invalidateSize(); if (radiusCircle) shopMap.fitBounds(radiusCircle.getBounds(), { padding: [10, 10] }); }
 }
 
+/** Statuses where the box asks the customer to get verified. They can stop it asking ("Don't ask again"). */
+const ASKS_FOR_VERIFICATION = ['NOT_REQUESTED', 'REJECTED'];
+
 function renderEligibility() {
   const box = $('#eligibilityBox');
   const status = me.eligibilityStatus;
+  $('#freeOnly').hidden = !me.freeClaimEligible;
+  $('#freeOfferBlock').hidden = !ASKS_FOR_VERIFICATION.includes(status);
+  // Wait for the profile before asking, so a dismissed box doesn't flash up and vanish.
+  if (ASKS_FOR_VERIFICATION.includes(status) && !radarProfile?.freeItemsOffer) { box.hidden = true; return; }
   const text = {
     NOT_REQUESTED: ['Going through a hard time?', 'Verified people can claim one donated item for free each day. Only the outcome of the check is stored, never the reason.', 'Ask to be verified'],
     REJECTED: ['Free items', 'Your last verification request was not approved. You can ask again.', 'Ask again'],
@@ -686,9 +695,10 @@ function renderEligibility() {
   box.className = 'notice' + (status === 'APPROVED' ? ' is-verified' : '');
   box.innerHTML = `<span class="notice-icon">${icon(status === 'APPROVED' ? 'shield' : 'heart')}</span>
     <div class="notice-text"><strong>${text[0]} ${badge}</strong><p>${text[1]}</p></div>
-    ${text[2] ? `<button class="btn btn-sm" type="button" id="requestEligibility">${text[2]}</button>` : ''}`;
+    ${text[2] ? `<div class="notice-actions">
+      <button class="btn btn-sm" type="button" id="requestEligibility">${text[2]}</button>
+      <button class="link-btn" type="button" id="hideEligibility">Don't ask again</button></div>` : ''}`;
   box.hidden = false;
-  $('#freeOnly').hidden = !me.freeClaimEligible;
 }
 
 async function requestEligibility(button) {
@@ -699,6 +709,19 @@ async function requestEligibility(button) {
       renderEligibility();
     } catch (e) { fail(e); }
   });
+}
+
+/** Turns the offer to get verified off ("Don't ask again") or back on. */
+async function setFreeItemsOffer(show) {
+  radarProfile = await api('/me/free-items-offer', { method: 'PUT', body: { show } });
+  renderEligibility();
+}
+
+async function hideEligibility() {
+  try {
+    await setFreeItemsOffer(false);
+    toast('We won\'t ask again. You can turn it back on in Alerts → Settings.');
+  } catch (e) { fail(e); }
 }
 
 // ---------- customer: Rescue Drop alerts ----------
@@ -808,6 +831,7 @@ async function loadSettings() {
     if (profile.quietStart) { $('#quietStart').value = hhmm(profile.quietStart); $('#quietEnd').value = hhmm(profile.quietEnd); }
     $('#personalised').checked = profile.personalised;
     $('#pickupReminders').checked = profile.pickupReminders;
+    $('#freeItemsOffer').checked = profile.freeItemsOffer;
     tagChips($('#interestChips'), profile.interests, 'interest');
     $('#throttledNote').hidden = !profile.throttled;
     renderFavList(favs);
@@ -842,8 +866,8 @@ async function saveAlerts(event) {
           notifyFavourites: $('#notifyFavourites').checked,
           quietStart: quiet ? $('#quietStart').value : null, quietEnd: quiet ? $('#quietEnd').value : null,
           digestTime: digest ? $('#digestTime').value : null, timeZone: BROWSER_TZ || 'UTC',
-          pickupReminders: $('#pickupReminders').checked,
-        } }).then((p) => { radarProfile = p; }),
+          pickupReminders: $('#pickupReminders').checked, freeItemsOffer: $('#freeItemsOffer').checked,
+        } }).then((p) => { radarProfile = p; renderEligibility(); }),
       ]);
       toast('Settings saved.');
       if (!pushOn && pushSupported() && Notification.permission === 'default'
@@ -2881,6 +2905,7 @@ document.addEventListener('click', (e) => {
   else if (d.suspend) setStoreActive(Number(d.suspend), false, t);
   else if (d.reactivate) setStoreActive(Number(d.reactivate), true, t);
   else if (t.id === 'requestEligibility') requestEligibility(t);
+  else if (t.id === 'hideEligibility') hideEligibility();
 });
 
 // Photos fade in once loaded; a broken image becomes the branded tile instead.

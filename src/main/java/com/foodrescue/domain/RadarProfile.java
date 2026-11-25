@@ -42,6 +42,10 @@ public class RadarProfile {
     @Column(nullable = false)
     private boolean pickupReminders = true;
 
+    /** Show the offer to get verified for free items on Browse. The customer can turn it off ("don't ask again"). */
+    @Column(nullable = false)
+    private boolean freeItemsOffer = true;
+
     /** No push messages between these times (alerts still land in the inbox). May span midnight. */
     private LocalTime quietStart;
     private LocalTime quietEnd;

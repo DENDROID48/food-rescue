@@ -24,7 +24,7 @@ OpenStreetMap; without them, food search still works as a list.
 
 ```bash
 mvn spring-boot:run      # http://localhost:8080, in-memory database with demo data
-mvn test                 # 157 unit and integration tests
+mvn test                 # 158 unit and integration tests
 ```
 
 Browser tests that drive the real page are in [`e2e/`](e2e/README.md).
@@ -304,6 +304,7 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 | `PUT/DELETE /api/v1/me/favourites/stores/{storeId}` | consumer | Follow or unfollow a shop |
 | `PUT/DELETE /api/v1/me/favourites/products/{templateId}` | consumer | Add or remove a favourite product |
 | `GET/PUT /api/v1/me/radar-profile` | consumer | Interests, favourite alerts, quiet hours, daily summary, personalisation |
+| `PUT /api/v1/me/free-items-offer` | consumer | `{"show": false}` stops the offer to get verified for free items ("Don't ask again"); `true` brings it back |
 | `GET /api/v1/stores/{storeId}/insights?days=28` | store owner | Results, forecast and recommendations (7–90 days) |
 | `GET /api/v1/stores/{storeId}/insights/export.csv?days=28` | store owner | One line per ended offer |
 | `GET /api/v1/admin/insights` | admin | Platform totals, quiet stores, stores needing attention |

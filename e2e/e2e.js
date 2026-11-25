@@ -248,8 +248,29 @@ async function openReservable(page, min = 2) {
     expect((await c.textContent('#mainNav [data-orders-dot]')).trim() === '1', 'orders badge not 1');
   });
   await axe(c, 'my orders');
-  await step(c, 'customer: ask to be verified', async () => {
+  await step(c, 'customer: "don\'t ask again" hides the verification offer, even after a reload', async () => {
     await c.click('#mainNav [data-view="shop"]');
+    await c.click('#hideEligibility');
+    await c.waitForSelector('#eligibilityBox', { state: 'hidden' });
+    await c.waitForSelector('.toast:has-text("Alerts → Settings")');
+    await c.reload();
+    await c.waitForSelector('#view-shop:not([hidden])');
+    await c.waitForTimeout(800);
+    expect(await c.isHidden('#eligibilityBox'), 'offer came back after reload');
+  });
+  await step(c, 'customer: the offer can be turned back on in Settings', async () => {
+    await c.click('#inboxBtn');
+    await c.click('#inboxTabSettings');
+    await c.waitForSelector('#freeOfferBlock:not([hidden])');
+    await c.waitForFunction(() => !document.querySelector('#freeItemsOffer').checked, null, { timeout: 5000 })
+      .catch(() => { throw new Error('setting should be off'); });
+    await c.check('#freeItemsOffer');
+    await c.click('#alertsForm [type=submit]');
+    await c.waitForSelector('.toast:has-text("Settings saved.")');
+    await c.click('#inboxDialog [data-close]');
+    await c.waitForSelector('#eligibilityBox:not([hidden]) #requestEligibility');
+  });
+  await step(c, 'customer: ask to be verified', async () => {
     await c.click('#requestEligibility');
     await c.waitForSelector('#eligibilityBox:has-text("Pending review")');
   });

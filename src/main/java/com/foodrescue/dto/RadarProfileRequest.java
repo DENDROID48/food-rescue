@@ -22,5 +22,7 @@ public record RadarProfileRequest(
         LocalTime digestTime,
         @NotBlank @Size(max = 40) String timeZone,
         /** Reminder before a pickup closes; null keeps the current setting (on by default). */
-        Boolean pickupReminders) {
+        Boolean pickupReminders,
+        /** Show the offer to get verified for free items; null keeps the current setting (on by default). */
+        Boolean freeItemsOffer) {
 }

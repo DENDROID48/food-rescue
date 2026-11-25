@@ -163,6 +163,16 @@ public class RadarService {
         p.setDigestTime(request.digestTime());
         p.setTimeZone(zone);
         if (request.pickupReminders() != null) p.setPickupReminders(request.pickupReminders());
+        if (request.freeItemsOffer() != null) p.setFreeItemsOffer(request.freeItemsOffer());
+        p.setUpdatedAt(clock.instant());
+        return toResponse(profileRepository.save(p));
+    }
+
+    /** "Don't ask again" on the free-items offer, or turning it back on, without touching the other settings. */
+    @Transactional
+    public RadarProfileResponse setFreeItemsOffer(Long userId, boolean show) {
+        RadarProfile p = profileOf(userId);
+        p.setFreeItemsOffer(show);
         p.setUpdatedAt(clock.instant());
         return toResponse(profileRepository.save(p));
     }
@@ -170,7 +180,7 @@ public class RadarService {
     private RadarProfileResponse toResponse(RadarProfile p) {
         return new RadarProfileResponse(p.isPersonalised(), p.getInterests(), p.isNotifyFavourites(), p.getQuietStart(),
                 p.getQuietEnd(), p.getDigestTime(), p.getTimeZone(), throttled(List.of(p.getUserId())).contains(p.getUserId()),
-                pushSubscriptionRepository.countByUserId(p.getUserId()), p.isPickupReminders());
+                pushSubscriptionRepository.countByUserId(p.getUserId()), p.isPickupReminders(), p.isFreeItemsOffer());
     }
 
     /**

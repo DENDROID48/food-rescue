@@ -1,5 +1,6 @@
 package com.foodrescue.web;
 
+import com.foodrescue.exception.BusinessRuleException;
 import com.foodrescue.dto.FavouritesResponse;
 import com.foodrescue.dto.PushSubscriptionRequest;
 import com.foodrescue.dto.RadarProfileRequest;
@@ -81,6 +82,14 @@ public class RadarController {
     @PutMapping("/me/radar-profile")
     public RadarProfileResponse saveProfile(@CurrentUser Long userId, @Valid @RequestBody RadarProfileRequest request) {
         return radarService.saveProfile(userId, request);
+    }
+
+    /** PUT /api/v1/me/free-items-offer   {"show": false} hides the offer to get verified; true brings it back. */
+    @PutMapping("/me/free-items-offer")
+    public RadarProfileResponse freeItemsOffer(@CurrentUser Long userId, @RequestBody Map<String, Boolean> body) {
+        Boolean show = body.get("show");
+        if (show == null) throw new BusinessRuleException(HttpStatus.BAD_REQUEST, "Say whether to show the offer");
+        return radarService.setFreeItemsOffer(userId, show);
     }
 
     // ---------- Web Push ----------

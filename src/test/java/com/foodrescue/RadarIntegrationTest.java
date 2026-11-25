@@ -344,6 +344,24 @@ class RadarIntegrationTest {
     }
 
     @Test
+    void theOfferToGetVerifiedCanBeTurnedOffAndBackOn() throws Exception {
+        String customer = register("CONSUMER");
+        assertThat(read(call(get("/api/v1/me/radar-profile"), customer, null)).get("freeItemsOffer").asBoolean()).isTrue();
+
+        call(put("/api/v1/me/free-items-offer"), customer, Map.of("show", false))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.freeItemsOffer").value(false));
+        // Saving the other settings without the field keeps the choice.
+        call(put("/api/v1/me/radar-profile"), customer, Map.of("personalised", true, "notifyFavourites", false,
+                "timeZone", "Europe/Bucharest")).andExpect(jsonPath("$.freeItemsOffer").value(false));
+        // Settings can turn it back on.
+        call(put("/api/v1/me/radar-profile"), customer, Map.of("personalised", true, "notifyFavourites", false,
+                "timeZone", "Europe/Bucharest", "freeItemsOffer", true)).andExpect(jsonPath("$.freeItemsOffer").value(true));
+
+        call(put("/api/v1/me/free-items-offer"), customer, Map.of()).andExpect(status().isBadRequest());
+        call(put("/api/v1/me/free-items-offer"), register("STORE_OWNER"), Map.of("show", false)).andExpect(status().isForbidden());
+    }
+
+    @Test
     void pushSubscriptionsAcceptOnlyRealPushServices() throws Exception {
         String customer = register("CONSUMER");
         mvc.perform(get("/api/v1/push/public-key")).andExpect(status().isOk())
