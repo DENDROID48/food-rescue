@@ -46,6 +46,7 @@ public class FoodItemService {
     private final UserRepository userRepository;
     private final FoodRescueProperties properties;
     private final Clock clock;
+    private final NoShowService noShows;
 
     /** SecureRandom (not Random) because pickup codes should not be guessable. */
     private final SecureRandom secureRandom = new SecureRandom();
@@ -125,6 +126,7 @@ public class FoodItemService {
         }
 
         User user = loadUser(userId);
+        noShows.check(userId);
         FoodItem item = loadItemForUpdate(foodItemId);
         Instant now = clock.instant();
 
@@ -173,6 +175,7 @@ public class FoodItemService {
             throw new BusinessRuleException(HttpStatus.FORBIDDEN,
                     "This account has not been verified for free Pay-It-Forward claims");
         }
+        noShows.check(userId);
 
         Instant now = clock.instant();
 

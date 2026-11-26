@@ -41,6 +41,25 @@ public class AdminController {
         return adminService.decideEligibility(adminId, userId, request.approved());
     }
 
+    /** GET /api/v1/admin/users?q=ana   people whose name or email contains the text (at most 50). */
+    @GetMapping("/users")
+    public List<com.foodrescue.dto.AdminUserResponse> users(@RequestParam(defaultValue = "") String q) {
+        return adminService.listUsers(q);
+    }
+
+    /** POST /api/v1/admin/users/{userId}/block   body: {"reason": "..."} (optional, for administrators only). */
+    @PostMapping("/users/{userId}/block")
+    public com.foodrescue.dto.AdminUserResponse block(@CurrentUser Long adminId, @PathVariable Long userId,
+                                                       @Valid @RequestBody com.foodrescue.dto.BlockRequest request) {
+        return adminService.block(adminId, userId, request.reason());
+    }
+
+    /** POST /api/v1/admin/users/{userId}/unblock */
+    @PostMapping("/users/{userId}/unblock")
+    public com.foodrescue.dto.AdminUserResponse unblock(@CurrentUser Long adminId, @PathVariable Long userId) {
+        return adminService.unblock(adminId, userId);
+    }
+
     /** GET /api/v1/admin/stores   every store with its owner. */
     @GetMapping("/stores")
     public List<AdminStoreResponse> stores() {

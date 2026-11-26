@@ -14,3 +14,6 @@ target/
 
 # Uploaded photos (FilePhotoStorage)
 uploads/
+
+# Local settings with secrets (mail server password): Spring Boot reads ./config/application.yml
+/config/

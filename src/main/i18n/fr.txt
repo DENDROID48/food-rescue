@@ -1043,3 +1043,34 @@
 1063|{n} × {x} (gratuit, Pay-It-Forward)
 1064|{x} est en offre à {x} lei · retrait {x}–{x}
 1065|{x} sont en offre · retrait {x}–{x}
+1066|Les réservations sont suspendues jusqu'au {x} en raison de retraits manqués
+1067|En raison de retraits manqués, vous ne pouvez avoir qu'une réservation à la fois. Récupérez ou annulez d'abord celle en cours.
+1068|Vous ne pouvez pas bloquer votre propre compte
+1069|Les administrateurs ne peuvent pas être bloqués
+1070|Ce compte est bloqué. Si vous pensez qu'il s'agit d'une erreur, contactez-nous.
+1071|Vous avez manqué 1 retrait ces 30 derniers jours.
+1072|Vous avez manqué {n} retraits ces 30 derniers jours.
+1073|Réservations suspendues jusqu'au {x}
+1074|Une réservation à la fois jusqu'au {x}
+1075|Annulez dans Mes commandes si vous ne pouvez pas venir, pour que les produits profitent à quelqu'un d'autre.
+1076|Après {n} retraits manqués, vous ne pourrez avoir qu'une réservation à la fois, et après {n}, les réservations seront suspendues un moment.
+1077|Personnes
+1078|Trouvez un compte, consultez les retraits manqués et bloquez qui abuse de Food Rescue.
+1079|Nom ou e-mail
+1080|Affichage des 50 résultats les plus récents. Saisissez davantage du nom ou de l'e-mail pour affiner.
+1081|Bloqué
+1082|1 retrait manqué
+1083|{n} retraits manqués
+1084|· {x} · membre depuis le {x}
+1085|Débloquer
+1086|Bloquer
+1087|Personne trouvé
+1088|Vérifiez l'orthographe ou cherchez une partie de l'adresse e-mail.
+1089|Bloquer ce compte ?
+1090|Note pour les autres administrateurs
+1091|Jamais montrée à la personne.
+1092|Bloquer le compte
+1093|La personne est déconnectée partout et ne peut plus se connecter. Ses magasins sont suspendus et les clients ne les voient plus. Le déblocage lui permet de se reconnecter ; réactivez vous-même les magasins.
+1094|La personne est déconnectée partout et ne peut plus se connecter. Ses réservations en cours sont annulées et les produits sont remis en vente. Vous pouvez la débloquer à tout moment.
+1095|Compte bloqué.
+1096|Compte débloqué. La personne peut se reconnecter.

@@ -1043,3 +1043,34 @@
 1063|{n} × {x} (gratis, Pay-It-Forward)
 1064|{x} ist für {x} Lei im Angebot · Abholung {x}–{x}
 1065|{x} sind im Angebot · Abholung {x}–{x}
+1066|Reservieren ist wegen verpasster Abholungen bis {x} pausiert
+1067|Wegen verpasster Abholungen kannst du nur eine Reservierung gleichzeitig haben. Hol die bestehende zuerst ab oder storniere sie.
+1068|Du kannst dein eigenes Konto nicht sperren
+1069|Administratoren können nicht gesperrt werden
+1070|Dieses Konto ist gesperrt. Wenn du glaubst, dass das ein Fehler ist, kontaktiere uns bitte.
+1071|Du hast in den letzten 30 Tagen 1 Abholung verpasst.
+1072|Du hast in den letzten 30 Tagen {n} Abholungen verpasst.
+1073|Reservieren ist bis {x} pausiert
+1074|Bis {x} nur eine Reservierung gleichzeitig
+1075|Storniere unter Meine Bestellungen, wenn du nicht kommen kannst, damit jemand anderes das Essen bekommt.
+1076|Nach {n} verpassten Abholungen kannst du nur eine Reservierung gleichzeitig haben, nach {n} wird Reservieren eine Weile pausiert.
+1077|Personen
+1078|Finde ein Konto, sieh verpasste Abholungen und sperre, wer Food Rescue missbraucht.
+1079|Name oder E-Mail
+1080|Die 50 neuesten Treffer werden angezeigt. Gib mehr vom Namen oder der E-Mail ein, um einzugrenzen.
+1081|Gesperrt
+1082|1 verpasste Abholung
+1083|{n} verpasste Abholungen
+1084|· {x} · Mitglied seit {x}
+1085|Entsperren
+1086|Sperren
+1087|Niemand gefunden
+1088|Prüfe die Schreibweise oder suche nach einem Teil der E-Mail-Adresse.
+1089|Dieses Konto sperren?
+1090|Notiz für andere Administratoren
+1091|Wird der Person nie angezeigt.
+1092|Konto sperren
+1093|Die Person wird überall abgemeldet und kann sich nicht mehr anmelden. Ihre Läden werden gesperrt und sind für die Kundschaft nicht mehr sichtbar. Nach dem Entsperren kann sie sich wieder anmelden; die Läden aktivierst du selbst wieder.
+1094|Die Person wird überall abgemeldet und kann sich nicht mehr anmelden. Offene Reservierungen werden storniert und das Essen geht wieder in den Verkauf. Du kannst sie jederzeit entsperren.
+1095|Konto gesperrt.
+1096|Konto entsperrt. Die Person kann sich wieder anmelden.

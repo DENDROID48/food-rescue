@@ -18,6 +18,7 @@ npm run photos       # photo upload saved as a file, distances
 npm run ai-impact    # photo suggestions (needs internet for the image model), My impact page
 SP_LOG=../app.log npm run account   # accounts: forgot password, settings, export, deletion (see below)
 npm run i18n         # every language: no English left on any role's screens, choosing a language
+npm run people       # missed pickups (late@example.com) and blocking accounts from Admin → People
 ```
 
 `account` reads the password reset link from the app's log (the dev profile writes it there instead

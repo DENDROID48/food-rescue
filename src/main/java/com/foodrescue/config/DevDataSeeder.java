@@ -74,6 +74,8 @@ public class DevDataSeeder implements CommandLineRunner {
         newUser("Verified Beneficiary", "beneficiary@example.com", UserRole.CONSUMER, EligibilityStatus.APPROVED);
         // Gives the admin a verification request to decide on.
         newUser("Pending Applicant", "applicant@example.com", UserRole.CONSUMER, EligibilityStatus.PENDING);
+        // Shows the no-show rule: three missed pickups, so one reservation at a time for now.
+        User late = newUser("Late Larry", "late@example.com", UserRole.CONSUMER, EligibilityStatus.NOT_REQUESTED);
 
         Store bakery = newStore("Corner Bakery", "Piata Victoriei 1, Timisoara", 45.7537, 21.2257, owner);
         Store market = newStore("Neighbourhood Market", "Bulevardul Take Ionescu 10, Timisoara", 45.7489, 21.2260, owner);
@@ -111,6 +113,9 @@ public class DevDataSeeder implements CommandLineRunner {
             code = pastDay(bag, day, zone, 5, 4, student, code);
         }
 
+        // Late Larry's three missed pickups, at the shop in Arad so the bakery's figures stay as they are.
+        for (int daysAgo : new int[]{2, 6, 12}) code = missedPickup(faraway, late, today.minusDays(daysAgo), zone, code);
+
         // The test student gets Rescue Drop alerts around the city centre.
         DropAlertPreference alerts = new DropAlertPreference();
         alerts.setUserId(student.getId());
@@ -139,7 +144,7 @@ public class DevDataSeeder implements CommandLineRunner {
         radarProfileRepository.save(profile);
 
         log.info("Seeded sample data. Demo logins (password \"{}\"): admin@example.com, owner@example.com, "
-                + "student@example.com, beneficiary@example.com, applicant@example.com", DEMO_PASSWORD);
+                + "student@example.com, beneficiary@example.com, applicant@example.com, late@example.com", DEMO_PASSWORD);
     }
 
     private User newUser(String name, String email, UserRole role, EligibilityStatus eligibility) {
@@ -196,6 +201,35 @@ public class DevDataSeeder implements CommandLineRunner {
             order.setPickedUpAt(item.getPickupStartsAt().plus(Duration.ofMinutes(30)));
             orderRepository.save(order);
         }
+        return code;
+    }
+
+    /** A reservation whose pickup time ended without the customer coming. */
+    private int missedPickup(Store store, User customer, LocalDate day, ZoneId zone, int code) {
+        FoodItem item = new FoodItem();
+        item.setStore(store);
+        item.setName("Sandwich pack");
+        item.setDescription("Out of range sample");
+        item.setOriginalPrice(new BigDecimal("20.00"));
+        item.setDiscountedPrice(new BigDecimal("8.00"));
+        item.setQuantityAvailable(0);
+        item.setQuantityPublished(1);
+        item.setFreePublished(0);
+        item.setPickupStartsAt(ZonedDateTime.of(day, LocalTime.of(17, 0), zone).toInstant());
+        item.setExpiresAt(ZonedDateTime.of(day, LocalTime.of(19, 0), zone).toInstant());
+        item.setCreatedAt(ZonedDateTime.of(day, LocalTime.of(9, 0), zone).toInstant());
+        item = foodItemRepository.save(item);
+        Order order = new Order();
+        order.setUser(customer);
+        order.setFoodItem(item);
+        order.setQuantity(1);
+        order.setTotalPrice(item.getDiscountedPrice());
+        order.setType(OrderType.PURCHASE);
+        order.setStatus(OrderStatus.EXPIRED);
+        order.setPickupCode(String.valueOf(code++));
+        order.setPickupDeadline(item.getExpiresAt());
+        order.setCreatedAt(item.getPickupStartsAt().minus(Duration.ofHours(1)));
+        orderRepository.save(order);
         return code;
     }
 

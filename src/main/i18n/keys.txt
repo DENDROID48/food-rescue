@@ -1044,3 +1044,34 @@
 1063|{n} × {x} (free, Pay-It-Forward)
 1064|{x} is on offer for {x} lei · pickup {x}–{x}
 1065|{x} are on offer · pickup {x}–{x}
+1066|Reserving is paused until {x} because of missed pickups
+1067|Because of missed pickups you can hold one reservation at a time. Collect or cancel the one you have first.
+1068|You cannot block your own account
+1069|Administrators cannot be blocked
+1070|This account is blocked. If you think this is a mistake, please contact us.
+1071|You missed 1 pickup in the last 30 days.
+1072|You missed {n} pickups in the last 30 days.
+1073|Reserving is paused until {x}
+1074|One reservation at a time until {x}
+1075|Cancel in My orders if you can't come, so the food can go to someone else.
+1076|After {n} missed pickups you can hold only one reservation at a time, and after {n} reserving pauses for a while.
+1077|People
+1078|Find an account, see missed pickups, and block someone who misuses Food Rescue.
+1079|Name or email
+1080|Showing the 50 newest matches. Type more of a name or email to narrow it down.
+1081|Blocked
+1082|1 missed pickup
+1083|{n} missed pickups
+1084|· {x} · member since {x}
+1085|Unblock
+1086|Block
+1087|Nobody found
+1088|Check the spelling, or search part of the email address.
+1089|Block this account?
+1090|Note for other administrators
+1091|Never shown to the person.
+1092|Block account
+1093|They are signed out everywhere and can no longer sign in. Their stores are suspended, so customers no longer see them. Unblocking lets them sign in again; reactivate the stores yourself.
+1094|They are signed out everywhere and can no longer sign in. Their open reservations are cancelled and the food goes back on sale. You can unblock them at any time.
+1095|Account blocked.
+1096|Account unblocked. They can sign in again.

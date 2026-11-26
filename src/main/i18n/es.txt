@@ -1043,3 +1043,34 @@
 1063|{n} × {x} (gratis, Pay-It-Forward)
 1064|{x} está en oferta por {x} lei · recogida {x}–{x}
 1065|{x} están en oferta · recogida {x}–{x}
+1066|Las reservas están en pausa hasta el {x} por recogidas no realizadas
+1067|Por recogidas no realizadas solo puedes tener una reserva a la vez. Recoge o cancela primero la que tienes.
+1068|No puedes bloquear tu propia cuenta
+1069|Los administradores no se pueden bloquear
+1070|Esta cuenta está bloqueada. Si crees que es un error, contacta con nosotros.
+1071|No recogiste 1 pedido en los últimos 30 días.
+1072|No recogiste {n} pedidos en los últimos 30 días.
+1073|Las reservas están en pausa hasta el {x}
+1074|Una reserva a la vez hasta el {x}
+1075|Cancela en Mis pedidos si no puedes ir, para que la comida le llegue a otra persona.
+1076|Tras {n} recogidas no realizadas solo podrás tener una reserva a la vez, y tras {n} las reservas se pausan un tiempo.
+1077|Personas
+1078|Busca una cuenta, mira las recogidas no realizadas y bloquea a quien haga mal uso de Food Rescue.
+1079|Nombre o email
+1080|Se muestran las 50 coincidencias más recientes. Escribe más del nombre o email para afinar.
+1081|Bloqueada
+1082|1 recogida no realizada
+1083|{n} recogidas no realizadas
+1084|· {x} · miembro desde {x}
+1085|Desbloquear
+1086|Bloquear
+1087|No se ha encontrado a nadie
+1088|Revisa la ortografía o busca parte del email.
+1089|¿Bloquear esta cuenta?
+1090|Nota para otros administradores
+1091|Nunca se muestra a la persona.
+1092|Bloquear cuenta
+1093|Se cierra su sesión en todas partes y ya no puede iniciar sesión. Sus tiendas se suspenden y los clientes dejan de verlas. Al desbloquear podrá volver a entrar; reactiva tú las tiendas.
+1094|Se cierra su sesión en todas partes y ya no puede iniciar sesión. Sus reservas abiertas se cancelan y la comida vuelve a la venta. Puedes desbloquearla cuando quieras.
+1095|Cuenta bloqueada.
+1096|Cuenta desbloqueada. Ya puede volver a iniciar sesión.

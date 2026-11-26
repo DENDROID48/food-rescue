@@ -388,12 +388,12 @@ async function openReservable(page, min = 2) {
     await ad.waitForSelector('#view-admin:not([hidden]) .person-row');
     await noOverflow(ad, 'admin 1440');
     await shot(ad, '16-admin-desktop', true);
-    await ad.locator('.person-row:has-text("Pending Applicant") [data-approve]').click();
-    await ad.waitForSelector('.person-row:has-text("Pending Applicant")', { state: 'detached' });
-    await ad.locator('.person-row:has-text("Test Student") [data-reject]').click();
+    await ad.locator('#eligibilityRequests .person-row:has-text("Pending Applicant") [data-approve]').click();
+    await ad.waitForSelector('#eligibilityRequests .person-row:has-text("Pending Applicant")', { state: 'detached' });
+    await ad.locator('#eligibilityRequests .person-row:has-text("Test Student") [data-reject]').click();
     await ad.waitForSelector('#confirmDialog[open]');
     await ad.click('#confirmOk');
-    await ad.waitForSelector('.person-row:has-text("Test Student")', { state: 'detached' });
+    await ad.waitForSelector('#eligibilityRequests .person-row:has-text("Test Student")', { state: 'detached' });
   });
   await axe(ad, 'admin dashboard');
   await step(ad, 'admin: suspend a store with confirmation, then reactivate it', async () => {

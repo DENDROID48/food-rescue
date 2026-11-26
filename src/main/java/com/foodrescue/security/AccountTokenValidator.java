@@ -34,7 +34,9 @@ public class AccountTokenValidator implements OAuth2TokenValidator<Jwt> {
         } catch (NumberFormatException e) {
             return OAuth2TokenValidatorResult.failure(SIGNED_OUT);
         }
-        if (user.isEmpty() || user.get().getDeletedAt() != null) return OAuth2TokenValidatorResult.failure(SIGNED_OUT);
+        if (user.isEmpty() || user.get().getDeletedAt() != null || user.get().getBlockedAt() != null) {
+            return OAuth2TokenValidatorResult.failure(SIGNED_OUT);
+        }
         Instant validAfter = user.get().getTokensValidAfter();
         Object ms = jwt.getClaims().get(TokenService.ISSUED_MS_CLAIM);
         Instant issuedAt = ms instanceof Number n ? Instant.ofEpochMilli(n.longValue()) : jwt.getIssuedAt();

@@ -210,6 +210,7 @@
     </div>
 
     <div id="eligibilityBox" class="notice" hidden></div>
+    <div id="standingShop" class="notice standing-note" role="status" hidden></div>
 
     <form id="placeForm" class="card searchbar is-collapsed" role="search" novalidate>
       <button type="button" class="place-summary" id="placeSummary" aria-expanded="false" aria-controls="placeFormBody">
@@ -290,6 +291,7 @@
         <p>Show the pickup code at the shop to collect your food. You pay at the shop.</p>
       </div>
     </div>
+    <div id="standingNote" class="notice standing-note" role="status" hidden></div>
     <div id="activeOrders"></div>
     <div id="historyBlock" hidden>
       <div class="section-head"><h2>Past orders</h2></div>
@@ -439,6 +441,19 @@
         <div id="adminStores"></div>
       </div>
     </div>
+    <div class="card panel people-panel">
+      <div class="panel-head"><div><h2>People</h2><p>Find an account, see missed pickups, and block someone who misuses Food Rescue.</p></div></div>
+      <form id="peopleSearch" class="people-search" role="search" novalidate>
+        <label class="visually-hidden" for="peopleQuery">Name or email</label>
+        <div class="input-with-icon">
+          <svg aria-hidden="true"><use href="#i-search"/></svg>
+          <input class="input" id="peopleQuery" type="search" placeholder="Name or email" autocomplete="off">
+        </div>
+        <button class="btn" type="submit"><span>Search</span></button>
+      </form>
+      <p class="field-hint" id="peopleHint"></p>
+      <div id="peopleList" aria-live="polite"></div>
+    </div>
   </section>
 </main>
 
@@ -516,6 +531,28 @@
     <div class="modal-foot">
       <button type="button" class="btn" data-close>Cancel</button>
       <button type="submit" class="btn btn-primary"><span>Save and sign in</span></button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Admin: block an account -->
+<dialog class="modal" id="blockDialog" aria-labelledby="blockTitle">
+  <form id="blockForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="blockTitle">Block this account?</h2><p id="blockWho" translate="no"></p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p class="muted" id="blockEffect"></p>
+      <div class="field">
+        <label class="field-label" for="blockReason">Note for other administrators <span class="optional">(optional)</span></label>
+        <textarea class="input" id="blockReason" name="reason" rows="3" maxlength="300" aria-describedby="blockReasonHint"></textarea>
+        <p class="field-hint" id="blockReasonHint">Never shown to the person.</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn btn-danger-solid"><span>Block account</span></button>
     </div>
   </form>
 </dialog>

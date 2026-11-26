@@ -31,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -54,7 +55,7 @@ class FoodItemServiceTest {
     void setUp() {
         FoodRescueProperties props = new FoodRescueProperties(25, 60, 1, 5);
         service = new FoodItemService(foodItemRepository, orderRepository, userRepository,
-                props, Clock.fixed(NOW, ZoneOffset.UTC));
+                props, Clock.fixed(NOW, ZoneOffset.UTC), mock(NoShowService.class));
 
         user = new User();
         user.setEligibilityStatus(EligibilityStatus.APPROVED);

@@ -29,6 +29,59 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    private final com.foodrescue.repository.OrderRepository orderRepository;
+    private final OrderService orderService;
+    private final NoShowService noShowService;
+    private final java.time.Clock clock;
+
+    /** People matching a search (name or email), at most 50, with their missed pickups. */
+    @Transactional(readOnly = true)
+    public List<com.foodrescue.dto.AdminUserResponse> listUsers(String query) {
+        String q = query == null ? "" : query.strip().toLowerCase(java.util.Locale.ROOT);
+        String pattern = "%" + q.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%";
+        List<User> users = userRepository.search(pattern, org.springframework.data.domain.PageRequest.of(0, 50));
+        java.util.Map<Long, Integer> noShows = noShowService.counts(users.stream().map(User::getId).toList());
+        return users.stream().map(u -> com.foodrescue.dto.AdminUserResponse.from(u, noShows.getOrDefault(u.getId(), 0))).toList();
+    }
+
+    /**
+     * Blocks an account: it cannot sign in, its logins end at once, open reservations are
+     * cancelled (the food goes back on sale) and a shop owner's stores are suspended.
+     */
+    @Transactional
+    public com.foodrescue.dto.AdminUserResponse block(Long adminId, Long userId, String reason) {
+        User user = userRepository.findById(userId).filter(u -> u.getDeletedAt() == null)
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+        if (user.getId().equals(adminId)) {
+            throw new BusinessRuleException(HttpStatus.BAD_REQUEST, "You cannot block your own account");
+        }
+        if (user.getRole() == UserRole.ADMIN) {
+            throw new BusinessRuleException(HttpStatus.BAD_REQUEST, "Administrators cannot be blocked");
+        }
+        java.time.Instant now = clock.instant();
+        user.setBlockedAt(now);
+        user.setBlockedReason(reason == null || reason.isBlank() ? null : reason.strip());
+        user.setTokensValidAfter(now);
+        for (com.foodrescue.domain.Order o : orderRepository.findByUserIdOrderByCreatedAtDesc(userId)) {
+            if (o.getStatus() == com.foodrescue.domain.OrderStatus.RESERVED) orderService.cancel(userId, o.getId());
+        }
+        if (user.getRole() == UserRole.STORE_OWNER) {
+            storeRepository.findByOwnerId(userId).forEach(s -> s.setActive(false));
+        }
+        log.info("Admin {} blocked user {}", adminId, userId);
+        return com.foodrescue.dto.AdminUserResponse.from(user, noShowService.counts(List.of(userId)).getOrDefault(userId, 0));
+    }
+
+    /** Lets the person sign in again. A shop owner's stores stay suspended until reactivated one by one. */
+    @Transactional
+    public com.foodrescue.dto.AdminUserResponse unblock(Long adminId, Long userId) {
+        User user = userRepository.findById(userId).filter(u -> u.getDeletedAt() == null)
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+        user.setBlockedAt(null);
+        user.setBlockedReason(null);
+        log.info("Admin {} unblocked user {}", adminId, userId);
+        return com.foodrescue.dto.AdminUserResponse.from(user, noShowService.counts(List.of(userId)).getOrDefault(userId, 0));
+    }
 
     @Transactional(readOnly = true)
     public List<UserResponse> listPendingEligibility() {

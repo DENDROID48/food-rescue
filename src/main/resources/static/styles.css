@@ -1088,3 +1088,14 @@ dialog.modal::backdrop { background: rgba(13, 30, 23, .5); backdrop-filter: blur
 body[data-role] .lang-pick { display: none; }
 /* While the chosen language loads, keep the English text from flashing up. */
 html.i18n-pending body { visibility: hidden; }
+
+/* Admin: People */
+.people-panel { margin-top: var(--s-6); }
+.people-search { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-3); margin-bottom: var(--s-2); }
+.person-row .badge-red, .person-row .badge-sun { margin-left: 2px; }
+.person-note { font-size: var(--text-sm); color: var(--muted); font-style: italic; }
+/* Customer: missed pickups */
+.standing-note { margin-bottom: var(--s-5); }
+.standing-note.is-limited { background: #fdeee9; border-color: #f3c9bd; }
+.standing-note.is-limited .notice-icon { color: var(--tomato); }
+.row-text span span { display: inline; }

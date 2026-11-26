@@ -58,6 +58,10 @@ public class AuthService {
             throw new BusinessRuleException(HttpStatus.UNAUTHORIZED, "Wrong email or password");
         }
         rateLimiter.reset(RateLimiter.Limit.FAILED_LOGIN_EMAIL, email);
+        if (user.get().getBlockedAt() != null) {
+            throw new BusinessRuleException(HttpStatus.FORBIDDEN,
+                    "This account is blocked. If you think this is a mistake, please contact us.");
+        }
         return issueFor(user.get());
     }
 

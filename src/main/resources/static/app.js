@@ -576,7 +576,7 @@ async function startSession() {
     openLinkedAlert();
   }
   if (me.role === 'STORE_OWNER') loadStores();
-  if (me.role === 'ADMIN') loadAdmin();
+  if (me.role === 'ADMIN') { loadAdmin(); loadPeople(''); }
 }
 
 function setAuthTab(which) {
@@ -981,6 +981,31 @@ async function hideEligibility() {
     await setFreeItemsOffer(false);
     toast('We won\'t ask again. You can turn it back on in Alerts → Settings.');
   } catch (e) { fail(e); }
+}
+
+// ---------- customer: missed pickups ----------
+
+/** Shows what missed pickups mean for this customer (see NoShowService on the server). */
+async function loadStanding() {
+  let st;
+  try { st = await api('/orders/standing'); } catch { return; }
+  const day = (iso) => new Date(iso).toLocaleDateString(I18N.locale(), { day: 'numeric', month: 'long' });
+  const missed = st.noShows === 1 ? 'You missed 1 pickup in the last 30 days.' : `You missed ${st.noShows} pickups in the last 30 days.`;
+  let html = '';
+  if (st.level === 'PAUSED') {
+    html = `<strong>Reserving is paused until ${day(st.until)}</strong><p><span>${missed}</span> <span>Cancel in My orders if you can't come, so the food can go to someone else.</span></p>`;
+  } else if (st.level === 'LIMITED') {
+    html = `<strong>One reservation at a time until ${day(st.until)}</strong><p><span>${missed}</span> <span>Cancel in My orders if you can't come, so the food can go to someone else.</span></p>`;
+  } else if (st.level === 'WARNED') {
+    html = `<strong>${missed}</strong><p><span>After ${st.limitAt} missed pickups you can hold only one reservation at a time, and after ${st.pauseAt} reserving pauses for a while.</span> <span>Cancel in My orders if you can't come, so the food can go to someone else.</span></p>`;
+  }
+  const limited = st.level === 'PAUSED' || st.level === 'LIMITED';
+  for (const [id, show] of [['#standingNote', !!html], ['#standingShop', limited]]) {
+    const box = $(id);
+    box.hidden = !show;
+    box.className = 'notice standing-note' + (limited ? ' is-limited' : '');
+    if (show) box.innerHTML = `<span class="notice-icon">${icon(limited ? 'alert' : 'clock')}</span><div class="notice-text">${html}</div>`;
+  }
 }
 
 // ---------- customer: Rescue Drop alerts ----------
@@ -1541,13 +1566,14 @@ const STATUS = {
   RESERVED: ['Reserved', ''],
   PICKED_UP: ['Collected', ''],
   CANCELLED: ['Cancelled', 'badge-grey'],
-  EXPIRED: ['Expired', 'badge-red'],
+  EXPIRED: ['Not collected', 'badge-red'],
 };
 
 async function loadMyOrders() {
   if (me?.role !== 'CONSUMER') return;
   try {
     myOrders = await api('/orders/mine');
+    loadStanding();
     renderOrders();
   } catch (e) { fail(e); }
 }
@@ -3061,6 +3087,63 @@ async function loadAdmin() {
     : `<div class="empty"><div class="empty-icon">${icon('store')}</div><h3>No stores yet</h3><p>Stores appear here once owners register them.</p></div>`;
 }
 
+let adminPeople = [];
+
+async function loadPeople(query = $('#peopleQuery').value.trim()) {
+  try { adminPeople = await api('/admin/users?q=' + encodeURIComponent(query)); } catch (e) { fail(e); return; }
+  $('#peopleHint').textContent = adminPeople.length === 50 ? 'Showing the 50 newest matches. Type more of a name or email to narrow it down.' : '';
+  const since = (iso) => new Date(iso).toLocaleDateString(I18N.locale(), { day: 'numeric', month: 'long', year: 'numeric' });
+  $('#peopleList').innerHTML = adminPeople.length ? adminPeople.map((u) => `
+    <div class="person-row">
+      <span class="avatar" aria-hidden="true">${esc(initials(u.fullName))}</span>
+      <div class="row-text"><strong><span translate="no">${esc(u.fullName)}</span>
+          ${u.blockedAt ? '<span class="badge badge-red">Blocked</span>' : ''}
+          ${u.noShows ? `<span class="badge badge-sun plain">${u.noShows === 1 ? '1 missed pickup' : `${u.noShows} missed pickups`}</span>` : ''}</strong>
+        <span><span translate="no">${esc(u.email)}</span> · ${esc(ROLE_TEXT[u.role])} · member since ${since(u.createdAt)}</span>
+        ${u.blockedReason ? `<span class="person-note" translate="no">${esc(u.blockedReason)}</span>` : ''}</div>
+      <div class="row-actions">${u.role === 'ADMIN' ? '' : u.blockedAt
+        ? `<button class="btn btn-sm" type="button" data-unblock="${u.id}">Unblock</button>`
+        : `<button class="btn btn-sm btn-danger" type="button" data-block="${u.id}">Block</button>`}</div>
+    </div>`).join('')
+    : `<div class="empty"><div class="empty-icon">${icon('search')}</div><h3>Nobody found</h3><p>Check the spelling, or search part of the email address.</p></div>`;
+}
+
+let blockTarget = null;
+function openBlock(id) {
+  blockTarget = adminPeople.find((u) => u.id === id);
+  if (!blockTarget) return;
+  $('#blockForm').reset();
+  $('#blockWho').textContent = `${blockTarget.fullName} · ${blockTarget.email}`;
+  $('#blockEffect').textContent = blockTarget.role === 'STORE_OWNER'
+    ? 'They are signed out everywhere and can no longer sign in. Their stores are suspended, so customers no longer see them. Unblocking lets them sign in again; reactivate the stores yourself.'
+    : 'They are signed out everywhere and can no longer sign in. Their open reservations are cancelled and the food goes back on sale. You can unblock them at any time.';
+  $('#blockDialog').dataset.focusFallback = '#peopleQuery';
+  openDialog($('#blockDialog'));
+}
+
+async function blockAccount(event) {
+  event.preventDefault();
+  const f = event.target;
+  await withLoading($('[type=submit]', f), async () => {
+    try {
+      await api(`/admin/users/${blockTarget.id}/block`, { method: 'POST', body: { reason: f.reason.value.trim() || null } });
+      $('#blockDialog').close();
+      toast('Account blocked.');
+      await Promise.all([loadPeople(), loadAdmin()]);
+    } catch (e) { fail(e); }
+  });
+}
+
+async function unblockAccount(button) {
+  await withLoading(button, async () => {
+    try {
+      await api(`/admin/users/${button.dataset.unblock}/unblock`, { method: 'POST' });
+      toast('Account unblocked. They can sign in again.');
+      await loadPeople();
+    } catch (e) { fail(e); }
+  });
+}
+
 /** Platform figures for the last 28 days, read with JDBC on the server. */
 async function loadAdminInsights() {
   const box = $('#adminInsights');
@@ -3190,6 +3273,8 @@ document.addEventListener('click', (e) => {
   else if (t.id === 'requestEligibility') requestEligibility(t);
   else if (t.id === 'hideEligibility') hideEligibility();
   else if (t.id === 'historyMore') showMoreHistory();
+  else if (d.block !== undefined) openBlock(Number(d.block));
+  else if (d.unblock !== undefined) unblockAccount(t);
 });
 
 // Photos fade in once loaded; a broken image becomes the branded tile instead.
@@ -3303,7 +3388,9 @@ $('#dismissReminder').addEventListener('click', (e) => dismissReminder(e.current
 $('#pickupForm').addEventListener('submit', confirmPickup);
 $('#pickupCode').addEventListener('input', (e) => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6); });
 
-$('#adminRefresh').addEventListener('click', (e) => withLoading(e.currentTarget, loadAdmin));
+$('#adminRefresh').addEventListener('click', (e) => withLoading(e.currentTarget, async () => { await loadAdmin(); await loadPeople(); }));
+$('#peopleSearch').addEventListener('submit', (e) => { e.preventDefault(); loadPeople(); });
+$('#blockForm').addEventListener('submit', blockAccount);
 $('#openCredits').addEventListener('click', () => { renderCredits(); openDialog($('#creditsDialog')); });
 
 window.addEventListener('scroll', () => $('#siteHeader').classList.toggle('is-scrolled', window.scrollY > 8), { passive: true });

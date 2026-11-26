@@ -108,4 +108,20 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             where o.status = com.foodrescue.domain.OrderStatus.PICKED_UP and o.pickedUpAt >= :from and o.pickedUpAt < :to
             """)
     long sumCollectedBetween(@Param("from") Instant from, @Param("to") Instant to);
+
+    /** Pickup deadlines of a customer's missed pickups (expired reservations) since a moment, oldest first. */
+    @Query("""
+            select o.pickupDeadline from Order o
+            where o.user.id = :userId and o.status = com.foodrescue.domain.OrderStatus.EXPIRED and o.pickupDeadline >= :since
+            order by o.pickupDeadline asc""")
+    List<Instant> noShowDeadlines(@Param("userId") Long userId, @Param("since") Instant since);
+
+    /** [user id, missed pickups since a moment] for several customers. */
+    @Query("""
+            select o.user.id, count(o) from Order o
+            where o.user.id in :userIds and o.status = com.foodrescue.domain.OrderStatus.EXPIRED and o.pickupDeadline >= :since
+            group by o.user.id""")
+    List<Object[]> noShowCounts(@Param("userIds") java.util.Collection<Long> userIds, @Param("since") Instant since);
+
+    boolean existsByUserIdAndStatus(Long userId, OrderStatus status);
 }

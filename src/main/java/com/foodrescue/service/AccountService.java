@@ -130,7 +130,7 @@ public class AccountService {
         }
         Instant now = clock.instant();
         userRepository.findByEmail(AuthService.normalizeEmail(rawEmail))
-                .filter(u -> u.getDeletedAt() == null)
+                .filter(u -> u.getDeletedAt() == null && u.getBlockedAt() == null)
                 .filter(u -> resetTokenRepository.countByUserIdAndCreatedAtAfter(u.getId(), now.minus(Duration.ofHours(1))) < RESET_EMAILS_PER_HOUR)
                 .ifPresent(user -> {
                     byte[] bytes = new byte[32];

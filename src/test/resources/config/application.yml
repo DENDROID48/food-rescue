@@ -2,3 +2,5 @@
 foodrescue:
   accounts:
     rate-limits: false
+    # Never send real emails from the tests, even with a mail server in ./config/application.yml.
+    send-emails: false

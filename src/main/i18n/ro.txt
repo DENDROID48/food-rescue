@@ -1043,3 +1043,34 @@
 1063|{n} × {x} (gratuit, Pay-It-Forward)
 1064|{x} e la ofertă pentru {x} lei · ridicare {x}–{x}
 1065|{x} sunt la ofertă · ridicare {x}–{x}
+1066|Rezervările sunt oprite până pe {x} din cauza ridicărilor ratate
+1067|Din cauza ridicărilor ratate poți avea o singură rezervare odată. Ridic-o sau anuleaz-o mai întâi pe cea pe care o ai.
+1068|Nu îți poți bloca propriul cont
+1069|Administratorii nu pot fi blocați
+1070|Acest cont este blocat. Dacă crezi că e o greșeală, te rugăm să ne contactezi.
+1071|Ai ratat o ridicare în ultimele 30 de zile.
+1072|Ai ratat {n} ridicări în ultimele 30 de zile.
+1073|Rezervările sunt oprite până pe {x}
+1074|O singură rezervare odată până pe {x}
+1075|Anulează din Comenzile mele dacă nu poți veni, ca mâncarea să ajungă la altcineva.
+1076|După {n} ridicări ratate poți avea o singură rezervare odată, iar după {n} rezervările se opresc o vreme.
+1077|Persoane
+1078|Găsește un cont, vezi ridicările ratate și blochează pe cine folosește Food Rescue abuziv.
+1079|Nume sau email
+1080|Se afișează cele mai noi 50 de rezultate. Scrie mai mult din nume sau email ca să restrângi căutarea.
+1081|Blocat
+1082|1 ridicare ratată
+1083|{n} ridicări ratate
+1084|· {x} · membru din {x}
+1085|Deblochează
+1086|Blochează
+1087|Nu a fost găsit nimeni
+1088|Verifică scrierea sau caută o parte din adresa de email.
+1089|Blochezi acest cont?
+1090|Notă pentru ceilalți administratori
+1091|Nu este arătată niciodată persoanei.
+1092|Blochează contul
+1093|Este deconectat peste tot și nu se mai poate autentifica. Magazinele lui sunt suspendate, așa că clienții nu le mai văd. Deblocarea îi permite să intre din nou în cont; reactivează tu magazinele.
+1094|Este deconectat peste tot și nu se mai poate autentifica. Rezervările deschise sunt anulate, iar mâncarea revine la vânzare. Îl poți debloca oricând.
+1095|Contul a fost blocat.
+1096|Contul a fost deblocat. Se poate autentifica din nou.

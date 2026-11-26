@@ -35,4 +35,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select u from User u where u.id = :id")
     Optional<User> findByIdForUpdate(@Param("id") Long id);
+
+    /** People whose name or email contains the text (lower case, with % around it), newest first. */
+    @Query("""
+            select u from User u
+            where u.deletedAt is null and (lower(u.fullName) like :pattern or lower(u.email) like :pattern)
+            order by u.createdAt desc""")
+    List<User> search(@Param("pattern") String pattern, org.springframework.data.domain.Pageable page);
 }

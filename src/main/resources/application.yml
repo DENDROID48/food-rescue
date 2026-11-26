@@ -39,6 +39,14 @@ foodrescue:
   # How often the daily-digest job looks for customers whose digest time has come.
   digest-job-delay-ms: 300000
 
+  # Missed pickups, bound to NoShowProperties. Counted over a rolling window, so limits lift by themselves.
+  no-shows:
+    window-days: 30
+    # From this many: one open reservation at a time.
+    limit-at: 3
+    # From this many: no new reservations or free claims until the count drops below it.
+    pause-at: 5
+
   # Streaks, achievements and the community challenge, bound to GamificationProperties.
   gamification:
     # Items the whole community tries to rescue each month (the challenge on the Impact page).

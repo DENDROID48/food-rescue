@@ -62,12 +62,21 @@ public class MailService {
     private final ObjectProvider<JavaMailSender> mailSender;
     private final AccountProperties properties;
     private final String mailHost;
+    private final boolean credentialsComplete;
+    private final boolean enabled;
 
     public MailService(ObjectProvider<JavaMailSender> mailSender, AccountProperties properties,
-                       @Value("${spring.mail.host:}") String mailHost) {
+                       @Value("${spring.mail.host:}") String mailHost,
+                       @Value("${spring.mail.username:}") String username,
+                       @Value("${spring.mail.password:}") String password,
+                       // Off in the tests (src/test/resources/config), so they never send real emails.
+                       @Value("${foodrescue.accounts.send-emails:true}") boolean enabled) {
         this.mailSender = mailSender;
         this.properties = properties;
         this.mailHost = mailHost;
+        // A server that needs a login is only usable once the password (SMTP key) is filled in too.
+        this.credentialsComplete = username.isBlank() || !password.isBlank();
+        this.enabled = enabled;
     }
 
     /** True when emails can actually reach people (or, in development, the reset link is logged). */
@@ -77,7 +86,8 @@ public class MailService {
 
     private boolean sendsEmail() {
         // An empty SPRING_MAIL_HOST (as docker-compose passes when unset) means no mail server.
-        return !mailHost.isBlank() && mailSender.getIfAvailable() != null && !properties.mailFrom().isBlank();
+        return enabled && !mailHost.isBlank() && credentialsComplete
+                && mailSender.getIfAvailable() != null && !properties.mailFrom().isBlank();
     }
 
     public void sendPasswordReset(String to, String name, String language, String link) {

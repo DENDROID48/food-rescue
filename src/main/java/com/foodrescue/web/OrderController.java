@@ -15,6 +15,13 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final com.foodrescue.service.NoShowService noShowService;
+
+    /** GET /api/v1/orders/standing   missed pickups and any limit they bring (see NoShowService). */
+    @GetMapping("/standing")
+    public com.foodrescue.service.NoShowService.Standing standing(@CurrentUser Long userId) {
+        return noShowService.standing(userId);
+    }
 
     /** GET /api/v1/orders/mine   order history of the caller, newest first. */
     @GetMapping("/mine")

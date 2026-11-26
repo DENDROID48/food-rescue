@@ -1043,3 +1043,34 @@
 1063|{n} × {x} (gratis, Pay-It-Forward)
 1064|{x} è in offerta a {x} lei · ritiro {x}–{x}
 1065|{x} sono in offerta · ritiro {x}–{x}
+1066|Le prenotazioni sono sospese fino al {x} per ritiri mancati
+1067|Per ritiri mancati puoi avere una sola prenotazione alla volta. Ritira o annulla prima quella che hai.
+1068|Non puoi bloccare il tuo account
+1069|Gli amministratori non possono essere bloccati
+1070|Questo account è bloccato. Se pensi che sia un errore, contattaci.
+1071|Hai mancato 1 ritiro negli ultimi 30 giorni.
+1072|Hai mancato {n} ritiri negli ultimi 30 giorni.
+1073|Prenotazioni sospese fino al {x}
+1074|Una prenotazione alla volta fino al {x}
+1075|Annulla in I miei ordini se non puoi venire, così il cibo va a qualcun altro.
+1076|Dopo {n} ritiri mancati potrai avere una sola prenotazione alla volta, e dopo {n} le prenotazioni si sospendono per un po'.
+1077|Persone
+1078|Trova un account, vedi i ritiri mancati e blocca chi usa Food Rescue in modo scorretto.
+1079|Nome o email
+1080|Sono mostrati i 50 risultati più recenti. Scrivi più del nome o dell'email per restringere.
+1081|Bloccato
+1082|1 ritiro mancato
+1083|{n} ritiri mancati
+1084|· {x} · iscritto dal {x}
+1085|Sblocca
+1086|Blocca
+1087|Nessuno trovato
+1088|Controlla l'ortografia o cerca una parte dell'indirizzo email.
+1089|Bloccare questo account?
+1090|Nota per gli altri amministratori
+1091|Non viene mai mostrata alla persona.
+1092|Blocca account
+1093|Viene disconnesso ovunque e non può più accedere. I suoi negozi vengono sospesi e i clienti non li vedono più. Sbloccando potrà accedere di nuovo; riattiva tu i negozi.
+1094|Viene disconnesso ovunque e non può più accedere. Le prenotazioni aperte vengono annullate e il cibo torna in vendita. Puoi sbloccarlo in qualsiasi momento.
+1095|Account bloccato.
+1096|Account sbloccato. Può accedere di nuovo.

@@ -24,7 +24,7 @@ OpenStreetMap; without them, food search still works as a list.
 
 ```bash
 mvn spring-boot:run      # http://localhost:8080, in-memory database with demo data
-mvn test                 # 175 unit and integration tests
+mvn test                 # 181 unit and integration tests
 ```
 
 Browser tests that drive the real page are in [`e2e/`](e2e/README.md).
@@ -44,6 +44,7 @@ Open http://localhost:8080/ and sign in with a demo account. Every one uses the 
 | `owner@example.com` | store owner | Publish food with a photo, confirm a pickup code |
 | `admin@example.com` | administrator | Approve the pending verification request, suspend a store |
 | `applicant@example.com` | consumer | Has a verification request waiting for the admin |
+| `late@example.com` | consumer | Missed 3 pickups lately, so may hold one reservation at a time (the no-show rule) |
 
 The demo data is recreated on every start. Uploaded photos are saved as files in the `uploads/`
 folder next to where the app was started (`uploads/templates/7` is the photo of product 7,
@@ -223,6 +224,25 @@ Rules:
 - **Nothing extra is stored:** `GamificationService` works everything out from the order history,
   so the figures always match it. The `Achievement` enum holds each milestone's figure and target.
 
+## Missed pickups and blocking
+
+Reserving food and not collecting it keeps it from someone else. A reservation whose pickup time
+ends without the food being collected counts as a missed pickup (cancelling in time never does),
+over a rolling 30 days:
+
+- 1–2 missed pickups: a friendly note in My orders explains the rule.
+- 3 or more: one open reservation at a time.
+- 5 or more: no new reservations or free claims until enough of them are older than 30 days.
+
+The limits lift by themselves, and the page says until when. The numbers are in `application.yml`
+under `foodrescue.no-shows`. The demo account `late@example.com` has three missed pickups.
+
+Administrators can find anyone under **People** on the Admin page (with their missed pickups) and
+block an account, with an optional note other administrators can read. A blocked person is signed
+out everywhere and cannot sign in, their open reservations are cancelled so the food goes back on
+sale, and a shop owner's stores are suspended. Administrators cannot be blocked. Unblocking lets
+the person sign in again; their stores are reactivated one by one under Stores.
+
 ## Languages
 
 The interface comes in English, Romanian, Spanish, French, German, Italian and Portuguese. A first
@@ -259,10 +279,14 @@ FOODRESCUE_JWT_SECRET=... java -jar target/food-rescue-0.1.0-SNAPSHOT.jar
 | `FOODRESCUE_CONTACT_EMAIL` | recommended | Contact for OpenStreetMap's geocoder and for push services (VAPID subject) |
 | `FOODRESCUE_UPLOADS_DIR` | no | Folder for uploaded photos (default `uploads`, in Docker `/app/uploads` on its own volume). Back it up together with the database. |
 | `FOODRESCUE_PUBLIC_URL` | yes | The address people open the app at, e.g. `https://foodrescue.ro`; used in emailed links |
-| `SPRING_MAIL_HOST`, `SPRING_MAIL_PORT`, `SPRING_MAIL_USERNAME`, `SPRING_MAIL_PASSWORD`, `FOODRESCUE_MAIL_FROM` | for password reset | Any SMTP server (for example the free tier of Brevo, or your domain's mailbox), port 587 with STARTTLS. `FOODRESCUE_MAIL_FROM` is the sender, e.g. `Food Rescue <hello@foodrescue.ro>`. Without them "Forgot your password?" is hidden. |
+| `SPRING_MAIL_HOST`, `SPRING_MAIL_PORT`, `SPRING_MAIL_USERNAME`, `SPRING_MAIL_PASSWORD`, `FOODRESCUE_MAIL_FROM` | for password reset | Any SMTP server (for example the free tier of Brevo, or your domain's mailbox), port 587 with STARTTLS. `FOODRESCUE_MAIL_FROM` is the sender, e.g. `Food Rescue <hello@foodrescue.ro>`; with Brevo it must be a sender verified in your Brevo account. Without them "Forgot your password?" is hidden. |
 | `FOODRESCUE_PUSH_PUBLIC_KEY`, `FOODRESCUE_PUSH_PRIVATE_KEY` | for push | VAPID key pair, for example from `npx web-push generate-vapid-keys`. Keep them fixed: browsers must subscribe again when they change. Without them, temporary keys are used. Push also needs HTTPS. |
 
 The production profile starts with an empty database and no demo accounts.
+
+**On your own computer**, put settings with secrets in `config/application.yml` in the project
+folder instead (git ignores it; Spring Boot reads it when the app is started from that folder).
+It already holds the Brevo mail server: fill in the SMTP key and the sender there.
 
 **Before launch**
 
@@ -363,6 +387,10 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 | `PUT /api/v1/admin/users/{userId}/eligibility` | admin | `{"approved": true}` or `false` |
 | `GET /api/v1/admin/stores` | admin | All stores with owners |
 | `PUT /api/v1/admin/stores/{storeId}/status` | admin | `{"active": false}` suspends a store |
+| `GET /api/v1/admin/users?q=` | admin | People whose name or email contains the text (50 newest), with missed pickups |
+| `POST /api/v1/admin/users/{userId}/block` | admin | `{"reason"}` (optional note for admins): ends their logins, cancels open reservations, suspends their stores |
+| `POST /api/v1/admin/users/{userId}/unblock` | admin | Lets them sign in again (stores stay suspended until reactivated) |
+| `GET /api/v1/orders/standing` | consumer | Missed pickups in the last 30 days and the limit they bring, if any |
 
 ## Code layout
 

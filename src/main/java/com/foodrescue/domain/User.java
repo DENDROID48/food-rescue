@@ -66,6 +66,13 @@ public class User {
     /** When the person agreed to the terms and the privacy policy. */
     private Instant termsAcceptedAt;
 
+    /** Set when an administrator blocked the account: it cannot sign in until unblocked. */
+    private Instant blockedAt;
+
+    /** Why it was blocked: a note for other administrators, never shown to the person. */
+    @Column(length = 300)
+    private String blockedReason;
+
     /** True when an administrator has verified that this user may receive free items. */
     public boolean isFreeClaimEligible() {
         return eligibilityStatus == EligibilityStatus.APPROVED;

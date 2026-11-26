@@ -1043,3 +1043,34 @@
 1063|{n} × {x} (grátis, Pay-It-Forward)
 1064|{x} está em oferta por {x} lei · levantamento {x}–{x}
 1065|{x} estão em oferta · levantamento {x}–{x}
+1066|As reservas estão em pausa até {x} por levantamentos falhados
+1067|Por levantamentos falhados só pode ter uma reserva de cada vez. Levante ou cancele primeiro a que tem.
+1068|Não pode bloquear a sua própria conta
+1069|Os administradores não podem ser bloqueados
+1070|Esta conta está bloqueada. Se acha que é um erro, contacte-nos.
+1071|Falhou 1 levantamento nos últimos 30 dias.
+1072|Falhou {n} levantamentos nos últimos 30 dias.
+1073|Reservas em pausa até {x}
+1074|Uma reserva de cada vez até {x}
+1075|Cancele em As minhas encomendas se não puder vir, para que a comida vá para outra pessoa.
+1076|Após {n} levantamentos falhados só pode ter uma reserva de cada vez e, após {n}, as reservas ficam em pausa durante algum tempo.
+1077|Pessoas
+1078|Encontre uma conta, veja os levantamentos falhados e bloqueie quem usa mal o Food Rescue.
+1079|Nome ou email
+1080|A mostrar os 50 resultados mais recentes. Escreva mais do nome ou do email para afinar.
+1081|Bloqueada
+1082|1 levantamento falhado
+1083|{n} levantamentos falhados
+1084|· {x} · membro desde {x}
+1085|Desbloquear
+1086|Bloquear
+1087|Ninguém encontrado
+1088|Verifique a ortografia ou pesquise parte do endereço de email.
+1089|Bloquear esta conta?
+1090|Nota para outros administradores
+1091|Nunca é mostrada à pessoa.
+1092|Bloquear conta
+1093|A sessão termina em todo o lado e deixa de poder entrar. As lojas ficam suspensas e os clientes deixam de as ver. Desbloquear permite voltar a entrar; reative as lojas você.
+1094|A sessão termina em todo o lado e deixa de poder entrar. As reservas abertas são canceladas e a comida volta a estar à venda. Pode desbloquear a qualquer momento.
+1095|Conta bloqueada.
+1096|Conta desbloqueada. Pode voltar a iniciar sessão.
