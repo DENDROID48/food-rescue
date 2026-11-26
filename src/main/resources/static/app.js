@@ -78,13 +78,13 @@ function sameDay(a, b) { return a.toDateString() === b.toDateString(); }
 /** "18:30" today, "tomorrow 09:00", or "Tue 18:30". */
 function fmtTime(iso) {
   const d = new Date(iso), now = new Date();
-  const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  const time = d.toLocaleTimeString(I18N.locale(), { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
   if (sameDay(d, now)) return time;
   const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
   if (sameDay(d, tomorrow)) return 'tomorrow ' + time;
-  return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }) + ', ' + time;
+  return d.toLocaleDateString(I18N.locale(), { weekday: 'short', day: 'numeric', month: 'short' }) + ', ' + time;
 }
-const timeOnly = (iso) => new Date(iso).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+const timeOnly = (iso) => new Date(iso).toLocaleTimeString(I18N.locale(), { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 /** "18:00–20:00", with the day in front when it is not today. */
 const fmtWindow = (start, end) => `${fmtTime(start)}–${timeOnly(end)}`;
 function minutesUntil(iso) { return Math.round((new Date(iso) - Date.now()) / 60000); }
@@ -192,13 +192,15 @@ function openDialog(dialog) {
 /** The interface language (a choice kept in the browser until the account has one). */
 const LANG_KEY = 'foodrescue.language';
 
+/** Switches the interface language and remembers it on this device. */
 function applyLanguage(lang) {
-  document.documentElement.lang = lang;
   save(LANG_KEY, lang);
+  $('#langSelect').value = lang;
+  return I18N.use(lang);
 }
 
 function uiLanguage() {
-  return me?.language || restore(LANG_KEY) || 'en';
+  return me?.language || I18N.lang;
 }
 
 function renderAccountHeader() {
@@ -266,7 +268,7 @@ function openAccount() {
   $('#deleteStart').hidden = false;
   $('#deleteStart').setAttribute('aria-expanded', 'false');
   for (const input of $$('#accountDialog input')) showFieldError(input, '');
-  $('#accountSince').textContent = `${ROLE_TEXT[me.role]} · member since ${new Date(me.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}`;
+  $('#accountSince').textContent = `${ROLE_TEXT[me.role]} · member since ${new Date(me.createdAt).toLocaleDateString(I18N.locale(), { day: 'numeric', month: 'long', year: 'numeric' })}`;
   $('#deleteHint').textContent = me.role === 'STORE_OWNER'
     ? 'Your stores are hidden from customers for good, and your details are removed straight away. Hand over any food customers are waiting for first. This can\'t be undone.'
     : 'Your details, favourites and alerts are removed straight away, and open reservations are cancelled. This can\'t be undone.';
@@ -294,7 +296,7 @@ async function saveDetails(event) {
       renderAccountHeader();
       f.currentPassword.value = '';
       syncEmailPassword();
-      if (languageChanged) applyLanguage(me.language);
+      if (languageChanged) { save(LANG_KEY, me.language); location.reload(); return; }
       toast('Your details are saved.');
     } catch (e) {
       if (/password/i.test(e.message)) showFieldError(f.currentPassword, e.message);
@@ -550,6 +552,14 @@ async function startSession() {
     return;
   }
   document.body.dataset.role = me.role;
+  // A language picked on the sign-in screen just now becomes the account's; otherwise the account's wins.
+  let picked = null;
+  try { picked = sessionStorage.getItem('foodrescue.languagePicked'); sessionStorage.removeItem('foodrescue.languagePicked'); } catch { /* storage blocked */ }
+  if (picked && picked !== me.language) {
+    me.language = picked;
+    api('/users/me', { method: 'PUT', body: { fullName: me.fullName, email: me.email, language: picked } }).catch(() => {});
+  }
+  if (me.language && me.language !== I18N.lang) applyLanguage(me.language);
   renderAccountHeader();
   $('#account').hidden = false;
   renderNav();
@@ -1575,7 +1585,7 @@ function renderImpact(r) {
   const fresh = firstVisit ? [] : unlocked.filter((c) => !seen.has(c));
   save(seenKey, unlocked);
 
-  const kg = r.kgRescued ? `<small>${r.kgRescued.toLocaleString(undefined, { maximumFractionDigits: 1 })} kg</small>` : '';
+  const kg = r.kgRescued ? `<small>${r.kgRescued.toLocaleString(I18N.locale(), { maximumFractionDigits: 1 })} kg</small>` : '';
   const tile = (label, value, accent = false) => `<div class="card stat${accent ? ' is-accent' : ''}"><span>${label}</span><strong>${value}</strong></div>`;
   const c = r.challenge;
   const achievements = r.achievements.map((a) => `
@@ -1752,7 +1762,7 @@ const nowInStore = () => storeClock(new Date().toISOString());
 const hhmm = (time) => (time ? String(time).slice(0, 5) : '');
 const offerWindow = (o) => (o.pickupStartsAt ? `${storeClock(o.pickupStartsAt)}–${storeClock(o.expiresAt)}` : `until ${storeClock(o.expiresAt)}`);
 function storeDateLabel() {
-  return new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'long', timeZone: storeTz }).format(new Date(today?.now ?? Date.now()));
+  return new Intl.DateTimeFormat(I18N.locale(), { weekday: 'long', day: 'numeric', month: 'long', timeZone: storeTz }).format(new Date(today?.now ?? Date.now()));
 }
 
 async function loadStoreDetails() {
@@ -2121,8 +2131,9 @@ function renderPhotoSuggestion(prefix, s) {
 function useSuggestion(prefix) {
   const s = suggestions[prefix];
   if (!s?.recognised) return;
-  $(`#${prefix}Name`).value = s.name;
-  $(`#${prefix}Description`).value = s.description;
+  // Field values are not translated with the page, so fill them in the chosen language here.
+  $(`#${prefix}Name`).value = I18N.t(s.name);
+  $(`#${prefix}Description`).value = I18N.t(s.description);
   for (const tag of s.tags) {
     const box = $(`#${prefix}Tags input[value="${tag}"]`);
     if (box) box.checked = true;
@@ -2432,7 +2443,7 @@ function renderSuggestion(l) {
   const price = l.suggestedPrice
     ? `<button type="button" class="price-chip" data-apply-price data-price="${l.suggestedPrice}" aria-pressed="false">Try ${money(l.suggestedPrice)}</button>` : '';
   row.insertAdjacentHTML('beforeend', `<div class="autopilot-hint">${icon('spark')}
-    <p>${l.quantity != null ? `<b>Suggested: ${l.quantity}</b> · ` : ''}${l.reasons.map(esc).join(' ')}</p>
+    <p>${l.quantity != null ? `<b>Suggested: ${l.quantity}</b> · ` : ''}${l.reasons.map((r) => `<span>${esc(r)}</span>`).join(' ')}</p>
     <span class="badge plain ${cls}">${label}</span>${price}</div>`);
 }
 
@@ -2616,9 +2627,9 @@ async function submitDrop(event) {
 let insightDays = 28;
 let insights = null;
 const COLLECTED = '#16855a', LEFTOVER = '#d99a1e'; // validated pair: legend + table view cover the amber's contrast
-const kgText = (kg) => `${kg >= 10 ? Math.round(kg) : kg.toLocaleString(undefined, { maximumFractionDigits: 1 })} kg`;
+const kgText = (kg) => `${kg >= 10 ? Math.round(kg) : kg.toLocaleString(I18N.locale(), { maximumFractionDigits: 1 })} kg`;
 const pct = (n) => (n == null ? '—' : `${n}%`);
-const dayLabel = (iso, opts = { day: 'numeric', month: 'short' }) => new Date(iso + 'T12:00:00').toLocaleDateString(undefined, opts);
+const dayLabel = (iso, opts = { day: 'numeric', month: 'short' }) => new Date(iso + 'T12:00:00').toLocaleDateString(I18N.locale(), opts);
 
 function setStoreTab(tab) {
   for (const t of $$('.store-tabs [role=tab]')) {
@@ -3030,7 +3041,7 @@ async function loadAdmin() {
   $('#eligibilityRequests').innerHTML = adminRequests.length ? adminRequests.map((u) => `
     <div class="person-row">
       <span class="avatar" aria-hidden="true">${esc(initials(u.fullName))}</span>
-      <div class="row-text"><strong>${esc(u.fullName)}</strong><span>${esc(u.email)} · member since ${new Date(u.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
+      <div class="row-text"><strong>${esc(u.fullName)}</strong><span>${esc(u.email)} · member since ${new Date(u.createdAt).toLocaleDateString(I18N.locale(), { day: 'numeric', month: 'long', year: 'numeric' })}</span></div>
       <div class="row-actions">
         <button class="btn btn-sm btn-danger" type="button" data-reject="${u.id}">Reject</button>
         <button class="btn btn-sm btn-primary" type="button" data-approve="${u.id}">${icon('check')}<span>Approve</span></button>
@@ -3307,6 +3318,22 @@ setInterval(() => {
   if (me?.role !== 'CONSUMER' || currentView !== 'shop' || document.hidden || $('#reserveDialog').open) return;
   if (nearbyItems.some((i) => i.rescueDrop)) search({ quiet: true });
 }, 30000);
+
+// Language: the account's (after sign-in), else the one chosen on this device, else the browser's.
+{
+  const startLang = restore(LANG_KEY) || I18N.preferred();
+  $('#langSelect').value = startLang;
+  if (startLang !== 'en') {
+    document.documentElement.classList.add('i18n-pending');
+    const reveal = () => document.documentElement.classList.remove('i18n-pending');
+    setTimeout(reveal, 3000); // never leave the page hidden if the translations are slow
+    I18N.use(startLang).finally(reveal);
+  } else I18N.use('en');
+}
+$('#langSelect').addEventListener('change', (e) => {
+  try { sessionStorage.setItem('foodrescue.languagePicked', e.target.value); } catch { /* storage blocked */ }
+  applyLanguage(e.target.value);
+});
 
 updateWhere();
 api('/settings').then((s) => {

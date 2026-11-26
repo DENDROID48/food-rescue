@@ -1081,3 +1081,10 @@ dialog.modal::backdrop { background: rgba(13, 30, 23, .5); backdrop-filter: blur
 .legal table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); margin: var(--s-3) 0; display: block; overflow-x: auto; }
 .legal th, .legal td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
 .legal-draft { background: var(--sun-100); border: 1px solid #f2e0b3; border-radius: var(--r-lg); padding: var(--s-4); color: #5c4a22; font-size: var(--text-sm); margin-top: var(--s-4); }
+
+/* Language picker for visitors who are not signed in. */
+.lang-pick { margin-left: auto; }
+.lang-pick .select { min-height: 38px; padding-top: 6px; padding-bottom: 6px; font-size: var(--text-sm); width: auto; }
+body[data-role] .lang-pick { display: none; }
+/* While the chosen language loads, keep the English text from flashing up. */
+html.i18n-pending body { visibility: hidden; }

@@ -9,7 +9,8 @@
     "insights": "node insights.js",
     "photos": "node today-changes.js",
     "ai-impact": "node ai-impact.js",
-    "account": "node account.js"
+    "account": "node account.js",
+    "i18n": "node i18n.js"
   },
   "devDependencies": {
     "axe-core": "4.10.2",

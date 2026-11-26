@@ -1,0 +1,1045 @@
+# Français. id|traduction ; {x} et {n} dans le même ordre qu'en anglais (ou {1}, {2} pour un autre ordre).
+0|(facultatif)
+1|({x} les alertes activées près de vous)
+2|+{n} gratuits
+3|1 alerte par jour
+4|1 heure
+5|1 km
+6|10 alertes par jour
+7|10 km
+8|1 h 30
+9|2 heures
+10|2 km
+11|25 km
+12|3 alertes par jour
+13|3 km
+14|3 mois
+15|30 min
+16|4 semaines
+17|5 alertes par jour
+18|5 km
+19|7 jours
+20|Un code à 6 chiffres suffit pour récupérer votre commande
+21|Un mélange de ce qui reste
+22|Un produit enregistré
+23|Paramètres du compte
+24|Magasins actifs
+25|Ajouter une offre ponctuelle
+26|Ajouter une photo
+27|Ajouter un magasin
+28|Ajoutez au moins une unité avant de publier
+29|Ajoutez au moins une unité des offres du jour.
+30|Ajouter plus
+31|Ajoutez des unités des offres du jour ci-dessus.
+32|Ajoutez ce qui vous reste habituellement, comme un pain ou un panier surprise. Le publier chaque jour ne prendra ensuite que quelques secondes.
+33|Ajoutez le nom et l'adresse de votre magasin. Les clients à proximité verront ensuite ce que vous publiez.
+34|Adresse
+35|La recherche d'adresses n'est pas disponible pour le moment
+36|Adresse introuvable. Ajoutez la ville ou vérifiez l'orthographe.
+37|Administration
+38|Administration
+39|Administrateur
+40|Prévenir les clients à proximité
+41|Réglages des alertes
+42|Alertes
+43|Les alertes vous attendent aussi ici. Au plus une alerte par magasin toutes les 2 heures.
+44|Les alertes utiliseront {x}. Enregistrez pour le garder.
+45|Alertes, {n} nouvelles
+46|Vous êtes à jour
+47|Déjà préparé aujourd'hui
+48|Toujours le même article, p. ex. un pain
+49|Un compte existe déjà avec cet e-mail
+50|Un administrateur l'a masqué aux clients : ses produits n'apparaissent plus dans la recherche. Contactez l'équipe Food Rescue pour le réactiver.
+51|Redemander
+52|Demander la vérification
+53|Au moins 8 caractères.
+54|Au moins 8 caractères. Vos autres appareils seront déconnectés.
+55|Au plus
+56|Les chiffres inférieurs à 5 sont masqués pour protéger la vie privée des clients.
+57|Pilote automatique
+58|Disponible maintenant
+59|Disponible jusqu'à
+60|Boulangerie
+62|Sur 3 à 4 jours
+63|Sur 5 jours ou plus
+64|D'après vos propres résultats. Rien ne change tant que vous ne décidez pas.
+65|Meilleure série : {x}. Les semaines vont du lundi au dimanche.
+66|Plus forte réduction
+68|Regrouper en drop
+69|Regrouper les restes
+70|Par produit
+71|Peut recevoir des articles gratuits
+72|Annuler
+73|Annuler la réservation
+74|Annuler cette réservation ?
+75|Annulée
+76|Modifier
+77|Changer le mot de passe
+78|Modifications enregistrées
+79|À vérifier avant utilisation
+80|Vérifiez le format
+81|Vérifiez l'heure de retrait de « {x} » : elle doit se terminer après son début, le même jour.
+82|Vérifiez le repère sur la carte pour que les clients vous trouvent facilement.
+83|Vérification…
+84|Choisissez un nouveau mot de passe
+85|Choisissez une photo
+86|Choisir un lieu
+87|Choisissez une photo du produit
+88|Choisissez une heure pour le résumé quotidien.
+89|Choisissez une heure pour le rappel
+90|Choisir un autre lieu
+91|Choisissez un début et une fin pour les heures de silence
+92|Choisissez les deux heures des heures de silence.
+93|Ne choisissez végétarien ou vegan que si c'est vrai pour tout le contenu ; cela s'affiche comme votre déclaration.
+94|Choisissez ce que vous mettez dans le drop.
+95|Choisissez ce qui vous intéresse
+96|Prendre un article gratuit
+97|Prendre gratuitement
+98|Fermer
+99|Les plus proches
+100|Code {x} copié
+101|À récupérer avant
+102|Récupérez des produits sauvés cette semaine pour lancer une série.
+103|Récupérez quelque chose d'ici dimanche pour garder votre série.
+104|Récupérez quelque chose ce mois-ci pour y contribuer.
+105|Récupéré
+106|Récupéré sur l'offert
+107|Récupéré aujourd'hui
+108|Défi de la communauté
+109|Progression du défi de la communauté
+110|Vue d'ensemble de la communauté
+111|Confirmer
+112|Confirmer le retrait
+113|Copié
+114|Copier le code
+115|Impossible d'obtenir votre position. Autorisez l'accès à la localisation ou cherchez un lieu.
+116|Impossible de joindre Food Rescue. Vérifiez votre connexion et réessayez.
+117|Impossible de charger vos statistiques
+118|Impossible d'activer les notifications : {x}. Les alertes s'affichent toujours ici tant que l'appli est ouverte.
+119|Créer un compte
+120|Créer mon compte
+122|Mot de passe actuel
+123|Client
+124|Des clients attendent encore de récupérer des produits chez {x}. Remettez-les-leur ou attendez la fin de leurs réservations, puis réessayez.
+125|Économies des clients
+126|Les clients voient le nom et l'adresse sur chaque offre.
+127|Clients venus récupérer
+128|Les clients ne la verront plus. Si quelqu'un l'a déjà réservée, sa réservation reste valable et l'offre reste dans votre liste comme épuisée.
+129|Les clients verront une photo d'illustration jusqu'à ce que vous en ajoutiez une nouvelle.
+130|Limite quotidienne de {x} articles gratuits atteinte
+131|Rappel quotidien
+132|Résumé quotidien
+133|Heure du résumé quotidien
+134|Produits laitiers
+135|Supprimer le compte
+136|Supprimer définitivement mon compte
+137|Supprimer mon compte…
+138|Description
+139|Deutsch
+140|Vouliez-vous dire
+141|Découvrir
+142|Distance
+143|Donnés (Pay-It-Forward)
+144|Offert par le magasin et la communauté.
+145|Donnés aujourd'hui
+146|Terminé
+147|Téléchargez tout ce que Food Rescue conserve sur vous, dans un fichier. Découvrez comment nous l'utilisons dans la
+148|Télécharger mes données
+149|Brouillon
+150|Déplacez le repère s'il n'est pas exactement sur votre magasin.
+151|Prix du drop
+152|Drops lancés
+153|Chaque offre ne peut apparaître qu'une fois
+154|Chaque produit ne peut apparaître qu'une fois
+155|Modifier les infos
+156|Modifier l'offre
+157|Modifier le produit
+158|Modifier les infos du magasin
+159|Modifier l'offre du jour
+160|Adresse e-mail
+161|Fin du retrait. Ensuite, les clients ne peuvent plus le réserver ni le récupérer.
+162|Heure de fin
+163|Se terminent bientôt
+164|English
+165|Saisissez un prix de drop supérieur à 0.
+166|Saisissez un nombre
+167|Saisissez un prix par panier supérieur à 0.
+168|Saisissez une adresse e-mail du type nom@exemple.fr
+169|Indiquez combien de paniers préparer.
+170|Indiquez combien d'unités sont en rayon maintenant
+171|Indiquez combien d'unités sont en rayon maintenant.
+172|Saisissez les quantités des produits que vous avez aujourd'hui.
+173|Saisissez la quantité du jour pour {x}
+174|Saisissez ce qui reste vraiment aujourd'hui. Rien n'est repris d'hier.
+175|Español
+176|Tous les magasins actifs ont publié cette semaine.
+177|Chaque panier doit contenir au moins une unité : {n} unités pour {n} paniers
+178|Seuls les produits que vous avez réellement récupérés comptent ici.
+179|Demande prévue, 7 prochains jours
+180|Expiré
+181|Exporter en CSV
+182|Favoris
+183|Remplir avec les suggestions
+184|Trouver et réserver des produits
+185|Trouver et réserver des produits à proximité
+186|Trouver des produits près de moi
+187|Trouver des produits à proximité
+188|Premier quart
+189|Suivre
+190|Suivent votre magasin
+191|Abonné
+192|Vous suivez ce magasin.
+193|Food Rescue · de bons produits, partagés.
+194|Food Rescue — de bons produits, sauvés près de chez vous
+195|Food Rescue, accueil
+196|Article
+197|Produits par jour
+198|Produits sauvés
+199|Type de produit
+200|Types de produits
+201|En vente
+202|Pour un article que vous ne vendez pas souvent. Enregistrez plutôt vos articles habituels comme produits.
+203|Pour vous
+204|Mot de passe oublié ?
+205|Français
+206|Gratuit
+207|Article gratuit Pay-It-Forward : rien à payer.
+208|Articles gratuits
+209|Articles gratuits pour les voisins vérifiés dans le besoin
+210|Unités gratuites
+211|Unités gratuites (Pay-It-Forward)
+213|Nom complet
+214|Recevez des alertes sur cet appareil même quand Food Rescue est fermé.
+215|Reçoivent les alertes de drop à proximité
+216|Offert aux personnes vérifiées dans le besoin.
+217|Vous traversez une période difficile ?
+218|Les bons produits méritent
+219|Épicerie
+220|Remettre les produits
+221|Remettre {x} × {x}
+222|Ont un produit favori ici
+223|Aide les clients qui cherchent ce type de produit. Ne choisissez végétarien ou vegan que si c'est vrai pour tout le contenu ; cela s'affiche comme votre déclaration.
+224|Masquer la carte
+225|Masquer le mot de passe
+226|J'accepte les
+227|J'ai vérifié que ces quantités sont disponibles aujourd'hui
+228|Je tiens un magasin ou un restaurant
+229|Je veux
+230|Si un compte utilise cette adresse, un lien est en route. Il fonctionne pendant une heure. Pensez à vérifier vos spams.
+231|Photo d'illustration
+232|Les photos d'illustration s'affichent quand un magasin n'a pas ajouté les siennes. Elles proviennent de Wikimedia Commons.
+233|Statistiques
+234|Les statistiques apparaissent une fois vos offres terminées. La prévision a besoin de quelques jours d'historique.
+235|Latitude ou longitude non valide
+236|Paramètres de requête non valides
+237|Cela prend moins d'une minute.
+238|Il n'apparaîtra plus lors de la préparation d'une journée. Les offres déjà publiées restent telles quelles.
+239|Italiano
+240|Ses produits disparaissent de la recherche jusqu'à sa réactivation. Le propriétaire peut toujours se connecter et voir son tableau de bord.
+241|JPEG, PNG ou WebP, jusqu'à 2 Mo. Elle est copiée dans l'offre de chaque jour.
+242|JPEG, PNG ou WebP, jusqu'à 2 Mo. De vraies photos aident les clients à choisir.
+243|Rejoignez Food Rescue
+244|Vous jetez juste un œil ? Connectez-vous avec un compte de démonstration (mot de passe
+245|La garder
+246|Garder mon compte
+247|Langue
+248|4 dernières semaines
+249|Dernier quart
+250|Lancer un Rescue Drop
+251|Lancer le drop
+252|Restant
+253|Peu d'historique
+254|En ligne
+255|En ligne tout de suite, pour peu de temps. Se termine tout seul quand c'est épuisé ou quand le temps est écoulé.
+256|Chargement du modèle d'images gratuit. La première fois prend quelques secondes (environ 14 Mo).
+257|Les commerces du quartier proposent ici, moins cher, ce qu'ils n'ont pas vendu aujourd'hui. Réservez ici, récupérez avant la fermeture et évitez que de bons produits finissent à la poubelle.
+258|La localisation n'est pas disponible dans ce navigateur. Cherchez plutôt un lieu.
+259|Repérez l'étiquette « gratuit » et prenez un article par jour. Utilisez le filtre Articles gratuits pour les voir en premier.
+260|Analyse de la photo…
+261|Recherche de produits près de {x}…
+262|Recherche de produits…
+263|Recherche…
+264|Téléphone perdu ou ordinateur partagé ? Déconnectez-vous partout sauf ici.
+265|Prix le plus bas
+266|Carte des magasins proposant des produits
+267|Argent économisé
+268|Doit être après l'heure de début
+269|Doit être avant l'heure de fin
+270|Doit être inférieur au prix d'origine
+271|Mon impact
+272|Mes commandes
+273|Mon magasin
+274|Nom
+275|Près de moi
+276|Nécessaire pour changer votre adresse e-mail.
+277|À surveiller
+278|Nouveau succès : {x}
+279|Nouvelle prévision
+280|Nouvelle offre ponctuelle
+281|Nouveau mot de passe
+282|Nouvelle photo prête
+283|Nouveau produit
+284|Il ne reste plus d'unités Pay-It-Forward pour cet article
+285|Aucune adresse trouvée près de ce point
+286|Pas encore d'alertes.
+287|Pas encore de favoris. Touchez ☆ sur un produit ou « Suivre » sur un magasin en parcourant.
+288|Aucune offre terminée sur cette période
+289|Aucun produit à moins de {n} km de {x}
+290|Aucun article gratuit dans ce secteur
+291|Pas encore d'historique
+292|Rien à regrouper : aucune offre du jour n'a d'unités restantes.
+293|Pas de notifications de
+294|Aucune réservation en cours avec ce code dans ce magasin
+295|Aucune réservation en cours pour le moment.
+296|Pas encore de photo
+297|Pas encore de retraits avec un créneau.
+298|Aucun lieu trouvé avec ce nom. Essayez d'ajouter la ville.
+299|Pas encore de réservations
+300|Pas encore de produits enregistrés
+301|Aucun magasin n'a de gaspillage ou d'absences inhabituels.
+302|Pas encore de magasins
+303|Aucune demande de vérification en attente.
+304|Personne à proximité ne devait recevoir d'alerte.
+305|Aucun de vos favoris à proximité pour le moment
+306|Non récupéré
+307|Pas encore assez d'historique. Les suggestions apparaissent après quelques jours d'offres.
+308|Pas aujourd'hui
+309|Rien de disponible à proximité pour le moment
+310|Rien en offre aujourd'hui
+311|Rien à payer
+312|Rien à récupérer
+313|Rien pour l'instant
+314|Les notifications sont bloquées pour ce site dans les réglages du navigateur.
+315|Les notifications sont bloquées pour ce site. Autorisez-les dans les réglages du site du navigateur, puis réessayez.
+316|Les notifications sont désactivées sur cet appareil.
+317|Les notifications sont activées sur cet appareil, même quand Food Rescue est fermé.
+318|Les notifications sont activées sur cet appareil.
+319|Proposez au moins une unité à la vente ou en Pay-It-Forward
+320|Offre supprimée
+321|Proposer des invendus
+322|Offre mise à jour
+323|Offert {x}
+324|Offres terminées ces 28 derniers jours, dans tous les magasins.
+325|Offres terminées {x} – {x}
+326|Les offres que vous publierez désormais n'auront pas de photo. Celles du jour gardent la leur.
+327|Sur iPhone et iPad, ajoutez d'abord Food Rescue à l'écran d'accueil (Partager → Sur l'écran d'accueil).
+328|Sur iPhone et iPad : touchez Partager → « Sur l'écran d'accueil », ouvrez Food Rescue depuis là, puis activez les notifications.
+329|En rayon maintenant
+330|Sur cet appareil
+331|Un panier de moins
+332|Un panier de plus
+333|Un de moins
+334|Une unité gratuite de moins
+335|Un de plus
+336|Une unité gratuite de plus
+337|Seuls les comptes client peuvent être vérifiés
+338|Seuls les comptes commerçant peuvent enregistrer des magasins
+339|Il ne reste que {n} unité(s)
+340|Il ne reste que {x} unité(s) de « {x} »
+341|Commande
+342|Prix d'origine
+343|Mot de passe
+344|Mot de passe modifié. Vos autres appareils ont été déconnectés.
+345|Mot de passe modifié. Vous êtes connecté.
+346|La réinitialisation du mot de passe par e-mail n'est pas encore configurée. Contactez-nous.
+347|Commandes passées
+348|En pause
+349|Payez au magasin et régalez-vous.
+350|En attente de vérification
+351|Personnes demandant à recevoir des articles gratuits Pay-It-Forward.
+352|Période
+353|Photo
+354|Crédits photo
+355|Photo de l'article
+356|Photo du produit
+357|Photo supprimée
+358|Photo indisponible
+359|Les photos ne doivent pas dépasser 2 Mo
+360|Choisissez parmi vos produits enregistrés et saisissez les quantités du jour. Cela prend environ une minute.
+361|Choisissez le bon
+362|Retrait {x}
+363|Code de retrait
+364|Fin du retrait
+365|Retrait à partir de
+366|Rappels de retrait
+367|Début du retrait
+368|Heure de retrait
+369|Retrait jusqu'à
+372|Impossible de charger les chiffres de la plateforme : {x}
+373|Veuillez accepter les conditions et la politique de confidentialité
+374|Confirmez que ces quantités sont vraiment disponibles aujourd'hui.
+375|Confirmez que ces unités sont en rayon maintenant.
+377|Português
+378|Prix
+379|Prix par panier
+380|Confidentialité
+381|Produit
+382|Produit supprimé
+383|Produit enregistré
+384|Publier
+385|Publier des produits, les remettre
+386|Publiez les invendus du jour pour que les clients à proximité puissent les réserver. Cela prend environ une minute.
+387|Publier {x}
+388|Publié ! Les clients à proximité peuvent le voir dès maintenant.
+389|Les quantités de « {x} » doivent être des nombres entiers, 0 ou plus.
+390|Quantité et horaires
+391|Aucune activité depuis 7 jours
+392|Heures de silence
+393|Fin des heures de silence
+394|Début des heures de silence
+395|Plats préparés
+396|Prêt à récupérer
+397|Actualiser
+398|Enregistrer un magasin
+399|Enregistrer le magasin
+400|Enregistrez votre magasin pour commencer
+401|Refuser la demande
+402|Refuser {x} ?
+403|Me rappeler 30 minutes avant la fin du retrait d'une réservation
+404|Me le rappeler chaque jour à
+405|Rappel masqué jusqu'à demain
+406|Heure du rappel
+407|Supprimer
+408|Supprimer la photo actuelle
+409|Supprimer l'offre
+410|Supprimer la photo
+411|Supprimer le produit
+412|Supprimer cette photo ?
+413|Retirer {x} des favoris
+414|Supprimer « {x} » de vos produits ?
+415|Supprimer « {x} » ?
+416|Retiré des favoris.
+417|Remplacer la photo
+418|Demande envoyée. Un administrateur va l'examiner.
+419|Rescue Drop
+420|Le Rescue Drop est en ligne jusqu'à {x}.{x}
+421|Rescue Drops et audience
+422|Les Rescue Drops sont comptés à part ci-dessous.
+423|Rescue Drops à proximité
+424|Rescue Drops, favoris et votre résumé quotidien.
+425|Sauver des produits
+426|Sauvez quelque chose
+427|Série de sauvetages
+428|Panier surprise sauvé
+429|Sauvé aujourd'hui, près de vous
+430|Sauvetages
+431|Réservation annulée. Le produit est de nouveau disponible.
+432|Réserver
+433|Réservez en quelques secondes et payez au magasin
+434|Réservez
+435|Réservez moins cher les invendus des magasins près de chez vous et récupérez-les avec un code de retrait.
+436|Réservez moins cher ce que les commerces du quartier n'ont pas vendu aujourd'hui, puis récupérez-le en rentrant.
+437|Réservé
+438|Réinitialisez votre mot de passe
+439|Juste {n} des {n} derniers jours
+440|Română
+441|Durée
+443|Enregistrer
+444|Enregistrer un produit
+445|Enregistrez d'abord un produit, ou regroupez plutôt les restes.
+446|Enregistrer et se connecter
+447|Enregistrer en brouillon
+448|Enregistrer les modifications
+449|Enregistrer les infos
+450|Enregistrer le produit
+451|Enregistrer les réglages
+452|Enregistrez une fois les produits que vous vendez souvent, puis publiez-les ici chaque jour en une fois.
+453|Enregistrez une fois ce que vous vendez souvent. Chaque jour, vous confirmez seulement les quantités.
+454|Enregistrer votre premier produit
+455|Ajouter {x} aux favoris
+456|Enregistré une fois, réutilisé chaque jour. Vous confirmez les quantités chaque jour.
+457|Ajouté aux favoris.
+458|Enregistré. Activez les notifications pour recevoir ces alertes même quand Food Rescue est fermé.
+459|Indiquez s'il faut afficher l'offre
+460|Rechercher
+461|Chercher un lieu
+462|La recherche a échoué
+463|Deuxième quart
+464|Voir
+465|Voir mes commandes
+466|Voir {x} dans la liste
+467|Envoyer un test
+468|Envoyez la latitude et la longitude, ou aucune des deux
+469|Envoyer le lien
+470|M'envoyer chaque jour ce qu'il y a près de chez moi à
+471|Préparer les offres du jour
+472|Réglages
+473|Réglages enregistrés.
+474|Magasins soutenus
+475|Les magasins ajoutent souvent leurs invendus plus tard dans la journée. Essayez une distance plus grande ou un autre lieu.
+476|Tout afficher
+477|Afficher sous forme de tableau
+478|Afficher la carte
+479|Afficher
+480|Voir les commandes plus anciennes ({n})
+481|Voir sur la carte
+482|Afficher le mot de passe
+483|Me proposer des suggestions selon mes favoris, mes centres d'intérêt et ce que j'ai déjà récupéré
+484|Montrez le code au comptoir.
+485|Afficher la proposition de vérification pour les articles gratuits dans Découvrir
+486|Montrez le code de retrait au magasin pour récupérer vos produits. Vous payez au magasin.
+487|Montrez ce code chez {x} pour récupérer vos produits.
+488|Montrez votre code au magasin
+489|Produits à moins de
+490|Montre combien de nourriture vous sauvez.
+491|Se connecter
+492|Connectez-vous ou créez un compte
+493|Connectez-vous pour voir ce qui vous attend à proximité.
+494|Se déconnecter
+495|Déconnecter les autres appareils
+496|Déconnecté de tous les autres appareils.
+497|Appareils connectés
+498|Produit unique
+499|Aller au contenu
+500|Épuisé
+501|Un problème est survenu ({x})
+502|Trier les résultats
+504|Magasin
+505|Tableau de bord du magasin
+506|Infos du magasin enregistrées
+507|Emplacement du magasin
+508|Nom du magasin
+509|Commerçant
+510|Magasins
+511|Les magasins apparaissent ici une fois enregistrés par leurs propriétaires.
+512|Magasins ayant remis des produits
+513|Rue et numéro, ville
+514|Rue, quartier ou ville
+515|Suggérer
+516|Suggérer les infos
+517|Suggestion
+518|Suggestion d'après la photo
+519|Suggestions pour {x}, d'après vos 4 dernières semaines. Vous vérifiez et confirmez toujours chaque nombre.
+520|Suggestions d'après vos 4 dernières semaines.
+521|Invendus des magasins près de chez vous
+522|Panier surprise
+523|Paniers surprise
+524|Suspendre le magasin
+525|Suspendre {x} ?
+526|Magasins suspendus
+527|Les magasins suspendus sont masqués aux clients.
+528|Sucreries
+529|Changer de magasin
+530|Prenez votre article gratuit. Rien à payer.
+531|À emporter
+532|Recettes
+533|Touchez la carte pour chercher autour de ce point.
+534|M'alerter des drops près de
+535|Me prévenir quand mes favoris sont en offre et quand les magasins que je suis lancent un drop
+536|Conditions
+537|Test envoyé. Il devrait arriver d'ici quelques secondes.
+538|Le prix du panier doit être inférieur à la valeur de son contenu ({x} lei)
+539|Le code a 6 chiffres
+540|L'export a échoué. Veuillez réessayer.
+541|Le fichier est vide
+542|Le produit
+543|Impossible de télécharger le modèle d'images. Vérifiez votre connexion et réessayez.
+544|Le modèle n'était sûr de rien sur cette photo.
+545|L'offre a été enregistrée, mais la photo n'a pas été acceptée :
+546|La photo n'a pas pu être {x}, veuillez réessayer
+547|Le code de retrait
+548|Le délai de retrait de cette réservation est dépassé
+549|Le créneau de retrait de {x} est déjà terminé aujourd'hui
+550|Le créneau de retrait de {x} doit se terminer après son début, le même jour
+551|Le créneau de retrait doit se terminer après son début, le même jour
+552|Le créneau de retrait doit commencer avant sa fin
+553|Le produit a été enregistré, mais la photo n'a pas été acceptée :
+554|Le test n'a pas pu être envoyé. Désactivez puis réactivez les notifications.
+555|Ce sont les unités encore en rayon. Les unités déjà réservées le restent.
+556|Ces unités sont en rayon maintenant
+557|Ils ne pourront pas recevoir d'articles gratuits. Ils pourront redemander plus tard.
+558|Troisième quart
+559|Ce compte n'est pas vérifié pour les articles gratuits Pay-It-Forward
+560|Ce compte est déjà vérifié
+561|Ce navigateur ne peut pas afficher de notifications. Les alertes s'affichent ici tant que Food Rescue est ouvert.
+562|Ce navigateur ne peut pas afficher de notifications. Les alertes s'afficheront quand même ici tant que Food Rescue est ouvert.
+563|Cela ne ressemble pas à un aliment que le modèle connaît. Remplissez les infos vous-même.
+564|Ce champ
+565|Cet article a expiré
+566|Cette offre est terminée. Préparez-en une nouvelle pour aujourd'hui.
+567|Cette offre vient de se terminer.
+568|Cette offre n'est pas disponible pour le moment
+569|Cette photo dépasse 2 Mo. Choisissez-en une plus petite.
+570|Ce lien a expiré ou a déjà été utilisé. Demandez-en un nouveau.
+571|Cela reste entre vous et Food Rescue. Les magasins ne le voient jamais.
+572|Ce magasin n'est pas actif pour le moment
+573|Ce magasin est suspendu.
+574|Quelqu'un l'a modifié au même moment, veuillez réessayer
+575|Cette semaine compte déjà. Récupérez quelque chose la semaine prochaine pour continuer.
+576|centre de Timișoara
+577|À payer
+578|À payer au magasin
+579|Aujourd'hui
+580|Offres du jour
+581|Les offres du jour ne sont pas encore prêtes
+582|Le prix du jour de {x} doit être supérieur à 0 et inférieur au prix d'origine
+584|Réessayer
+585|Essayer {x}
+586|Désactiver sur cet appareil
+587|Activez les alertes favoris pour savoir quand ils sont en offre.
+588|Activer les notifications
+589|Type
+590|Saisissez au moins 3 lettres d'un lieu
+591|Saisissez le code à 6 chiffres que vous montre le client.
+592|Saisissez d'abord l'adresse
+593|Saisissez votre mot de passe pour confirmer
+594|Annuler le changement de photo
+595|Ne plus suivre
+596|Unités récupérées et restantes, selon le jour de fin de l'offre.
+597|Unités que les clients réserveront probablement, avec une fourchette probable. D'après les 8 dernières semaines, en privilégiant le même jour de la semaine.
+598|Unités en vente
+599|Les unités ajoutées ici sont retirées des offres du jour et vendues en paniers surprise.
+600|Fuseau horaire inconnu : {x}
+601|Jusqu'à {x}
+602|Envoyez une image JPEG, PNG ou WebP
+603|Utilisez une photo JPEG, PNG ou WebP.
+604|Utilisez un nombre entier
+605|Utilisez au moins {n} caractères
+606|Utilisez au plus 2 décimales
+607|Utilisez au plus {n} caractères
+608|Utiliser le lieu que je recherche
+609|Utiliser ces infos
+610|Utilisateur
+611|{x} utilisé aujourd'hui
+612|Retrait habituel à partir de
+613|Retrait habituel jusqu'à
+614|Prix habituel {x}, prix plein {x}. Un prix plus bas écoule le stock plus vite.
+615|Vegan
+616|Végétarien
+617|Demandes de vérification
+618|Client vérifié
+619|Les personnes vérifiées peuvent recevoir gratuitement un article donné par jour. Seul le résultat de la vérification est conservé, jamais le motif.
+620|Vérifiez les personnes pour les articles gratuits et veillez au bon fonctionnement des magasins partenaires.
+621|Vérifier des personnes, gérer des magasins
+622|Vérifiez la personne en dehors de l'appli, par exemple via une association partenaire, puis décidez ici. Aucun motif ni document n'est conservé.
+623|Visible par les clients
+624|En attente de décision
+625|À récupérer
+626|Impossible de trouver cette adresse sur la carte. Vérifiez l'orthographe ou ajoutez la ville.
+627|Impossible de charger les produits pour le moment
+628|Nous ne vous le demanderons plus. Vous pouvez le réactiver dans Alertes → Réglages.
+629|Nous vous enverrons un lien par e-mail pour en choisir un nouveau.
+630|Nous vous le rappellerons ici après {x} les jours sans offre
+631|Poids
+632|Poids par unité
+633|Bienvenue
+634|Content de vous revoir
+635|Bienvenue sur Food Rescue, {x} !
+636|Bienvenue, {x}
+637|Ce que le modèle a vu : {x}.
+638|Contenu du drop
+639|Pistes à essayer
+640|Ce que vous aimez
+641|Contenu, allergènes, tout ce qui est utile à savoir
+642|Contenu habituel, allergènes
+643|Quand viennent les clients
+644|Quand vous réservez, votre code de retrait apparaît ici.
+645|Pourquoi ceux-ci ?
+646|À moins de
+647|E-mail ou mot de passe incorrect
+648|Vous
+649|Vous êtes le seul administrateur. Ajoutez d'abord un autre administrateur.
+650|Vous pouvez recevoir des articles gratuits
+651|Vous ne gérez pas ce magasin
+652|Vous n'avez pas encore de produits enregistrés. Enregistrez une fois ce que vous vendez souvent, puis publiez-le ici chaque jour.
+653|Vous n'avez pas ouvert les alertes récentes : nous vous en envoyons moins pour l'instant. Les ouvrir rétablit le nombre habituel.
+654|Vous payez au magasin au moment du retrait.
+655|Vous économisez {x}
+656|Vous serez connecté ici et déconnecté partout ailleurs.
+657|Votre compte
+658|Votre compte a été supprimé. Merci d'avoir sauvé des produits avec nous.
+659|Votre mot de passe actuel
+660|Votre mot de passe actuel est incorrect
+661|Vos données
+662|Vos informations
+663|Vos informations sont enregistrées.
+664|Vos informations, favoris et alertes sont supprimés immédiatement, et les réservations en cours sont annulées. C'est irréversible.
+665|Votre impact
+666|Impossible de charger votre impact
+667|Votre dernière demande de vérification n'a pas été acceptée. Vous pouvez redemander.
+668|Votre nom
+669|Votre mot de passe
+670|Votre prix
+671|Votre prix doit être inférieur au prix d'origine
+672|Vos produits
+673|Vos réservations
+674|Votre session est terminée, veuillez vous reconnecter
+675|Votre magasin
+676|Votre magasin n'est pas actif : les clients ne peuvent pas voir de drops pour le moment
+677|Vos magasins sont masqués aux clients définitivement et vos informations sont supprimées immédiatement. Remettez d'abord les produits que les clients attendent. C'est irréversible.
+678|Votre demande de vérification est en attente d'examen. Les articles gratuits apparaîtront ici une fois acceptée.
+679|une seconde chance.
+680|et la
+681|Le prix réduit doit être inférieur au prix d'origine
+682|p. ex. Panier de viennoiseries
+683|p. ex. Panier surprise boulangerie
+684|en vente
+685|dans {n} h {n} min
+686|dans {n} min
+687|au lieu de
+688|près du centre de Timișoara
+689|facultatif, environ
+690|politique de confidentialité
+691|la quantité doit être comprise entre 1 et {n}
+692|le rayon doit être supérieur à 0 et au plus {n}
+693|sauvés jusqu'ici · {x}
+694|le rôle doit être CONSUMER ou STORE_OWNER
+695|conditions d'utilisation
+696|ce lieu
+697|pour savoir quand un magasin proche en lance un.
+698|activez les alertes Rescue Drop
+699|jusqu'à {x}
+701|à moins de 3 km
+702|à moins de {n} km
+703|à moins de {n} km de {x}
+705|{x} Il peut se tromper. Il ne remplit jamais les allergènes ni les mentions comme végétarien ou vegan : ajoutez-les vous-même.
+706|{x} Activez les alertes favoris dans Alertes → Réglages pour savoir quand il est disponible.
+707|{x} prévenus.
+708|{x} a déjà un Rescue Drop en cours. Modifiez plutôt ce drop.
+709|{x} chez {x} pour {x}
+710|{x} remplies. Vérifiez-les par rapport à vos rayons, puis confirmez.
+711|{n} unités gratuites en ce moment. Essayez une distance plus grande ou affichez tout.
+712|{x} d'affilée
+713|{x} dans {x} : environ {x} par panier, d'une valeur de {x} au prix plein.
+714|{x} est déjà en offre aujourd'hui. Modifiez plutôt cette offre.
+715|{x} est obligatoire
+716|à {n} km
+717|{n} restants · {x} prix plein · fin {x}
+718|{n} min
+719|{x} doit être au moins {x}
+720|{x} doit être au plus {x}
+721|{n} nouveaux succès
+722|{n} sur {n} débloqués
+723|{x} publiées. Les clients à proximité peuvent réserver dès maintenant.
+724|{x} enregistrées. Publiez quand vous êtes prêt.
+726|{x} a été archivé
+727|{x} avec l'identifiant {x} introuvable
+729|{x} · Food Rescue
+730|{x} · membre depuis le {x}
+731|{x} · heures dans le fuseau horaire de votre magasin
+736|{n} % de réduction pour les clients
+737|{x}. Saisissez ce qui reste vraiment aujourd'hui ; rien n'est repris d'hier.
+738|{x}Rempli. Vérifiez les infos et modifiez-les avant d'enregistrer.
+743|· jours en {x}
+744|· retrait {x}–{x}
+745|· magasin que vous suivez
+746|· heures en {x}
+747|« {x} » est déjà terminé
+748|« {x} » est de nouveau en offre
+749|« {x} » est en pause et masqué aux clients
+750|« {x} » est publié
+751|« {x} » est enregistré. Il est temps d'ajouter des produits !
+752|« {x} » enregistré. Utilisez-le en préparant les offres du jour.
+753|Veuillez vous connecter (jeton de connexion manquant, invalide ou expiré)
+754|Veuillez vous connecter
+755|Votre type de compte ne permet pas cette action
+756|Trop de tentatives. Réessayez dans {n} minutes
+757|Trop de tentatives. Réessayez dans 1 minute
+758|(fin dans {x})
+759|dans {n} h
+760|dans {n} jours
+761|dans 1 jour
+762|{n} jours
+763|{n} sur {n}
+764|{n} sur {n} magasins
+765|{n} sur {n} semaines
+766|{n} sur {n} kg
+767|{n} sur {n} lei
+768|{n} gratuits
+769|{n} retraits avec un créneau.
+770|{n} articles
+771|1 article
+772|{n} unités · {x} kg
+773|{n} résultats
+774|1 résultat
+775|{n} magasins
+776|1 magasin
+777|{n} restants
+778|{n} restants · jusqu'à {n} par commande
+779|{n} produits · {n} unités en vente
+780|{n} produits
+781|1 produit
+782|{n} unités
+783|1 unité
+784|{n} paniers
+785|1 panier
+786|{n} offres
+787|1 offre
+788|{n} brouillons
+789|1 brouillon
+790|{n} clients
+791|1 client
+792|{n} suggestions
+793|1 suggestion
+794|{n} prix plus bas
+795|1 prix plus bas
+796|{n} Rescue Drops
+797|1 Rescue Drop
+798|{n} semaines
+799|1 semaine
+800|1 jour
+801|{n} personnes ont
+802|1 personne a
+803|{n} articles ont
+804|1 article a
+805|Premier sauvetage
+806|Récupérez votre premier produit sauvé
+807|Sauveteur régulier
+808|Récupérez des produits sauvés 10 fois
+809|Héros du sauvetage
+810|Récupérez des produits sauvés 50 fois
+811|5 kg sauvés de la poubelle
+812|Sauvez 5 kg de nourriture
+813|25 kg sauvés de la poubelle
+814|Sauvez 25 kg de nourriture
+815|Malin
+816|Économisez 100 lei par rapport aux prix pleins
+817|Explorateur local
+818|Récupérez dans 3 magasins différents
+819|Chasseur de drops
+820|Récupérez un Rescue Drop
+821|Série régulière
+822|Sauvez des produits 4 semaines d'affilée
+823|Progression : {x}
+824|Sauvons ensemble {n} articles en {x}
+825|janvier
+826|février
+827|mars
+828|avril
+829|mai
+830|juin
+831|juillet
+832|août
+833|septembre
+834|octobre
+835|novembre
+836|décembre
+837|Vous en avez sauvé {n} ce mois-ci.
+838|Débloqué le {x}
+839|À récupérer avant {x} ·
+840|{x} est remis en vente pour d'autres personnes. C'est irréversible.
+841|Prendre {x} gratuitement
+842|Réserver {x}
+843|Modifier {x}
+844|Supprimer {x}
+845|Suivre {x}
+846|Ne plus suivre {x}
+847|{x} est de nouveau actif
+848|{x} est suspendu
+849|Un de moins : {x}
+850|Un de plus : {x}
+851|Une unité gratuite de moins : {x}
+852|Une unité gratuite de plus : {x}
+853|Une unité en vente de moins : {x}
+854|Une unité en vente de plus : {x}
+855|Retrait à partir de, {x}
+856|Retrait jusqu'à, {x}
+857|Supprimer {x} de vos produits
+858|Réservation de {x}
+859|Unités de {x} pour les paniers
+860|unités gratuites de {x}
+861|unités en vente de {x}
+862|Réserver · {x}
+863|{n} % n'ont pas été vendus ({n} sur {n} unités).
+864|Des clients arrivaient encore. Le pilote automatique suggère déjà davantage ; vérifiez que vous pouvez suivre.
+865|Moins de restes de {x}
+866|Proposer {n} de plus de {x}
+867|Proposez moins, baissez le prix ou regroupez les restes dans un Rescue Drop plus tôt dans la soirée.
+868|Reste souvent invendu
+869|Se vend entièrement
+870|Beaucoup d'absences
+871|{x} · beaucoup d'absences
+872|Épuisé {n} jours sur {n}, en général {x} avant la fin du retrait.
+873|Épuisé {n} jours sur {n}.
+874|{n} minutes
+875|{n} heures
+876|Juste {n} des {n} derniers jours · souvent épuisé, la demande peut être plus forte
+877|La plupart des réservations sont faites entre {x} et {x}.
+878|Par jour : {n} unités récupérées et {n} restantes au total. Le tableau ci-dessous détaille chaque jour.
+879|moins de 5
+880|Suggéré : {n}
+881|Horaires de retrait comme le {x}.
+882|Pas encore d'historique. Saisissez la quantité du jour ; les suggestions arrivent après quelques jours.
+883|Comme la dernière fois ({x}). Plus de suggestions dans quelques jours.
+884|Épuisé {n} des {n} derniers jours, donc {n} pourraient répondre à la demande.
+885|En général environ {n} réservés et {n} restants.
+886|Environ {n} % restent généralement invendus ; un prix de {x} lei peut aider. Appliqué seulement si vous le choisissez.
+887|lundi {x}
+888|mardi {x}
+889|mercredi {x}
+890|jeudi {x}
+891|vendredi {x}
+892|samedi {x}
+893|dimanche {x}
+894|{n} janv.
+895|{n} févr.
+896|{n} mars
+897|{n} avr.
+898|{n} mai
+899|{n} juin
+900|{n} juil.
+901|{n} août
+902|{n} sept.
+903|{n} oct.
+904|{n} nov.
+905|{n} déc.
+906|1 brouillon n'est pas encore visible par les clients.
+907|{n} brouillons ne sont pas encore visibles par les clients.
+908|« {x} » part vite : il en reste {n} sur {n}. Ajoutez-en si vous en avez.
+909|« {x} » a été épuisé {x} avant la fin du retrait. Le pilote automatique en tiendra compte.
+910|{n} unités invendues se terminent dans {n} heures. Les regrouper dans 1 panier surprise en Rescue Drop ?
+911|{n} unités invendues se terminent dans {n} heures. Les regrouper dans {n} paniers surprise en Rescue Drop ?
+912|La plupart des clients viennent en fin de créneau
+913|{n} % des retraits ont eu lieu dans le dernier quart du créneau.
+914|Commencer le retrait plus tard libère le comptoir plus tôt et peut réduire les absences.
+915|{n} % des réservations n'ont pas été récupérées
+916|{n} unités réservées n'ont jamais été récupérées.
+917|Les clients reçoivent maintenant un rappel avant la fin du retrait. Des créneaux plus courts aident aussi.
+918|Ajoutez des poids pour voir les kg de nourriture sauvés
+919|1 produit n'a pas encore de poids, p. ex. {x}.
+920|{n} produits n'ont pas encore de poids, p. ex. {x}.
+921|Une estimation par unité suffit.
+922|Aucune offre {n} des {n} derniers jours
+923|Les invendus non publiés finissent à la poubelle.
+924|Activez le rappel quotidien et utilisez le pilote automatique pour publier en moins d'une minute.
+925|N'a jamais publié
+926|Dernière offre il y a {n} jours
+927|Seulement {n} % des produits proposés récupérés
+928|{n} % des réservations non récupérées
+929|Rescue Drop chez {x}
+930|{x} · jusqu'à {x}
+931|Votre favori chez {x}
+932|{x} est en offre à {x} lei
+933|{x} de vos favoris chez {x}
+934|{x} sont en offre
+935|1 offre près de vous aujourd'hui
+936|{n} offres près de vous aujourd'hui
+937|{x} · à moins de {n} km
+938|{x} et {n} autres
+939|À récupérer avant {x} chez {x}
+940|{x} · votre code de retrait est dans Mes commandes
+941|Un mélange de {x} du jour. Le contenu varie.
+942|Succès
+943|Actif
+944|Prendre gratuitement
+945|Copier
+946|Modifier
+947|Fruits et légumes
+948|Viande et poisson
+949|Proposé
+950|Mettre en pause
+951|Réactiver
+952|Réserver
+953|Réservé, c'est à vous !
+954|Réservés, en attente
+955|Reprendre
+956|Suspendre
+957|Suspendu
+958|À payer au magasin :
+959|Total, à payer au magasin
+960|Vous ne suivez plus.
+961|Nous vous le gardons pour une durée limitée. Vous verrez l'heure limite exacte de retrait après l'avoir pris.
+962|Nous vous le gardons pour une durée limitée. Vous verrez l'heure limite exacte de retrait après la réservation.
+963|Zoom avant
+964|Zoom arrière
+965|délicieux
+966|gratuit
+967|près de chez vous.
+968|facultatif
+969|à moins de 100 m
+970|votre position
+971|votre lieu enregistré
+972|Les articles gratuits sont limités à un par jour, pour qu'il y en ait pour tout le monde.
+973|Passez au magasin avant {x}. Ensuite, le produit est remis en vente.
+974|· fin
+975|{x} avec unités gratuites
+976|{x} parmi vos favoris
+977|Un de vos favoris
+978|D'un magasin que vous suivez
+979|Vous l'avez déjà pris une fois
+980|Vous l'avez déjà pris {n} fois
+981|Vous avez déjà récupéré ici une fois
+982|Vous avez déjà récupéré ici {n} fois
+983|Correspond à votre intérêt pour {x}
+984|Unités gratuites disponibles pour vous
+985|Rescue Drop en cours
+986|Se termine bientôt
+987|boulangerie
+988|plats préparés
+989|fruits et légumes
+990|produits laitiers
+991|viande et poisson
+992|sucreries
+993|épicerie
+994|végétarien
+995|vegan
+996|{x} restant d'aujourd'hui, moins cher pour ne pas être gaspillé. Demandez-nous les ingrédients et les allergènes.
+997|Pain
+998|Bagels
+999|Bretzels
+1000|Viennoiseries
+1001|Pâte
+1002|Dessert au chocolat
+1003|Glace
+1004|Glaces à l'eau
+1005|Dessert
+1006|Pizza
+1007|Burritos
+1008|Hot-dogs
+1009|Burgers
+1010|Tourte
+1011|Pâtes
+1012|Soupe
+1013|Ragoût
+1014|Purée de pommes de terre
+1015|Guacamole
+1016|Plat cuisiné
+1017|Pain de viande
+1018|Viande
+1019|Pommes
+1020|Fraises
+1021|Oranges
+1022|Citrons
+1023|Figues
+1024|Ananas
+1025|Bananes
+1026|Jacquier
+1027|Pommes cannelle
+1028|Grenades
+1029|Chou
+1030|Brocoli
+1031|Chou-fleur
+1032|Courgettes
+1033|Courge
+1034|Concombres
+1035|Artichauts
+1036|Poivrons
+1037|Cardons
+1038|Champignons
+1039|Maïs doux
+1040|Rempli. Vérifiez les infos et modifiez-les avant d'enregistrer.
+1041|Abonné.
+1042|Enregistré.
+1043|Il peut se tromper. Il ne remplit jamais les allergènes ni les mentions comme végétarien ou vegan : ajoutez-les vous-même.
+1044|{x} à moins de {n} km de {x}
+1045|Produit · {x}
+1046|Panier surprise · {x}
+1047|{x} · à moins de 100 m
+1048|{x} · à {n} km
+1049|Principal
+1050|Produits de boulangerie sur le comptoir
+1051|Bol de fruits frais
+1052|Croissants à Madrid
+1053|Fruits et légumes frais au marché
+1054|Part de gâteau au chocolat
+1055|Pizza à la part à Rome
+1056|Saladier, Kiedrich
+1057|Kraphao moo
+1058|Sandwich halloumi et légumes rôtis
+1059|Ne plus demander
+1060|demain {x}
+1061|Retrait
+1062|{n} × {x} pour {x} lei
+1063|{n} × {x} (gratuit, Pay-It-Forward)
+1064|{x} est en offre à {x} lei · retrait {x}–{x}
+1065|{x} sont en offre · retrait {x}–{x}

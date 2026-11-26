@@ -85,6 +85,7 @@ public class AlertService {
     private final ApplicationEventPublisher events;
     private final com.foodrescue.repository.OrderRepository orderRepository;
     private final org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate jdbc;
+    private final com.foodrescue.i18n.Translator translator;
     private final Clock clock;
 
     // ------------------------------------------------------------------------------------
@@ -234,7 +235,7 @@ public class AlertService {
             sent++;
         }
         if (!pushes.isEmpty()) {
-            events.publishEvent(new PushRequested(pushes));
+            events.publishEvent(new PushRequested(translator.localize(pushes))); // in each person's language
         }
         return sent;
     }
@@ -315,7 +316,7 @@ public class AlertService {
                 .filter(n -> profiles.get(n.getUserId()) == null || !profiles.get(n.getUserId()).isQuietAt(now))
                 .map(AlertService::push).toList();
         if (!pushes.isEmpty()) {
-            events.publishEvent(new PushRequested(pushes));
+            events.publishEvent(new PushRequested(translator.localize(pushes))); // in each person's language
         }
         return saved.size();
     }
@@ -367,7 +368,7 @@ public class AlertService {
             if (profile == null || !profile.isQuietAt(now)) pushes.add(push(n));
         }
         if (!pushes.isEmpty()) {
-            events.publishEvent(new PushRequested(pushes));
+            events.publishEvent(new PushRequested(translator.localize(pushes))); // in each person's language
         }
         return saved.size();
     }

@@ -1,0 +1,1045 @@
+# Deutsch. id|Übersetzung; {x} und {n} in derselben Reihenfolge wie im Englischen (oder {1}, {2} für eine andere).
+0|(optional)
+1|({x} Benachrichtigungen in der Nähe aktiviert)
+2|+{n} gratis
+3|1 Benachrichtigung pro Tag
+4|1 Stunde
+5|1 km
+6|10 Benachrichtigungen pro Tag
+7|10 km
+8|1½ Stunden
+9|2 Stunden
+10|2 km
+11|25 km
+12|3 Benachrichtigungen pro Tag
+13|3 km
+14|3 Monate
+15|30 Min.
+16|4 Wochen
+17|5 Benachrichtigungen pro Tag
+18|5 km
+19|7 Tage
+20|Zum Abholen brauchst du nur einen 6-stelligen Code
+21|Eine Mischung aus dem, was übrig ist
+22|Ein gespeichertes Produkt
+23|Kontoeinstellungen
+24|Aktive Läden
+25|Einmaliges Angebot hinzufügen
+26|Foto hinzufügen
+27|Laden hinzufügen
+28|Füge vor dem Veröffentlichen mindestens eine Einheit hinzu
+29|Füge mindestens eine Einheit aus den heutigen Angeboten hinzu.
+30|Mehr hinzufügen
+31|Füge oben Einheiten aus den heutigen Angeboten hinzu.
+32|Füge hinzu, was dir meistens übrig bleibt, etwa ein Brot oder eine Überraschungstüte. Das tägliche Veröffentlichen dauert dann nur Sekunden.
+33|Füge Name und Adresse deines Ladens hinzu. Kundschaft in der Nähe sieht dann die Lebensmittel, die du veröffentlichst.
+34|Adresse
+35|Die Adresssuche ist gerade nicht verfügbar
+36|Adresse nicht gefunden. Ergänze die Stadt oder prüfe die Schreibweise.
+37|Verwaltung
+38|Verwaltung
+39|Administrator
+40|Kundschaft in der Nähe benachrichtigen
+41|Benachrichtigungseinstellungen
+42|Benachrichtigungen
+43|Benachrichtigungen warten auch hier auf dich. Höchstens eine pro Laden alle 2 Stunden.
+44|Benachrichtigungen verwenden {x}. Speichere, um es zu behalten.
+45|Benachrichtigungen, {n} neu
+46|Alles erledigt
+47|Heute schon eingerichtet
+48|Immer derselbe Artikel, z. B. ein Brot
+49|Es gibt bereits ein Konto mit dieser E-Mail
+50|Ein Administrator hat ihn für die Kundschaft ausgeblendet, daher erscheinen seine Lebensmittel nicht in der Suche. Wende dich an das Food-Rescue-Team, um ihn wieder zu aktivieren.
+51|Erneut anfragen
+52|Verifizierung anfragen
+53|Mindestens 8 Zeichen.
+54|Mindestens 8 Zeichen. Andere Geräte werden abgemeldet.
+55|Höchstens
+56|Zahlen unter 5 werden ausgeblendet, um die Privatsphäre der Kundschaft zu schützen.
+57|Autopilot
+58|Jetzt verfügbar
+59|Verfügbar bis
+60|Bäckerei
+62|Basierend auf 3–4 Tagen
+63|Basierend auf 5+ Tagen
+64|Basierend auf deinen eigenen Ergebnissen. Nichts ändert sich, bis du entscheidest.
+65|Bisher am besten: {x}. Wochen laufen von Montag bis Sonntag.
+66|Größter Rabatt
+68|Als Drop bündeln
+69|Reste bündeln
+70|Nach Produkt
+71|Kann Gratisartikel erhalten
+72|Abbrechen
+73|Reservierung stornieren
+74|Diese Reservierung stornieren?
+75|Storniert
+76|Ändern
+77|Passwort ändern
+78|Änderungen gespeichert
+79|Vor der Verwendung prüfen
+80|Prüfe das Format
+81|Prüfe die Abholzeit für „{x}“: Sie muss am selben Tag nach dem Beginn enden.
+82|Prüfe die Markierung auf der Karte, damit die Kundschaft dich leicht findet.
+83|Wird geprüft …
+84|Neues Passwort wählen
+85|Foto wählen
+86|Ort wählen
+87|Produktfoto wählen
+88|Wähle eine Uhrzeit für die tägliche Zusammenfassung.
+89|Wähle eine Uhrzeit für die Erinnerung
+90|Anderen Ort wählen
+91|Wähle Beginn und Ende der Ruhezeit
+92|Wähle beide Uhrzeiten für die Ruhezeit.
+93|Wähle vegetarisch oder vegan nur, wenn es für den gesamten Inhalt gilt; es wird als deine Angabe angezeigt.
+94|Wähle aus, was in den Drop kommt.
+95|Wähle, worüber du informiert werden möchtest
+96|Gratisartikel holen
+97|Gratis holen
+98|Schließen
+99|Am nächsten
+100|Code {x} kopiert
+101|Abholen bis
+102|Hole diese Woche gerettete Lebensmittel ab, um eine Serie zu starten.
+103|Hole bis Sonntag etwas ab, um deine Serie zu halten.
+104|Hole diesen Monat etwas ab, um beizutragen.
+105|Abgeholt
+106|Abgeholt vom Angebot
+107|Heute abgeholt
+108|Gemeinschafts-Challenge
+109|Fortschritt der Gemeinschafts-Challenge
+110|Gemeinschaftsübersicht
+111|Bestätigen
+112|Abholung bestätigen
+113|Kopiert
+114|Code kopieren
+115|Dein Standort konnte nicht ermittelt werden. Erlaube den Standortzugriff oder suche einen Ort.
+116|Food Rescue ist nicht erreichbar. Prüfe deine Verbindung und versuche es erneut.
+117|Deine Statistiken konnten nicht geladen werden
+118|Benachrichtigungen konnten nicht aktiviert werden: {x}. Benachrichtigungen erscheinen weiter hier, solange die App geöffnet ist.
+119|Konto erstellen
+120|Mein Konto erstellen
+122|Aktuelles Passwort
+123|Kunde
+124|Bei {x} warten noch Kunden auf ihre Abholung. Gib die Lebensmittel aus oder warte, bis ihre Reservierungen enden, und versuche es dann erneut.
+125|Ersparnis der Kundschaft
+126|Die Kundschaft sieht Name und Adresse bei jedem Angebot.
+127|Kunden, die abgeholt haben
+128|Die Kundschaft sieht es nicht mehr. Wer es schon reserviert hat, behält die Reservierung, und das Angebot bleibt als ausverkauft in deiner Liste.
+129|Die Kundschaft sieht stattdessen ein Beispielfoto, bis du ein neues hinzufügst.
+130|Tageslimit von {x} Gratisartikeln erreicht
+131|Tägliche Erinnerung
+132|Tägliche Zusammenfassung
+133|Uhrzeit der täglichen Zusammenfassung
+134|Milchprodukte
+135|Konto löschen
+136|Mein Konto endgültig löschen
+137|Mein Konto löschen …
+138|Beschreibung
+139|Deutsch
+140|Meintest du
+141|Entdecken
+142|Entfernung
+143|Gespendet (Pay-It-Forward)
+144|Gespendet vom Laden und der Gemeinschaft.
+145|Heute gespendet
+146|Fertig
+147|Lade alles, was Food Rescue über dich speichert, als Datei herunter. Wie wir die Daten nutzen, steht in der
+148|Meine Daten herunterladen
+149|Entwurf
+150|Ziehe die Markierung, falls sie nicht genau auf deinem Laden liegt.
+151|Drop-Preis
+152|Gestartete Drops
+153|Jedes Angebot darf nur einmal vorkommen
+154|Jedes Produkt darf nur einmal vorkommen
+155|Angaben bearbeiten
+156|Angebot bearbeiten
+157|Produkt bearbeiten
+158|Ladenangaben bearbeiten
+159|Heutiges Angebot bearbeiten
+160|E-Mail-Adresse
+161|Ende der Abholung. Danach kann die Kundschaft nicht mehr reservieren oder abholen.
+162|Endzeit
+163|Endet am frühesten
+164|English
+165|Gib einen Drop-Preis über 0 ein.
+166|Gib eine Zahl ein
+167|Gib einen Preis pro Tüte über 0 ein.
+168|Gib eine E-Mail-Adresse wie name@beispiel.de ein
+169|Gib an, wie viele Tüten du machst.
+170|Gib an, wie viele Einheiten jetzt im Regal sind
+171|Gib an, wie viele Einheiten jetzt im Regal sind.
+172|Gib die Mengen für die Produkte ein, die du heute hast.
+173|Gib die heutige Menge für {x} ein
+174|Gib ein, was heute wirklich übrig ist. Nichts wird von gestern übernommen.
+175|Español
+176|Jeder aktive Laden hat diese Woche veröffentlicht.
+177|Jede Tüte braucht mindestens eine Einheit: {n} Einheiten für {n} Tüten
+178|Hier zählen nur Lebensmittel, die du wirklich abgeholt hast.
+179|Erwartete Nachfrage, nächste 7 Tage
+180|Abgelaufen
+181|Als CSV exportieren
+182|Favoriten
+183|Vorschläge eintragen
+184|Lebensmittel finden und reservieren
+185|Lebensmittel in der Nähe finden und reservieren
+186|Lebensmittel in meiner Nähe finden
+187|Lebensmittel in der Nähe finden
+188|Erstes Viertel
+189|Folgen
+190|Folgen deinem Laden
+191|Gefolgt
+192|Du folgst diesem Laden.
+193|Food Rescue · gutes Essen, gut geteilt.
+194|Food Rescue — gutes Essen, in deiner Nähe gerettet
+195|Food Rescue, Startseite
+196|Artikel
+197|Lebensmittel pro Tag
+198|Gerettete Lebensmittel
+199|Art von Lebensmittel
+200|Arten von Lebensmitteln
+201|Zum Verkauf
+202|Für etwas, das du selten verkaufst. Speichere regelmäßige Artikel lieber als Produkte.
+203|Für dich
+204|Passwort vergessen?
+205|Français
+206|Gratis
+207|Gratisartikel Pay-It-Forward: nichts zu bezahlen.
+208|Gratisartikel
+209|Gratisartikel für verifizierte Nachbarn in Not
+210|Gratiseinheiten
+211|Gratiseinheiten (Pay-It-Forward)
+213|Vollständiger Name
+214|Erhalte Benachrichtigungen auf diesem Gerät, auch wenn Food Rescue geschlossen ist.
+215|Erhalten Drop-Benachrichtigungen in der Nähe
+216|Wird an verifizierte Menschen in Not verschenkt.
+217|Gerade eine schwierige Zeit?
+218|Gutes Essen verdient
+219|Lebensmittel
+220|Lebensmittel ausgeben
+221|{x} × {x} ausgeben
+222|Haben hier ein Lieblingsprodukt
+223|Hilft der Kundschaft, die diese Art von Lebensmittel sucht. Wähle vegetarisch oder vegan nur, wenn es für den gesamten Inhalt gilt; es wird als deine Angabe angezeigt.
+224|Karte ausblenden
+225|Passwort verbergen
+226|Ich akzeptiere die
+227|Ich habe geprüft, dass diese Mengen heute verfügbar sind
+228|Ich führe einen Laden oder ein Restaurant
+229|Ich möchte
+230|Falls ein Konto diese Adresse nutzt, ist ein Link unterwegs. Er gilt eine Stunde. Sieh auch im Spam-Ordner nach.
+231|Beispielfoto
+232|Beispielfotos werden gezeigt, wenn ein Laden keine eigenen hinzugefügt hat. Sie stammen von Wikimedia Commons.
+233|Statistiken
+234|Statistiken erscheinen, sobald deine Angebote beendet sind. Die Prognose braucht ein paar Tage Verlauf.
+235|Ungültiger Breiten- oder Längengrad
+236|Ungültige Anfrageparameter
+237|Es dauert weniger als eine Minute.
+238|Es erscheint nicht mehr, wenn du einen Tag einrichtest. Bereits veröffentlichte Angebote bleiben, wie sie sind.
+239|Italiano
+240|Seine Lebensmittel verschwinden aus der Suche, bis du ihn wieder aktivierst. Der Inhaber kann sich weiterhin anmelden und sein Dashboard sehen.
+241|JPEG, PNG oder WebP, bis 2 MB. Es wird in das Angebot jedes Tages übernommen.
+242|JPEG, PNG oder WebP, bis 2 MB. Echte Fotos helfen der Kundschaft bei der Wahl.
+243|Bei Food Rescue mitmachen
+244|Nur mal schauen? Melde dich mit einem Demokonto an (Passwort
+245|Behalten
+246|Mein Konto behalten
+247|Sprache
+248|Letzte 4 Wochen
+249|Letztes Viertel
+250|Rescue Drop starten
+251|Drop starten
+252|Übrig
+253|Wenig Verlauf
+254|Live
+255|Sofort live, für kurze Zeit. Endet von selbst, wenn ausverkauft oder die Zeit abgelaufen ist.
+256|Das kostenlose Bildmodell wird geladen. Beim ersten Mal dauert es ein paar Sekunden (etwa 14 MB).
+257|Läden aus der Nachbarschaft bieten hier günstiger an, was sie heute nicht verkauft haben. Reserviere hier, hol es vor Ladenschluss ab und bewahre gutes Essen vor der Tonne.
+258|Der Standort ist in diesem Browser nicht verfügbar. Suche stattdessen einen Ort.
+259|Achte auf das Etikett „gratis“ und hol dir einen Artikel pro Tag. Mit dem Filter Gratisartikel siehst du sie zuerst.
+260|Foto wird angesehen …
+261|Lebensmittel in der Nähe von {x} werden gesucht …
+262|Lebensmittel werden gesucht …
+263|Suche läuft …
+264|Handy verloren oder einen gemeinsamen Computer benutzt? Melde dich überall außer hier ab.
+265|Niedrigster Preis
+266|Karte der Läden mit Lebensmitteln
+267|Gespartes Geld
+268|Muss nach der Startzeit liegen
+269|Muss vor der Endzeit liegen
+270|Muss unter dem ursprünglichen Preis liegen
+271|Meine Wirkung
+272|Meine Bestellungen
+273|Mein Laden
+274|Name
+275|In meiner Nähe
+276|Wird benötigt, um deine E-Mail-Adresse zu ändern.
+277|Braucht Aufmerksamkeit
+278|Neuer Erfolg: {x}
+279|Neue Prognose
+280|Neues einmaliges Angebot
+281|Neues Passwort
+282|Neues Foto bereit
+283|Neues Produkt
+284|Für diesen Artikel sind keine Pay-It-Forward-Einheiten mehr übrig
+285|Keine Adresse in der Nähe dieses Punktes gefunden
+286|Noch keine Benachrichtigungen.
+287|Noch keine Favoriten. Tippe beim Stöbern auf ☆ bei einem Produkt oder auf „Folgen“ bei einem Laden.
+288|Keine beendeten Angebote in diesem Zeitraum
+289|Keine Lebensmittel im Umkreis von {n} km um {x}
+290|Keine Gratisartikel in dieser Gegend
+291|Noch kein Verlauf
+292|Nichts zu bündeln: Keines der heutigen Angebote hat noch Einheiten.
+293|Keine Benachrichtigungen von
+294|Keine offene Reservierung mit diesem Abholcode in diesem Laden
+295|Gerade keine offenen Reservierungen.
+296|Noch kein Foto
+297|Noch keine Abholungen mit Abholzeitraum.
+298|Kein Ort mit diesem Namen gefunden. Versuche es mit der Stadt.
+299|Noch keine Reservierungen
+300|Noch keine gespeicherten Produkte
+301|Kein Laden hat ungewöhnlich viel Verschwendung oder Nichtabholungen.
+302|Noch keine Läden
+303|Keine Verifizierungsanfragen offen.
+304|Niemand in der Nähe musste benachrichtigt werden.
+305|Gerade keiner deiner Favoriten in der Nähe
+306|Nicht abgeholt
+307|Noch nicht genug Verlauf. Vorschläge erscheinen nach ein paar Tagen mit Angeboten.
+308|Heute nicht
+309|Gerade nichts in der Nähe verfügbar
+310|Heute keine Angebote
+311|Nichts zu bezahlen
+312|Nichts abzuholen
+313|Noch nichts
+314|Benachrichtigungen sind für diese Seite in den Browsereinstellungen blockiert.
+315|Benachrichtigungen sind für diese Seite blockiert. Erlaube sie in den Website-Einstellungen deines Browsers und versuche es erneut.
+316|Benachrichtigungen sind auf diesem Gerät aus.
+317|Benachrichtigungen sind auf diesem Gerät an, auch wenn Food Rescue geschlossen ist.
+318|Benachrichtigungen sind auf diesem Gerät an.
+319|Biete mindestens eine Einheit zum Verkauf oder als Pay-It-Forward an
+320|Angebot entfernt
+321|Übrige Lebensmittel anbieten
+322|Angebot aktualisiert
+323|Angeboten {x}
+324|Angebote, die in den letzten 28 Tagen endeten, in allen Läden.
+325|Angebote, die {x} – {x} endeten
+326|Angebote, die du ab jetzt veröffentlichst, haben kein Foto. Die heutigen behalten ihres.
+327|Füge Food Rescue auf iPhone und iPad zuerst zum Home-Bildschirm hinzu (Teilen → Zum Home-Bildschirm).
+328|Auf iPhone und iPad: Tippe auf Teilen → „Zum Home-Bildschirm“, öffne Food Rescue von dort und aktiviere dann die Benachrichtigungen.
+329|Jetzt im Regal
+330|Auf diesem Gerät
+331|Eine Tüte weniger
+332|Eine Tüte mehr
+333|Eins weniger
+334|Eine Gratiseinheit weniger
+335|Eins mehr
+336|Eine Gratiseinheit mehr
+337|Nur Kundenkonten können verifiziert werden
+338|Nur Ladeninhaber-Konten können Läden registrieren
+339|Nur noch {n} Einheit(en) übrig
+340|Nur noch {x} Einheit(en) von „{x}“ übrig
+341|Bestellung
+342|Ursprünglicher Preis
+343|Passwort
+344|Passwort geändert. Andere Geräte wurden abgemeldet.
+345|Passwort geändert. Du bist angemeldet.
+346|Das Zurücksetzen des Passworts per E-Mail ist noch nicht eingerichtet. Bitte kontaktiere uns.
+347|Frühere Bestellungen
+348|Pausiert
+349|An der Kasse bezahlen und genießen.
+350|Wird geprüft
+351|Menschen, die Gratisartikel Pay-It-Forward erhalten möchten.
+352|Zeitraum
+353|Foto
+354|Fotonachweise
+355|Foto des Artikels
+356|Foto des Produkts
+357|Foto entfernt
+358|Foto nicht verfügbar
+359|Fotos dürfen höchstens 2 MB groß sein
+360|Wähle aus deinen gespeicherten Produkten und gib die heutigen Mengen ein. Das dauert etwa eine Minute.
+361|Wähle den richtigen
+362|Abholung {x}
+363|Abholcode
+364|Ende der Abholung
+365|Abholung ab
+366|Abholerinnerungen
+367|Beginn der Abholung
+368|Abholzeit
+369|Abholung bis
+372|Plattformzahlen konnten nicht geladen werden: {x}
+373|Bitte akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung
+374|Bitte bestätige, dass diese Mengen heute wirklich verfügbar sind.
+375|Bitte bestätige, dass diese Einheiten jetzt im Regal sind.
+377|Português
+378|Preis
+379|Preis pro Tüte
+380|Datenschutz
+381|Produkt
+382|Produkt entfernt
+383|Produkt gespeichert
+384|Veröffentlichen
+385|Lebensmittel veröffentlichen und ausgeben
+386|Veröffentliche den heutigen Überschuss, damit die Kundschaft in der Nähe ihn reservieren kann. Das dauert etwa eine Minute.
+387|{x} veröffentlichen
+388|Veröffentlicht! Die Kundschaft in der Nähe sieht es jetzt.
+389|Die Mengen für „{x}“ müssen ganze Zahlen sein, 0 oder mehr.
+390|Menge und Zeiten
+391|Seit 7 Tagen ruhig
+392|Ruhezeit
+393|Ende der Ruhezeit
+394|Beginn der Ruhezeit
+395|Fertiggerichte
+396|Abholbereit
+397|Aktualisieren
+398|Einen Laden registrieren
+399|Laden registrieren
+400|Registriere deinen Laden, um loszulegen
+401|Anfrage ablehnen
+402|{x} ablehnen?
+403|30 Minuten vor Ende der Abholung einer Reservierung erinnern
+404|Täglich erinnern um
+405|Erinnerung bis morgen ausgeblendet
+406|Uhrzeit der Erinnerung
+407|Entfernen
+408|Aktuelles Foto entfernen
+409|Angebot entfernen
+410|Foto entfernen
+411|Produkt entfernen
+412|Dieses Foto entfernen?
+413|{x} aus den Favoriten entfernen
+414|„{x}“ aus deinen Produkten entfernen?
+415|„{x}“ entfernen?
+416|Aus den Favoriten entfernt.
+417|Foto ersetzen
+418|Anfrage gesendet. Ein Administrator prüft sie.
+419|Rescue Drop
+420|Der Rescue Drop ist live bis {x}.{x}
+421|Rescue Drops und Reichweite
+422|Rescue Drops werden unten separat gezählt.
+423|Rescue Drops in der Nähe
+424|Rescue Drops, Favoriten und deine tägliche Zusammenfassung.
+425|Lebensmittel retten
+426|Rette etwas
+427|Rettungsserie
+428|Gerettete Überraschungstüte
+429|Heute gerettet, in deiner Nähe
+430|Rettungen
+431|Reservierung storniert. Das Lebensmittel ist wieder verfügbar.
+432|Lebensmittel reservieren
+433|In Sekunden reservieren, im Laden bezahlen
+434|Reservieren
+435|Reserviere übrige Lebensmittel aus Läden in deiner Nähe zum kleineren Preis und hol sie mit einem Abholcode ab.
+436|Reserviere günstiger, was Läden in der Nähe heute nicht verkauft haben, und hol es auf dem Heimweg ab.
+437|Reserviert
+438|Passwort zurücksetzen
+439|An {n} der letzten {n} Tage richtig
+440|Română
+441|Dauer
+443|Speichern
+444|Produkt speichern
+445|Speichere zuerst ein Produkt oder bündle stattdessen Reste.
+446|Speichern und anmelden
+447|Als Entwurf speichern
+448|Änderungen speichern
+449|Angaben speichern
+450|Produkt speichern
+451|Einstellungen speichern
+452|Speichere einmal die Produkte, die du oft verkaufst, und veröffentliche sie dann hier jeden Tag in einem Schritt.
+453|Speichere einmal, was du oft verkaufst. Jeden Tag bestätigst du nur die Mengen.
+454|Erstes Produkt speichern
+455|{x} als Favorit speichern
+456|Einmal gespeichert, jeden Tag wiederverwendet. Du bestätigst die Mengen täglich.
+457|Zu den Favoriten hinzugefügt.
+458|Gespeichert. Aktiviere Benachrichtigungen, um diese auch zu erhalten, wenn Food Rescue geschlossen ist.
+459|Gib an, ob das Angebot angezeigt werden soll
+460|Suchen
+461|Ort suchen
+462|Suche fehlgeschlagen
+463|Zweites Viertel
+464|Ansehen
+465|Meine Bestellungen ansehen
+466|{x} in der Liste ansehen
+467|Test senden
+468|Sende Breiten- und Längengrad oder keins von beidem
+469|Link senden
+470|Schick mir täglich, was es in der Nähe meines Ortes gibt, um
+471|Heutige Angebote einrichten
+472|Einstellungen
+473|Einstellungen gespeichert.
+474|Unterstützte Läden
+475|Läden stellen Überschüsse meist später am Tag ein. Versuche eine größere Entfernung oder einen anderen Ort.
+476|Alle Lebensmittel zeigen
+477|Als Tabelle anzeigen
+478|Karte zeigen
+479|Zeigen
+480|Ältere Bestellungen zeigen ({n})
+481|Auf der Karte zeigen
+482|Passwort anzeigen
+483|Empfehlungen für mich anzeigen, basierend auf meinen Favoriten, Interessen und dem, was ich schon abgeholt habe
+484|Zeig den Code an der Kasse.
+485|Das Angebot zur Verifizierung für Gratisartikel unter Entdecken anzeigen
+486|Zeig den Abholcode im Laden, um dein Essen abzuholen. Du bezahlst im Laden.
+487|Zeig diesen Code bei {x}, um dein Essen abzuholen.
+488|Zeig deinen Code im Laden
+489|Lebensmittel im Umkreis von
+490|Zeigt, wie viel Essen du rettest.
+491|Anmelden
+492|Melde dich an oder erstelle ein Konto
+493|Melde dich an, um zu sehen, was in der Nähe auf dich wartet.
+494|Abmelden
+495|Andere Geräte abmelden
+496|Auf allen anderen Geräten abgemeldet.
+497|Angemeldete Geräte
+498|Einzelnes Produkt
+499|Zum Inhalt springen
+500|Ausverkauft
+501|Etwas ist schiefgelaufen ({x})
+502|Ergebnisse sortieren
+504|Laden
+505|Laden-Dashboard
+506|Ladenangaben gespeichert
+507|Standort des Ladens
+508|Name des Ladens
+509|Ladeninhaber
+510|Läden
+511|Läden erscheinen hier, sobald ihre Inhaber sie registrieren.
+512|Läden, die Lebensmittel ausgegeben haben
+513|Straße und Hausnummer, Stadt
+514|Straße, Viertel oder Stadt
+515|Vorschlagen
+516|Angaben vorschlagen
+517|Vorschlag
+518|Vorschlag aus dem Foto
+519|Vorschläge für {x}, aus deinen letzten 4 Wochen. Du prüfst und bestätigst trotzdem jede Zahl.
+520|Vorschläge aus deinen letzten 4 Wochen.
+521|Übrige Lebensmittel aus Läden in deiner Nähe
+522|Überraschungstüte
+523|Überraschungstüten
+524|Laden sperren
+525|{x} sperren?
+526|Gesperrte Läden
+527|Gesperrte Läden sind für die Kundschaft ausgeblendet.
+528|Süßes
+529|Laden wechseln
+530|Hol dir deinen Gratisartikel. Nichts zu bezahlen.
+531|Zum Mitnehmen
+532|Einnahmen
+533|Tippe auf die Karte, um rund um diesen Punkt zu suchen.
+534|Benachrichtige mich über Drops in der Nähe von
+535|Benachrichtige mich, wenn meine Favoriten im Angebot sind und wenn Läden, denen ich folge, einen Drop starten
+536|Bedingungen
+537|Test gesendet. Er sollte in wenigen Sekunden ankommen.
+538|Der Tütenpreis muss unter dem Wert des Inhalts liegen ({x} Lei)
+539|Der Code hat 6 Ziffern
+540|Der Export ist fehlgeschlagen. Bitte versuche es erneut.
+541|Die Datei ist leer
+542|Das Essen
+543|Das Bildmodell konnte nicht heruntergeladen werden. Prüfe deine Verbindung und versuche es erneut.
+544|Das Modell war sich bei diesem Foto bei nichts sicher.
+545|Das Angebot wurde gespeichert, aber das Foto wurde nicht angenommen:
+546|Das Foto konnte nicht {x} werden, bitte versuche es erneut
+547|Der Abholcode
+548|Die Abholfrist für diese Reservierung ist abgelaufen
+549|Der Abholzeitraum für {x} ist heute schon vorbei
+550|Der Abholzeitraum für {x} muss am selben Tag nach dem Beginn enden
+551|Der Abholzeitraum muss am selben Tag nach dem Beginn enden
+552|Der Abholzeitraum muss vor seinem Ende beginnen
+553|Das Produkt wurde gespeichert, aber das Foto wurde nicht angenommen:
+554|Der Test konnte nicht zugestellt werden. Schalte die Benachrichtigungen aus und wieder ein.
+555|Das sind die Einheiten, die noch im Regal liegen. Bereits reservierte Einheiten bleiben reserviert.
+556|Diese Einheiten sind jetzt im Regal
+557|Sie können dann keine Gratisartikel erhalten. Sie können später erneut anfragen.
+558|Drittes Viertel
+559|Dieses Konto ist nicht für Gratisartikel Pay-It-Forward verifiziert
+560|Dieses Konto ist bereits verifiziert
+561|Dieser Browser kann keine Benachrichtigungen anzeigen. Sie erscheinen hier, solange Food Rescue geöffnet ist.
+562|Dieser Browser kann keine Benachrichtigungen anzeigen. Sie erscheinen trotzdem hier, solange Food Rescue geöffnet ist.
+563|Das sieht nicht nach einem Lebensmittel aus, das das Modell kennt. Fülle die Angaben selbst aus.
+564|Dieses Feld
+565|Dieser Artikel ist abgelaufen
+566|Dieses Angebot ist beendet. Richte ein neues für heute ein.
+567|Dieses Angebot ist gerade beendet.
+568|Dieses Angebot ist gerade nicht verfügbar
+569|Dieses Foto ist größer als 2 MB. Wähle ein kleineres.
+570|Dieser Link ist abgelaufen oder wurde schon verwendet. Fordere einen neuen an.
+571|Das bleibt zwischen dir und Food Rescue. Läden sehen es nie.
+572|Dieser Laden ist derzeit nicht aktiv
+573|Dieser Laden ist gesperrt.
+574|Jemand anderes hat das im selben Moment geändert, bitte versuche es erneut
+575|Diese Woche zählt schon. Hol nächste Woche etwas ab, um weiterzumachen.
+576|Zentrum von Timișoara
+577|Zu bezahlen
+578|Im Laden zu bezahlen
+579|Heute
+580|Heutige Angebote
+581|Die heutigen Angebote sind noch nicht eingerichtet
+582|Der heutige Preis für {x} muss über 0 und unter dem ursprünglichen Preis liegen
+584|Erneut versuchen
+585|{x} versuchen
+586|Auf diesem Gerät ausschalten
+587|Aktiviere Favoriten-Benachrichtigungen, um zu erfahren, wann sie im Angebot sind.
+588|Benachrichtigungen aktivieren
+589|Art
+590|Gib mindestens 3 Buchstaben eines Ortes ein
+591|Gib den 6-stelligen Code ein, den dir die Kundin oder der Kunde zeigt.
+592|Gib zuerst die Adresse ein
+593|Gib zur Bestätigung dein Passwort ein
+594|Fotoänderung rückgängig machen
+595|Nicht mehr folgen
+596|Abgeholte und übrige Einheiten, nach dem Tag, an dem das Angebot endete.
+597|Einheiten, die die Kundschaft wahrscheinlich reserviert, mit einer wahrscheinlichen Spanne. Basierend auf den letzten 8 Wochen, gewichtet nach Wochentag.
+598|Einheiten zum Verkauf
+599|Einheiten, die du hier hinzufügst, werden aus den heutigen Angeboten genommen und als Überraschungstüten verkauft.
+600|Unbekannte Zeitzone: {x}
+601|Bis {x}
+602|Lade ein JPEG-, PNG- oder WebP-Bild hoch
+603|Verwende ein JPEG-, PNG- oder WebP-Foto.
+604|Verwende eine ganze Zahl
+605|Verwende mindestens {n} Zeichen
+606|Verwende höchstens 2 Nachkommastellen
+607|Verwende höchstens {n} Zeichen
+608|Den Ort verwenden, den ich suche
+609|Übernehmen
+610|Benutzer
+611|Heute mit {x}
+612|Übliche Abholung ab
+613|Übliche Abholung bis
+614|Üblicher Preis {x}, voller Preis {x}. Ein niedrigerer Preis verkauft schneller.
+615|Vegan
+616|Vegetarisch
+617|Verifizierungsanfragen
+618|Verifizierter Kunde
+619|Verifizierte Personen können täglich einen gespendeten Artikel gratis erhalten. Gespeichert wird nur das Ergebnis der Prüfung, nie der Grund.
+620|Verifiziere Personen für Gratisartikel und halte Partnerläden in gutem Zustand.
+621|Personen verifizieren, Läden verwalten
+622|Verifiziere die Person außerhalb der App, etwa über eine Partnerorganisation, und entscheide dann hier. Gründe oder Dokumente werden nicht gespeichert.
+623|Für die Kundschaft sichtbar
+624|Warten auf Entscheidung
+625|Warten auf Abholung
+626|Wir konnten diese Adresse nicht auf der Karte finden. Prüfe die Schreibweise oder ergänze die Stadt.
+627|Wir konnten die Lebensmittel gerade nicht laden
+628|Wir fragen nicht mehr. Du kannst es unter Benachrichtigungen → Einstellungen wieder einschalten.
+629|Wir schicken dir per E-Mail einen Link, um ein neues zu wählen.
+630|Wir erinnern dich hier nach {x} an Tagen ohne Angebote
+631|Gewicht
+632|Gewicht pro Einheit
+633|Willkommen
+634|Willkommen zurück
+635|Willkommen bei Food Rescue, {x}!
+636|Willkommen, {x}
+637|Was das Modell gesehen hat: {x}.
+638|Was in den Drop kommt
+639|Was du als Nächstes probieren kannst
+640|Was du magst
+641|Inhalt, Allergene, alles Wissenswerte
+642|Üblicher Inhalt, Allergene
+643|Wann die Kundschaft kommt
+644|Wenn du Lebensmittel reservierst, erscheint dein Abholcode hier.
+645|Warum diese?
+646|Im Umkreis von
+647|Falsche E-Mail oder falsches Passwort
+648|Du
+649|Du bist der einzige Administrator. Füge zuerst einen weiteren Administrator hinzu.
+650|Du kannst Gratisartikel erhalten
+651|Du verwaltest diesen Laden nicht
+652|Du hast noch keine gespeicherten Produkte. Speichere einmal, was du oft verkaufst, und veröffentliche es dann hier jeden Tag.
+653|Du hast die letzten Benachrichtigungen nicht geöffnet, daher schicken wir vorerst weniger. Wenn du sie öffnest, kommt die übliche Anzahl zurück.
+654|Du bezahlst beim Abholen im Laden.
+655|Du sparst {x}
+656|Du wirst hier angemeldet und überall sonst abgemeldet.
+657|Dein Konto
+658|Dein Konto wurde gelöscht. Danke, dass du mit uns Lebensmittel gerettet hast.
+659|Dein aktuelles Passwort
+660|Dein aktuelles Passwort ist nicht richtig
+661|Deine Daten
+662|Deine Angaben
+663|Deine Angaben sind gespeichert.
+664|Deine Angaben, Favoriten und Benachrichtigungen werden sofort entfernt und offene Reservierungen storniert. Das lässt sich nicht rückgängig machen.
+665|Deine Wirkung
+666|Deine Wirkung konnte nicht geladen werden
+667|Deine letzte Verifizierungsanfrage wurde nicht bestätigt. Du kannst erneut anfragen.
+668|Dein Name
+669|Dein Passwort
+670|Dein Preis
+671|Dein Preis muss unter dem ursprünglichen Preis liegen
+672|Deine Produkte
+673|Deine Reservierungen
+674|Deine Sitzung ist abgelaufen, bitte melde dich erneut an
+675|Dein Laden
+676|Dein Laden ist nicht aktiv, daher sieht die Kundschaft gerade keine Drops
+677|Deine Läden werden dauerhaft für die Kundschaft ausgeblendet und deine Angaben sofort entfernt. Gib zuerst die Lebensmittel aus, auf die Kunden warten. Das lässt sich nicht rückgängig machen.
+678|Deine Verifizierungsanfrage wird geprüft. Sobald sie bestätigt ist, zeigen wir dir hier Gratisartikel.
+679|eine zweite Chance.
+680|und die
+681|Der reduzierte Preis muss unter dem ursprünglichen Preis liegen
+682|z. B. Gemischte Gebäcktüte
+683|z. B. Bäckerei-Überraschungstüte
+684|zum Verkauf
+685|in {n} Std. {n} Min.
+686|in {n} Min.
+687|statt
+688|in der Nähe des Zentrums von Timișoara
+689|optional, ungefähr
+690|Datenschutzerklärung
+691|die Menge muss zwischen 1 und {n} liegen
+692|der Radius muss größer als 0 und höchstens {n} sein
+693|bisher gerettet · {x}
+694|die Rolle muss CONSUMER oder STORE_OWNER sein
+695|Nutzungsbedingungen
+696|diesem Ort
+697|um zu erfahren, wenn ein Laden in der Nähe einen startet.
+698|aktiviere Rescue-Drop-Benachrichtigungen
+699|bis {x}
+701|im Umkreis von 3 km
+702|im Umkreis von {n} km
+703|im Umkreis von {n} km um {x}
+705|{x} Es kann sich irren. Es füllt nie Allergene oder Angaben wie vegetarisch oder vegan aus: Füge sie selbst hinzu.
+706|{x} Aktiviere Favoriten-Benachrichtigungen unter Benachrichtigungen → Einstellungen, um zu erfahren, wann es verfügbar ist.
+707|{x} benachrichtigt.
+708|{x} hat bereits einen laufenden Rescue Drop. Ändere stattdessen diesen Drop.
+709|{x} bei {x} für {x}
+710|{x} eingetragen. Vergleiche sie mit deinen Regalen und bestätige dann.
+711|{n} Gratiseinheiten gerade. Versuche eine größere Entfernung oder zeige alle Lebensmittel.
+712|{x} in Folge
+713|{x} in {x}: etwa {x} pro Tüte, im Wert von {x} zum vollen Preis.
+714|{x} ist heute schon im Angebot. Ändere stattdessen dieses Angebot.
+715|{x} ist erforderlich
+716|{n} km entfernt
+717|{n} übrig · {x} voller Preis · endet {x}
+718|{n} Min.
+719|{x} muss mindestens {x} sein
+720|{x} darf höchstens {x} sein
+721|{n} neue Erfolge
+722|{n} von {n} freigeschaltet
+723|{x} veröffentlicht. Die Kundschaft in der Nähe kann jetzt reservieren.
+724|{x} gespeichert. Veröffentliche, wenn du so weit bist.
+726|{x} wurde archiviert
+727|{x} mit der ID {x} wurde nicht gefunden
+729|{x} · Food Rescue
+730|{x} · Mitglied seit {x}
+731|{x} · Zeiten in der Zeitzone deines Ladens
+736|{n} % Rabatt für die Kundschaft
+737|{x}. Gib ein, was heute wirklich übrig ist; nichts wird von gestern übernommen.
+738|{x}Eingetragen. Prüfe die Angaben und passe sie vor dem Speichern an.
+743|· Tage in {x}
+744|· Abholung {x}–{x}
+745|· Laden, dem du folgst
+746|· Zeiten in {x}
+747|„{x}“ ist bereits beendet
+748|„{x}“ ist wieder im Angebot
+749|„{x}“ ist pausiert und für die Kundschaft ausgeblendet
+750|„{x}“ ist veröffentlicht
+751|„{x}“ ist registriert. Zeit, Lebensmittel hinzuzufügen!
+752|„{x}“ gespeichert. Nutze es beim Einrichten der heutigen Angebote.
+753|Bitte melde dich an (Anmeldetoken fehlt, ist ungültig oder abgelaufen)
+754|Bitte melde dich an
+755|Dein Kontotyp kann das nicht
+756|Zu viele Versuche. Versuche es in {n} Minuten erneut
+757|Zu viele Versuche. Versuche es in 1 Minute erneut
+758|(endet in {x})
+759|in {n} Std.
+760|in {n} Tagen
+761|in 1 Tag
+762|{n} Tage
+763|{n} von {n}
+764|{n} von {n} Läden
+765|{n} von {n} Wochen
+766|{n} von {n} kg
+767|{n} von {n} Lei
+768|{n} gratis
+769|{n} Abholungen mit Abholzeitraum.
+770|{n} Artikel
+771|1 Artikel
+772|{n} Einheiten · {x} kg
+773|{n} Treffer
+774|1 Treffer
+775|{n} Läden
+776|1 Laden
+777|{n} übrig
+778|{n} übrig · bis zu {n} pro Bestellung
+779|{n} Produkte · {n} Einheiten zum Verkauf
+780|{n} Produkte
+781|1 Produkt
+782|{n} Einheiten
+783|1 Einheit
+784|{n} Tüten
+785|1 Tüte
+786|{n} Angebote
+787|1 Angebot
+788|{n} Entwürfe
+789|1 Entwurf
+790|{n} Kunden
+791|1 Kunde
+792|{n} Vorschläge
+793|1 Vorschlag
+794|{n} niedrigere Preise
+795|1 niedrigerer Preis
+796|{n} Rescue Drops
+797|1 Rescue Drop
+798|{n} Wochen
+799|1 Woche
+800|1 Tag
+801|{n} Personen haben
+802|1 Person hat
+803|{n} Artikel haben
+804|1 Artikel hat
+805|Erste Rettung
+806|Hole dein erstes gerettetes Essen ab
+807|Regelmäßige Retterin
+808|Hole 10-mal gerettetes Essen ab
+809|Rettungsheld
+810|Hole 50-mal gerettetes Essen ab
+811|5 kg vor der Tonne bewahrt
+812|Rette 5 kg Lebensmittel
+813|25 kg vor der Tonne bewahrt
+814|Rette 25 kg Lebensmittel
+815|Clever gespart
+816|Spare 100 Lei gegenüber vollen Preisen
+817|Lokale Entdeckerin
+818|Hole bei 3 verschiedenen Läden ab
+819|Drop-Jägerin
+820|Hole einen Rescue Drop ab
+821|Stetige Serie
+822|Rette 4 Wochen in Folge Lebensmittel
+823|Fortschritt: {x}
+824|Gemeinsam {n} Artikel im {x} retten
+825|Januar
+826|Februar
+827|März
+828|April
+829|Mai
+830|Juni
+831|Juli
+832|August
+833|September
+834|Oktober
+835|November
+836|Dezember
+837|Du hast diesen Monat {n} davon gerettet.
+838|Freigeschaltet am {x}
+839|Abholen bis {x} ·
+840|{x} geht für andere wieder in den Verkauf. Das lässt sich nicht rückgängig machen.
+841|{x} gratis holen
+842|{x} reservieren
+843|{x} bearbeiten
+844|{x} entfernen
+845|{x} folgen
+846|{x} nicht mehr folgen
+847|{x} ist wieder aktiv
+848|{x} ist gesperrt
+849|Eins weniger: {x}
+850|Eins mehr: {x}
+851|Eine Gratiseinheit weniger: {x}
+852|Eine Gratiseinheit mehr: {x}
+853|Eine Verkaufseinheit weniger: {x}
+854|Eine Verkaufseinheit mehr: {x}
+855|Abholung ab, {x}
+856|Abholung bis, {x}
+857|{x} aus deinen Produkten entfernen
+858|Reservierung für {x}
+859|Einheiten von {x} für die Tüten
+860|Gratiseinheiten von {x}
+861|Verkaufseinheiten von {x}
+862|Reservieren · {x}
+863|{n} % blieben unverkauft ({n} von {n} Einheiten).
+864|Es kamen noch Kunden. Der Autopilot schlägt bereits mehr vor; prüfe, ob du liefern kannst.
+865|Weniger {x} übrig lassen
+866|{n} mehr {x} anbieten
+867|Biete weniger an, senke den Preis oder bündle Reste früher am Abend zu einem Rescue Drop.
+868|Bleibt oft übrig
+869|Ausverkauft
+870|Viele Nichtabholungen
+871|{x} · viele Nichtabholungen
+872|An {n} von {n} Tagen ausverkauft, meist {x} vor Ende der Abholung.
+873|An {n} von {n} Tagen ausverkauft.
+874|{n} Minuten
+875|{n} Stunden
+876|An {n} der letzten {n} Tage richtig · oft ausverkauft, die Nachfrage kann höher sein
+877|Die meisten Reservierungen erfolgen zwischen {x} und {x}.
+878|Pro Tag: insgesamt {n} Einheiten abgeholt und {n} übrig. Die Tabelle unten zeigt jeden Tag.
+879|weniger als 5
+880|Vorschlag: {n}
+881|Abholzeiten wie am {x}.
+882|Noch kein Verlauf. Gib die heutige Menge ein; Vorschläge gibt es nach ein paar Tagen.
+883|Wie beim letzten Mal ({x}). Mehr Vorschläge nach ein paar Tagen.
+884|An {n} der letzten {n} Tage ausverkauft, daher könnten {n} die Nachfrage decken.
+885|Meist etwa {n} reserviert und {n} übrig.
+886|Etwa {n} % bleiben meist unverkauft; ein Preis von {x} Lei kann helfen. Gilt nur, wenn du ihn wählst.
+887|Montag, {x}
+888|Dienstag, {x}
+889|Mittwoch, {x}
+890|Donnerstag, {x}
+891|Freitag, {x}
+892|Samstag, {x}
+893|Sonntag, {x}
+894|{n}. Jan.
+895|{n}. Feb.
+896|{n}. März
+897|{n}. Apr.
+898|{n}. Mai
+899|{n}. Juni
+900|{n}. Juli
+901|{n}. Aug.
+902|{n}. Sept.
+903|{n}. Okt.
+904|{n}. Nov.
+905|{n}. Dez.
+906|1 Entwurf ist für die Kundschaft noch nicht sichtbar.
+907|{n} Entwürfe sind für die Kundschaft noch nicht sichtbar.
+908|„{x}“ verkauft sich schnell: noch {n} von {n} übrig. Füge mehr hinzu, wenn du hast.
+909|„{x}“ war {x} vor Ende der Abholung ausverkauft. Der Autopilot berücksichtigt das.
+910|{n} unverkaufte Einheiten enden in {n} Stunden. Als 1 Überraschungstüte zu einem Rescue Drop bündeln?
+911|{n} unverkaufte Einheiten enden in {n} Stunden. Als {n} Überraschungstüten zu einem Rescue Drop bündeln?
+912|Die meisten Kunden kommen am Ende des Zeitraums
+913|{n} % der Abholungen lagen im letzten Viertel des Abholzeitraums.
+914|Ein späterer Abholbeginn hält die Theke früher frei und kann Nichtabholungen verringern.
+915|{n} % der Reservierungen wurden nicht abgeholt
+916|{n} reservierte Einheiten wurden nie abgeholt.
+917|Kunden erhalten jetzt vor Ende der Abholung eine Erinnerung. Kürzere Abholzeiträume helfen auch.
+918|Füge Gewichte hinzu, um die geretteten kg zu sehen
+919|1 Produkt hat noch kein Gewicht, z. B. {x}.
+920|{n} Produkte haben noch kein Gewicht, z. B. {x}.
+921|Eine Schätzung pro Einheit genügt.
+922|Keine Angebote an {n} der letzten {n} Tage
+923|Nicht veröffentlichter Überschuss landet im Müll.
+924|Aktiviere die tägliche Erinnerung und nutze den Autopiloten, um in unter einer Minute zu veröffentlichen.
+925|Nie veröffentlicht
+926|Letztes Angebot vor {n} Tagen
+927|Nur {n} % der angebotenen Lebensmittel abgeholt
+928|{n} % der Reservierungen nicht abgeholt
+929|Rescue Drop bei {x}
+930|{x} · bis {x}
+931|Dein Favorit bei {x}
+932|{x} ist für {x} Lei im Angebot
+933|{x} deiner Favoriten bei {x}
+934|{x} sind im Angebot
+935|1 Angebot heute in deiner Nähe
+936|{n} Angebote heute in deiner Nähe
+937|{x} · im Umkreis von {n} km
+938|{x} und {n} weitere
+939|Abholen bis {x} bei {x}
+940|{x} · dein Abholcode ist unter Meine Bestellungen
+941|Eine Mischung aus den heutigen {x}. Der Inhalt variiert.
+942|Erfolge
+943|Aktiv
+944|Gratis holen
+945|Kopieren
+946|Bearbeiten
+947|Obst und Gemüse
+948|Fleisch und Fisch
+949|Angeboten
+950|Pausieren
+951|Wieder aktivieren
+952|Reservieren
+953|Reserviert, es gehört dir!
+954|Reserviert, wartend
+955|Fortsetzen
+956|Sperren
+957|Gesperrt
+958|Im Laden zu bezahlen:
+959|Summe, im Laden zu bezahlen
+960|Du folgst nicht mehr.
+961|Wir halten es eine begrenzte Zeit für dich bereit. Die genaue Abholfrist siehst du, nachdem du es geholt hast.
+962|Wir halten es eine begrenzte Zeit für dich bereit. Die genaue Abholfrist siehst du nach dem Reservieren.
+963|Vergrößern
+964|Verkleinern
+965|Leckeres
+966|gratis
+967|in deiner Nähe.
+968|optional
+969|weniger als 100 m entfernt
+970|dein Standort
+971|dein gespeicherter Ort
+972|Gratisartikel sind auf einen pro Tag begrenzt, damit genug für alle da ist.
+973|Geh vor {x} in den Laden. Danach geht das Essen wieder in den Verkauf.
+974|· endet
+975|{x} mit Gratiseinheiten
+976|{x} aus deinen Favoriten
+977|Einer deiner Favoriten
+978|Aus einem Laden, dem du folgst
+979|Hattest du schon einmal
+980|Hattest du schon {n}-mal
+981|Hier hast du schon einmal abgeholt
+982|Hier hast du schon {n}-mal abgeholt
+983|Passt zu deinem Interesse an {x}
+984|Gratiseinheiten für dich verfügbar
+985|Laufender Rescue Drop
+986|Endet bald
+987|Backwaren
+988|Fertiggerichte
+989|Obst und Gemüse
+990|Milchprodukte
+991|Fleisch und Fisch
+992|Süßes
+993|Lebensmittel
+994|vegetarisch
+995|vegan
+996|{x} von heute übrig, günstiger, damit nichts verschwendet wird. Frag uns nach Zutaten und Allergenen.
+997|Brot
+998|Bagels
+999|Brezeln
+1000|Backwaren
+1001|Teig
+1002|Schokoladendessert
+1003|Eis
+1004|Eis am Stiel
+1005|Dessert
+1006|Pizza
+1007|Burritos
+1008|Hotdogs
+1009|Burger
+1010|Pastete
+1011|Pasta
+1012|Suppe
+1013|Eintopf
+1014|Kartoffelpüree
+1015|Guacamole
+1016|Gekochtes Gericht
+1017|Hackbraten
+1018|Fleisch
+1019|Äpfel
+1020|Erdbeeren
+1021|Orangen
+1022|Zitronen
+1023|Feigen
+1024|Ananas
+1025|Bananen
+1026|Jackfrucht
+1027|Zimtäpfel
+1028|Granatäpfel
+1029|Kohl
+1030|Brokkoli
+1031|Blumenkohl
+1032|Zucchini
+1033|Kürbis
+1034|Gurken
+1035|Artischocken
+1036|Paprika
+1037|Karden
+1038|Pilze
+1039|Zuckermais
+1040|Eingetragen. Prüfe die Angaben und passe sie vor dem Speichern an.
+1041|Gefolgt.
+1042|Gespeichert.
+1043|Es kann sich irren. Es füllt nie Allergene oder Angaben wie vegetarisch oder vegan aus: Füge sie selbst hinzu.
+1044|{x} im Umkreis von {n} km um {x}
+1045|Produkt · {x}
+1046|Überraschungstüte · {x}
+1047|{x} · weniger als 100 m entfernt
+1048|{x} · {n} km entfernt
+1049|Hauptmenü
+1050|Backwaren auf der Theke
+1051|Schale mit frischem Obst
+1052|Croissants in Madrid
+1053|Frisches Gemüse und Obst auf dem Markt
+1054|Stück Schokoladenkuchen
+1055|Pizza am Stück in Rom
+1056|Salatschüssel, Kiedrich
+1057|Kraphao moo
+1058|Sandwich mit Halloumi und Ofengemüse
+1059|Nicht mehr fragen
+1060|morgen {x}
+1061|Abholung
+1062|{n} × {x} für {x} Lei
+1063|{n} × {x} (gratis, Pay-It-Forward)
+1064|{x} ist für {x} Lei im Angebot · Abholung {x}–{x}
+1065|{x} sind im Angebot · Abholung {x}–{x}

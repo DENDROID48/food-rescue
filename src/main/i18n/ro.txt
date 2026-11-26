@@ -1,0 +1,1045 @@
+# Română. id|traducere; {x} și {n} în aceeași ordine ca în engleză (sau {1}, {2} pentru altă ordine).
+0|(opțional)
+1|({x} alertele pornite în apropiere)
+2|+{n} gratuite
+3|1 alertă pe zi
+4|1 oră
+5|1 km
+6|10 alerte pe zi
+7|10 km
+8|1½ ore
+9|2 ore
+10|2 km
+11|25 km
+12|3 alerte pe zi
+13|3 km
+14|3 luni
+15|30 min
+16|4 săptămâni
+17|5 alerte pe zi
+18|5 km
+19|7 zile
+20|Ai nevoie doar de un cod din 6 cifre ca să ridici comanda
+21|Un amestec din ce a rămas
+22|Un produs salvat
+23|Setările contului
+24|Magazine active
+25|Adaugă o ofertă unică
+26|Adaugă o fotografie
+27|Adaugă un magazin
+28|Adaugă cel puțin o unitate înainte de publicare
+29|Adaugă cel puțin o unitate din ofertele de azi.
+30|Adaugă mai multe
+31|Adaugă unități din ofertele de azi de mai sus.
+32|Adaugă ce îți rămâne de obicei, de exemplu o pâine sau o pungă surpriză. Apoi publicarea zilnică durează câteva secunde.
+33|Adaugă numele și adresa magazinului. Clienții din apropiere vor vedea apoi mâncarea pe care o publici.
+34|Adresă
+35|Căutarea adreselor nu este disponibilă acum
+36|Adresa nu a fost găsită. Adaugă orașul sau verifică scrierea.
+37|Administrare
+38|Administrare
+39|Administrator
+40|Anunță clienții din apropiere
+41|Setări alerte
+42|Alerte
+43|Alertele te așteaptă și aici. Cel mult o alertă pe magazin la fiecare 2 ore.
+44|Alertele vor folosi {x}. Salvează ca să păstrezi.
+45|Alerte, {n} noi
+46|Ești la zi
+47|Deja configurat azi
+48|Mereu același produs, de ex. o pâine
+49|Există deja un cont cu acest email
+50|Un administrator l-a ascuns de clienți, așa că mâncarea lui nu apare în căutare. Contactează echipa Food Rescue ca să fie reactivat.
+51|Cere din nou
+52|Cere verificarea
+53|Cel puțin 8 caractere.
+54|Cel puțin 8 caractere. Celelalte dispozitive vor fi deconectate.
+55|Cel mult
+56|Cifrele sub 5 sunt ascunse ca să protejăm intimitatea clienților.
+57|Autopilot
+58|Disponibile acum
+59|Disponibil până la
+60|Brutărie
+62|Pe baza a 3–4 zile
+63|Pe baza a 5+ zile
+64|Pe baza propriilor tale rezultate. Nimic nu se schimbă până nu decizi tu.
+65|Cel mai bun rezultat: {x}. Săptămânile sunt de luni până duminică.
+66|Cea mai mare reducere
+68|Grupează ca drop
+69|Grupează resturile
+70|Pe produs
+71|Poate primi produse gratuite
+72|Anulează
+73|Anulează rezervarea
+74|Anulezi rezervarea?
+75|Anulată
+76|Schimbă
+77|Schimbă parola
+78|Modificări salvate
+79|Verifică înainte de folosire
+80|Verifică formatul
+81|Verifică ora de ridicare pentru „{x}”: trebuie să se termine după ce începe, în aceeași zi.
+82|Verifică pinul de pe hartă, ca să te găsească ușor clienții.
+83|Se verifică…
+84|Alege o parolă nouă
+85|Alege o fotografie
+86|Alege un loc
+87|Alege o fotografie a produsului
+88|Alege o oră pentru rezumatul zilnic.
+89|Alege o oră pentru memento
+90|Alege alt loc
+91|Alege atât începutul, cât și sfârșitul orelor de liniște
+92|Alege ambele ore pentru orele de liniște.
+93|Alege vegetarian sau vegan doar dacă se potrivește pentru tot ce e înăuntru; apare ca declarația ta.
+94|Alege ce pui în drop.
+95|Alege despre ce vrei să afli
+96|Ia un produs gratuit
+97|Ia gratuit
+98|Închide
+99|Cele mai apropiate
+100|Codul {x} a fost copiat
+101|Ridică până la
+102|Ridică mâncare salvată săptămâna aceasta ca să începi o serie.
+103|Ridică ceva până duminică ca să-ți păstrezi seria.
+104|Ridică ceva luna aceasta ca să contribui.
+105|Ridicat
+106|Ridicat din oferit
+107|Ridicate azi
+108|Provocarea comunității
+109|Progresul provocării comunității
+110|Privire de ansamblu
+111|Confirmă
+112|Confirmă ridicarea
+113|Copiat
+114|Copiază codul
+115|Nu am putut afla locația. Permite accesul la locație sau caută un loc.
+116|Nu ne-am putut conecta la Food Rescue. Verifică conexiunea și încearcă din nou.
+117|Nu am putut încărca statisticile
+118|Nu am putut porni notificările: {x}. Alertele apar aici cât timp aplicația e deschisă.
+119|Creează cont
+120|Creează-mi contul
+122|Parola actuală
+123|Client
+124|Clienții încă așteaptă să ridice mâncare la {x}. Predă-le-o sau așteaptă să le expire rezervările, apoi încearcă din nou.
+125|Bani economisiți de clienți
+126|Clienții văd numele și adresa la fiecare ofertă.
+127|Clienți care au ridicat
+128|Clienții nu o vor mai vedea. Dacă cineva a rezervat-o deja, rezervarea rămâne valabilă, iar oferta rămâne în listă ca epuizată.
+129|Clienții vor vedea în schimb o fotografie ilustrativă până adaugi una nouă.
+130|Limita zilnică de {x} produse gratuite a fost atinsă
+131|Memento zilnic
+132|Rezumat zilnic
+133|Ora rezumatului zilnic
+134|Lactate
+135|Șterge contul
+136|Șterge-mi contul definitiv
+137|Șterge-mi contul…
+138|Descriere
+139|Deutsch
+140|Ai vrut să spui
+141|Descoperă
+142|Distanță
+143|Donate (Pay-It-Forward)
+144|Donat de magazin și de comunitate.
+145|Donate azi
+146|Gata
+147|Descarcă tot ce păstrează Food Rescue despre tine, într-un fișier. Citește cum folosim datele în
+148|Descarcă datele mele
+149|Ciornă
+150|Trage pinul dacă nu e exact pe magazinul tău.
+151|Prețul drop-ului
+152|Drop-uri lansate
+153|Fiecare ofertă poate apărea o singură dată
+154|Fiecare produs poate apărea o singură dată
+155|Editează detaliile
+156|Editează oferta
+157|Editează produsul
+158|Editează detaliile magazinului
+159|Editează oferta de azi
+160|Adresă de email
+161|Sfârșitul ridicării. După aceasta, clienții nu mai pot rezerva sau ridica.
+162|Ora de sfârșit
+163|Se termină cel mai curând
+164|English
+165|Introdu un preț al drop-ului mai mare de 0.
+166|Introdu un număr
+167|Introdu un preț pe pungă mai mare de 0.
+168|Introdu o adresă de email de forma nume@exemplu.ro
+169|Introdu câte pungi să faci.
+170|Introdu câte unități sunt acum pe raft
+171|Introdu câte unități sunt acum pe raft.
+172|Introdu cantitățile pentru produsele pe care le ai azi.
+173|Introdu cantitatea de azi pentru {x}
+174|Introdu ce a rămas cu adevărat azi. Nimic nu se copiază de ieri.
+175|Español
+176|Fiecare magazin activ a publicat săptămâna aceasta.
+177|Fiecare pungă are nevoie de cel puțin o unitate: {n} unități pentru {n} pungi
+178|Aici se numără doar mâncarea pe care ai ridicat-o efectiv.
+179|Cerere estimată, următoarele 7 zile
+180|Expirat
+181|Exportă CSV
+182|Favorite
+183|Completează sugestiile
+184|Găsește și rezervă mâncare
+185|Găsește și rezervă mâncare în apropiere
+186|Găsește mâncare lângă mine
+187|Găsește mâncare în apropiere
+188|Primul sfert
+189|Urmărește
+190|Urmăresc magazinul tău
+191|Urmărești
+192|Urmărești acest magazin.
+193|Food Rescue · mâncare bună, împărțită cu drag.
+194|Food Rescue — mâncare bună, salvată aproape de tine
+195|Food Rescue, acasă
+196|Produs
+197|Mâncare pe zi
+198|Mâncare salvată
+199|Tip de mâncare
+200|Tipuri de mâncare
+201|De vânzare
+202|Pentru ceva ce nu vinzi des. Salvează produsele obișnuite ca produse.
+203|Pentru tine
+204|Ai uitat parola?
+205|Français
+206|Gratuit
+207|Produs gratuit Pay-It-Forward: nu ai nimic de plătit.
+208|Produse gratuite
+209|Produse gratuite pentru vecinii verificați care au nevoie
+210|Unități gratuite
+211|Unități gratuite (Pay-It-Forward)
+213|Nume complet
+214|Primește alerte pe acest dispozitiv chiar și când Food Rescue e închis.
+215|Primesc alerte de drop în apropiere
+216|Oferit gratuit persoanelor verificate care au nevoie.
+217|Treci printr-o perioadă grea?
+218|Mâncarea bună merită
+219|Băcănie
+220|Predă mâncarea
+221|Predă {x} × {x}
+222|Au un produs favorit aici
+223|Îi ajută pe clienții care caută acest tip de mâncare. Alege vegetarian sau vegan doar dacă se potrivește pentru tot ce e înăuntru; apare ca declarația ta.
+224|Ascunde harta
+225|Ascunde parola
+226|Sunt de acord cu
+227|Am verificat că aceste cantități sunt disponibile azi
+228|Am un magazin sau un restaurant
+229|Vreau să
+230|Dacă există un cont cu această adresă, linkul e pe drum. Funcționează o oră. Verifică și folderul de spam.
+231|Fotografie ilustrativă
+232|Fotografiile ilustrative apar când un magazin nu și-a adăugat propriile fotografii. Sunt de pe Wikimedia Commons.
+233|Statistici
+234|Statisticile apar după ce ofertele tale s-au încheiat. Prognoza are nevoie de câteva zile de istoric.
+235|Latitudine sau longitudine invalidă
+236|Parametri invalizi în cerere
+237|Durează mai puțin de un minut.
+238|Nu va mai apărea când configurezi o zi. Ofertele deja publicate rămân cum sunt.
+239|Italiano
+240|Mâncarea lui dispare din căutare până îl reactivezi. Proprietarul se poate autentifica în continuare și își vede panoul.
+241|JPEG, PNG sau WebP, până la 2 MB. Se copiază în oferta fiecărei zile.
+242|JPEG, PNG sau WebP, până la 2 MB. Fotografiile reale îi ajută pe clienți să aleagă.
+243|Alătură-te Food Rescue
+244|Doar te uiți? Intră cu un cont demo (parola
+245|Păstrează
+246|Îmi păstrez contul
+247|Limbă
+248|Ultimele 4 săptămâni
+249|Ultimul sfert
+250|Lansează un Rescue Drop
+251|Lansează drop-ul
+252|Rămas
+253|Istoric redus
+254|Activ
+255|Activ imediat, pentru scurt timp. Se încheie singur când se epuizează sau când expiră timpul.
+256|Se încarcă modelul de imagini gratuit. Prima dată durează câteva secunde (circa 14 MB).
+257|Magazinele locale pun aici mâncarea pe care n-au vândut-o azi, la preț redus. Rezerv-o aici, ridic-o înainte de închidere și ține mâncarea bună departe de coșul de gunoi.
+258|Locația nu e disponibilă în acest browser. Caută un loc.
+259|Caută eticheta „gratuit” și ia câte un produs pe zi. Folosește filtrul Produse gratuite ca să le vezi primele.
+260|Mă uit la fotografie…
+261|Caut mâncare lângă {x}…
+262|Caut mâncare…
+263|Caut…
+264|Ți-ai pierdut telefonul sau ai folosit un calculator comun? Deconectează-te peste tot, mai puțin aici.
+265|Cel mai mic preț
+266|Harta magazinelor cu mâncare
+267|Bani economisiți
+268|Trebuie să fie după ora de început
+269|Trebuie să fie înainte de ora de sfârșit
+270|Trebuie să fie mai mic decât prețul inițial
+271|Impactul meu
+272|Comenzile mele
+273|Magazinul meu
+274|Nume
+275|Lângă mine
+276|E necesară ca să schimbi adresa de email.
+277|Necesită atenție
+278|Realizare nouă: {x}
+279|Prognoză nouă
+280|Ofertă unică nouă
+281|Parolă nouă
+282|Fotografie nouă pregătită
+283|Produs nou
+284|Nu mai sunt unități Pay-It-Forward pentru acest produs
+285|Nicio adresă găsită lângă acest punct
+286|Încă nicio alertă.
+287|Încă nu ai favorite. Atinge ☆ la un produs sau „Urmărește” la un magazin când navighezi.
+288|Nicio ofertă încheiată în această perioadă
+289|Nicio mâncare pe o rază de {n} km de {x}
+290|Niciun produs gratuit în această zonă
+291|Încă niciun istoric
+292|Nimic de grupat: niciuna dintre ofertele de azi nu mai are unități.
+293|Fără notificări între
+294|Nicio rezervare deschisă cu acest cod la acest magazin
+295|Nicio rezervare deschisă acum.
+296|Încă nicio fotografie
+297|Încă nicio ridicare cu interval de ridicare.
+298|Niciun loc găsit cu acest nume. Încearcă să adaugi orașul.
+299|Încă nicio rezervare
+300|Încă niciun produs salvat
+301|Niciun magazin nu are risipă sau neridicări neobișnuite.
+302|Încă niciun magazin
+303|Nicio cerere de verificare în așteptare.
+304|Nimeni din apropiere nu trebuia alertat.
+305|Niciun favorit în apropiere acum
+306|Neridicat
+307|Încă prea puțin istoric. Sugestiile apar după câteva zile de oferte.
+308|Nu azi
+309|Nimic disponibil în apropiere acum
+310|Nicio ofertă azi
+311|Nimic de plătit
+312|Nimic de ridicat
+313|Încă nimic
+314|Notificările sunt blocate pentru acest site în setările browserului.
+315|Notificările sunt blocate pentru acest site. Permite-le în setările site-ului din browser, apoi încearcă din nou.
+316|Notificările sunt oprite pe acest dispozitiv.
+317|Notificările sunt pornite pe acest dispozitiv, chiar și când Food Rescue e închis.
+318|Notificările sunt pornite pe acest dispozitiv.
+319|Oferă cel puțin o unitate de vânzare sau ca Pay-It-Forward
+320|Oferta a fost ștearsă
+321|Ofer mâncare rămasă
+322|Oferta a fost actualizată
+323|Oferit {x}
+324|Oferte încheiate în ultimele 28 de zile, la toate magazinele.
+325|Oferte încheiate {x} – {x}
+326|Ofertele pe care le publici de acum nu vor avea fotografie. Ofertele de azi și-o păstrează.
+327|Pe iPhone și iPad, adaugă mai întâi Food Rescue pe ecranul principal (Partajează → Adaugă pe ecranul principal).
+328|Pe iPhone și iPad: atinge Partajează → „Adaugă pe ecranul principal”, deschide Food Rescue de acolo, apoi pornește notificările.
+329|Acum pe raft
+330|Pe acest dispozitiv
+331|O pungă mai puțin
+332|O pungă în plus
+333|Una mai puțin
+334|O unitate gratuită mai puțin
+335|Încă una
+336|Încă o unitate gratuită
+337|Doar conturile de client pot fi verificate
+338|Doar conturile de proprietar de magazin pot înregistra magazine
+339|Au mai rămas doar {n} unități
+340|Au mai rămas doar {x} unități din „{x}”
+341|Comanda
+342|Preț inițial
+343|Parolă
+344|Parola a fost schimbată. Celelalte dispozitive au fost deconectate.
+345|Parola a fost schimbată. Ești autentificat.
+346|Resetarea parolei prin email nu e configurată încă. Te rugăm să ne contactezi.
+347|Comenzi anterioare
+348|Pe pauză
+349|Plătește la magazin și poftă bună.
+350|În așteptarea verificării
+351|Persoane care cer să primească produse gratuite Pay-It-Forward.
+352|Perioadă
+353|Fotografie
+354|Credite foto
+355|Fotografia produsului
+356|Fotografia produsului
+357|Fotografia a fost ștearsă
+358|Fotografie indisponibilă
+359|Fotografiile pot avea cel mult 2 MB
+360|Alege din produsele salvate și introdu cantitățile de azi. Durează cam un minut.
+361|Alege-l pe cel potrivit
+362|Ridicare {x}
+363|Cod de ridicare
+364|Sfârșitul ridicării
+365|Ridicare de la
+366|Mementouri de ridicare
+367|Începutul ridicării
+368|Ora de ridicare
+369|Ridicare până la
+372|Cifrele platformei nu au putut fi încărcate: {x}
+373|Te rugăm să accepți termenii și politica de confidențialitate
+374|Te rugăm să confirmi că aceste cantități sunt cu adevărat disponibile azi.
+375|Te rugăm să confirmi că aceste unități sunt acum pe raft.
+377|Português
+378|Preț
+379|Preț pe pungă
+380|Confidențialitate
+381|Produs
+382|Produsul a fost șters
+383|Produsul a fost salvat
+384|Publică
+385|Publică mâncare și predă-o
+386|Publică surplusul de azi ca să-l poată rezerva clienții din apropiere. Durează cam un minut.
+387|Publică {x}
+388|Publicat! Clienții din apropiere îl pot vedea acum.
+389|Cantitățile pentru „{x}” trebuie să fie numere întregi, 0 sau mai mult.
+390|Cantitate și program
+391|Liniște de 7 zile
+392|Ore de liniște
+393|Sfârșitul orelor de liniște
+394|Începutul orelor de liniște
+395|Mâncare gătită
+396|Gata de ridicat
+397|Reîmprospătează
+398|Înregistrează un magazin
+399|Înregistrează magazinul
+400|Înregistrează-ți magazinul ca să începi
+401|Respinge cererea
+402|Respingi cererea lui {x}?
+403|Amintește-mi cu 30 de minute înainte să se închidă ridicarea unei rezervări
+404|Amintește-mi zilnic la
+405|Memento ascuns până mâine
+406|Ora mementoului
+407|Șterge
+408|Șterge fotografia actuală
+409|Șterge oferta
+410|Șterge fotografia
+411|Șterge produsul
+412|Ștergi această fotografie?
+413|Elimină {x} din favorite
+414|Ștergi „{x}” din produsele tale?
+415|Ștergi „{x}”?
+416|Eliminat din favorite.
+417|Înlocuiește fotografia
+418|Cerere trimisă. Un administrator o va analiza.
+419|Rescue Drop
+420|Rescue Drop e activ până la {x}.{x}
+421|Rescue Drop-uri și public
+422|Rescue Drop-urile sunt numărate separat mai jos.
+423|Rescue Drop-uri în apropiere
+424|Rescue Drop-uri, favorite și rezumatul tău zilnic.
+425|Salvez mâncare
+426|Salvează ceva
+427|Seria de salvări
+428|Pungă surpriză salvată
+429|Salvat azi, lângă tine
+430|Salvări
+431|Rezervare anulată. Mâncarea e din nou disponibilă.
+432|Rezervă mâncare
+433|Rezervi în câteva secunde și plătești la magazin
+434|Rezervi
+435|Rezervă la preț redus mâncarea rămasă în magazinele din apropiere și ridic-o cu un cod de ridicare.
+436|Rezervă la preț redus ce n-au vândut azi magazinele locale, apoi ridic-o în drum spre casă.
+437|Rezervat
+438|Resetează-ți parola
+439|Corect în {n} din ultimele {n} zile
+440|Română
+441|Durează
+443|Salvează
+444|Salvează un produs
+445|Salvează mai întâi un produs sau grupează resturile.
+446|Salvează și intră în cont
+447|Salvează ca ciornă
+448|Salvează modificările
+449|Salvează detaliile
+450|Salvează produsul
+451|Salvează setările
+452|Salvează o dată produsele pe care le vinzi des, apoi publică-le aici în fiecare zi dintr-o dată.
+453|Salvează o dată ce vinzi des. În fiecare zi doar confirmi cantitățile.
+454|Salvează primul produs
+455|Salvează {x} ca favorit
+456|Salvat o dată și refolosit zilnic. Confirmi cantitățile în fiecare zi.
+457|Salvat la favorite.
+458|Salvat. Pornește notificările ca să primești aceste alerte chiar și când Food Rescue e închis.
+459|Spune dacă să afișăm oferta
+460|Caută
+461|Caută un loc
+462|Căutarea a eșuat
+463|Al doilea sfert
+464|Vezi
+465|Vezi comenzile mele
+466|Vezi {x} în listă
+467|Trimite un test
+468|Trimite atât latitudinea, cât și longitudinea, sau niciuna
+469|Trimite linkul
+470|Trimite-mi zilnic ce e lângă locul meu, la
+471|Configurează ofertele de azi
+472|Setări
+473|Setări salvate.
+474|Magazine sprijinite
+475|Magazinele adaugă de obicei mâncarea rămasă mai târziu în zi. Încearcă o distanță mai mare sau alt loc.
+476|Arată toată mâncarea
+477|Arată ca tabel
+478|Arată harta
+479|Arată-mi
+480|Arată comenzile mai vechi ({n})
+481|Arată pe hartă
+482|Arată parola
+483|Arată-mi recomandări pe baza favoritelor, intereselor și a ce am ridicat înainte
+484|Arată codul la casă.
+485|Arată oferta de verificare pentru produse gratuite în Descoperă
+486|Arată codul de ridicare la magazin ca să-ți ridici mâncarea. Plătești la magazin.
+487|Arată acest cod la {x} ca să-ți ridici mâncarea.
+488|Arată codul la magazin
+489|Mâncare pe o rază de
+490|Arată câtă mâncare salvezi.
+491|Intră în cont
+492|Intră în cont sau creează unul
+493|Intră în cont ca să vezi ce te așteaptă în apropiere.
+494|Ieși din cont
+495|Deconectează celelalte dispozitive
+496|Te-ai deconectat de pe toate celelalte dispozitive.
+497|Dispozitive conectate
+498|Produs unic
+499|Sari la conținut
+500|Epuizat
+501|Ceva n-a mers ({x})
+502|Sortează rezultatele
+504|Magazin
+505|Panoul magazinului
+506|Detaliile magazinului au fost salvate
+507|Locația magazinului
+508|Numele magazinului
+509|Proprietar de magazin
+510|Magazine
+511|Magazinele apar aici după ce proprietarii le înregistrează.
+512|Magazine care au predat mâncare
+513|Stradă și număr, oraș
+514|Stradă, cartier sau oraș
+515|Sugerează
+516|Sugerează detalii
+517|Sugestie
+518|Sugestie din fotografie
+519|Sugestii pentru {x}, din ultimele tale 4 săptămâni. Tot tu verifici și confirmi fiecare număr.
+520|Sugestii din ultimele tale 4 săptămâni.
+521|Mâncare rămasă de la magazinele din apropiere
+522|Pungă surpriză
+523|Pungi surpriză
+524|Suspendă magazinul
+525|Suspenzi {x}?
+526|Magazine suspendate
+527|Magazinele suspendate sunt ascunse de clienți.
+528|Dulciuri
+529|Schimbă magazinul
+530|Ia-ți produsul gratuit. Nimic de plătit.
+531|La pachet
+532|Încasări
+533|Atinge harta ca să cauți în jurul acelui punct.
+534|Anunță-mă despre drop-uri lângă
+535|Anunță-mă când favoritele mele sunt la ofertă și când magazinele pe care le urmăresc lansează un drop
+536|Termeni
+537|Test trimis. Ar trebui să ajungă în câteva secunde.
+538|Prețul pungii trebuie să fie sub valoarea conținutului ({x} lei)
+539|Codul are 6 cifre
+540|Exportul a eșuat. Încearcă din nou.
+541|Fișierul este gol
+542|Mâncarea
+543|Modelul de imagini nu a putut fi descărcat. Verifică conexiunea și încearcă din nou.
+544|Modelul nu a fost sigur de nimic din această fotografie.
+545|Oferta a fost salvată, dar fotografia nu a fost acceptată:
+546|Fotografia nu a putut fi {x}, încearcă din nou
+547|Codul de ridicare
+548|Termenul de ridicare pentru această rezervare a trecut
+549|Intervalul de ridicare pentru {x} s-a încheiat deja azi
+550|Intervalul de ridicare pentru {x} trebuie să se termine după ce începe, în aceeași zi
+551|Intervalul de ridicare trebuie să se termine după ce începe, în aceeași zi
+552|Intervalul de ridicare trebuie să înceapă înainte să se termine
+553|Produsul a fost salvat, dar fotografia nu a fost acceptată:
+554|Testul nu a putut fi livrat. Oprește și pornește din nou notificările.
+555|Acestea sunt unitățile rămase pe raft. Unitățile deja rezervate rămân rezervate.
+556|Aceste unități sunt acum pe raft
+557|Nu vor putea primi produse gratuite. Pot cere din nou mai târziu.
+558|Al treilea sfert
+559|Acest cont nu a fost verificat pentru produse gratuite Pay-It-Forward
+560|Acest cont este deja verificat
+561|Acest browser nu poate afișa notificări. Alertele apar aici cât timp Food Rescue e deschis.
+562|Acest browser nu poate afișa notificări. Alertele vor apărea totuși aici cât timp Food Rescue e deschis.
+563|Nu pare un aliment pe care modelul îl cunoaște. Completează detaliile tu.
+564|Acest câmp
+565|Acest produs a expirat
+566|Această ofertă s-a încheiat. Configurează una nouă pentru azi.
+567|Această ofertă tocmai s-a încheiat.
+568|Această ofertă nu este disponibilă acum
+569|Fotografia are mai mult de 2 MB. Alege una mai mică.
+570|Acest link de resetare a expirat sau a fost deja folosit. Cere unul nou.
+571|Rămâne între tine și Food Rescue. Magazinele nu văd asta niciodată.
+572|Acest magazin nu este activ momentan
+573|Acest magazin este suspendat.
+574|Altcineva a modificat asta în același moment, încearcă din nou
+575|Săptămâna aceasta contează deja. Ridică ceva săptămâna viitoare ca să continui.
+576|centrul Timișoarei
+577|De plată
+578|De plată la magazin
+579|Azi
+580|Ofertele de azi
+581|Ofertele de azi nu sunt configurate încă
+582|Prețul de azi pentru {x} trebuie să fie peste 0 și sub prețul inițial
+584|Încearcă din nou
+585|Încearcă {x}
+586|Oprește pe acest dispozitiv
+587|Pornește alertele pentru favorite ca să afli când sunt la ofertă.
+588|Pornește notificările
+589|Tip
+590|Scrie cel puțin 3 litere dintr-un loc
+591|Introdu codul din 6 cifre pe care ți-l arată clientul.
+592|Scrie mai întâi adresa
+593|Scrie parola ca să confirmi
+594|Anulează schimbarea fotografiei
+595|Nu mai urmări
+596|Unități ridicate și rămase, pe ziua în care s-a încheiat oferta.
+597|Unități pe care clienții le vor rezerva probabil, cu un interval probabil. Pe baza ultimelor 8 săptămâni, cu accent pe aceeași zi a săptămânii.
+598|Unități de vânzare
+599|Unitățile adăugate aici se scot din ofertele de azi și se vând ca pungi surpriză.
+600|Fus orar necunoscut: {x}
+601|Până la {x}
+602|Încarcă o imagine JPEG, PNG sau WebP
+603|Folosește o fotografie JPEG, PNG sau WebP.
+604|Folosește un număr întreg
+605|Folosește cel puțin {n} caractere
+606|Folosește cel mult 2 zecimale
+607|Folosește cel mult {n} caractere
+608|Folosește locul pe care îl caut
+609|Folosește-le
+610|Utilizatorul
+611|Folosește {x} azi
+612|Ridicare obișnuită de la
+613|Ridicare obișnuită până la
+614|Preț obișnuit {x}, preț întreg {x}. Un preț mai mic golește stocul mai repede.
+615|Vegan
+616|Vegetarian
+617|Cereri de verificare
+618|Client verificat
+619|Persoanele verificate pot primi gratuit un produs donat pe zi. Se păstrează doar rezultatul verificării, niciodată motivul.
+620|Verifică persoane pentru produse gratuite și ține magazinele partenere în regulă.
+621|Verifică persoane, gestionează magazine
+622|Verifică persoana în afara aplicației, de exemplu printr-o organizație caritabilă parteneră, apoi decide aici. Nu se păstrează motive sau documente.
+623|Vizibil pentru clienți
+624|Așteaptă o decizie
+625|Așteaptă să fie ridicate
+626|Nu am găsit această adresă pe hartă. Verifică scrierea sau adaugă orașul.
+627|Nu am putut încărca mâncarea acum
+628|Nu te mai întrebăm. O poți reactiva în Alerte → Setări.
+629|Îți trimitem pe email un link ca să alegi una nouă.
+630|Îți amintim aici după {x} în zilele fără oferte
+631|Greutate
+632|Greutate pe unitate
+633|Bun venit
+634|Bine ai revenit
+635|Bun venit în Food Rescue, {x}!
+636|Bun venit, {x}
+637|Ce a văzut modelul: {x}.
+638|Ce pui în drop
+639|Ce să încerci în continuare
+640|Ce îți place
+641|Ce conține, alergeni, orice e bine de știut
+642|Ce conține de obicei, alergeni
+643|Când vin clienții
+644|Când rezervi mâncare, codul de ridicare apare aici.
+645|De ce acestea?
+646|Pe o rază de
+647|Email sau parolă greșită
+648|Tu
+649|Ești singurul administrator. Adaugă mai întâi alt administrator.
+650|Poți primi produse gratuite
+651|Nu administrezi acest magazin
+652|Încă nu ai produse salvate. Salvează o dată ce vinzi des, apoi publică aici în fiecare zi.
+653|Nu ai deschis alertele recente, așa că îți trimitem mai puține deocamdată. Dacă le deschizi, revine numărul obișnuit.
+654|Plătești la magazin când ridici.
+655|Economisești {x}
+656|Vei fi autentificat aici și deconectat de peste tot în rest.
+657|Contul tău
+658|Contul tău a fost șters. Mulțumim că ai salvat mâncare cu noi.
+659|Parola ta actuală
+660|Parola actuală nu este corectă
+661|Datele tale
+662|Detaliile tale
+663|Detaliile tale au fost salvate.
+664|Detaliile, favoritele și alertele tale sunt șterse imediat, iar rezervările deschise sunt anulate. Nu se poate anula.
+665|Impactul tău
+666|Impactul tău nu a putut fi încărcat
+667|Ultima ta cerere de verificare nu a fost aprobată. Poți cere din nou.
+668|Numele tău
+669|Parola ta
+670|Prețul tău
+671|Prețul tău trebuie să fie mai mic decât prețul inițial
+672|Produsele tale
+673|Rezervările tale
+674|Sesiunea ta s-a încheiat, te rugăm să intri din nou în cont
+675|Magazinul tău
+676|Magazinul tău nu e activ, așa că acum clienții nu pot vedea drop-uri
+677|Magazinele tale sunt ascunse definitiv de clienți, iar detaliile tale sunt șterse imediat. Predă mai întâi mâncarea pe care o așteaptă clienții. Nu se poate anula.
+678|Cererea ta de verificare așteaptă să fie analizată. Îți vom arăta aici produsele gratuite după ce e aprobată.
+679|o a doua șansă.
+680|și
+681|Prețul redus trebuie să fie mai mic decât prețul inițial
+682|de ex. Pungă cu produse de patiserie
+683|de ex. Pungă surpriză de la brutărie
+684|de vânzare
+685|în {n} h {n} min
+686|în {n} min
+687|în loc de
+688|lângă centrul Timișoarei
+689|opțional, aproximativ
+690|politica de confidențialitate
+691|cantitatea trebuie să fie între 1 și {n}
+692|raza trebuie să fie mai mare de 0 și cel mult {n}
+693|salvate până acum · {x}
+694|rolul trebuie să fie CONSUMER sau STORE_OWNER
+695|termenii de utilizare
+696|acest loc
+697|ca să afli când un magazin din apropiere lansează unul.
+698|pornește alertele Rescue Drop
+699|până la {x}
+701|pe o rază de 3 km
+702|pe o rază de {n} km
+703|pe o rază de {n} km de {x}
+705|{x} Poate greși. Nu completează niciodată alergeni sau etichete ca vegetarian ori vegan: adaugă-le tu.
+706|{x} Pornește alertele pentru favorite în Alerte → Setări ca să afli când e disponibil.
+707|{x} alertați.
+708|{x} are deja un Rescue Drop activ. Modifică acel drop.
+709|{x} la {x} pentru {x}
+710|{x} completate. Verifică-le cu rafturile, apoi confirmă.
+711|{n} unități gratuite acum. Încearcă o distanță mai mare sau arată toată mâncarea.
+712|{x} la rând
+713|{x} în {x}: cam {x} pe pungă, în valoare de {x} la preț întreg.
+714|{x} este deja la ofertă azi. Modifică acea ofertă.
+715|{x} este obligatoriu
+716|la {n} km
+717|{n} rămase · {x} preț întreg · se termină {x}
+718|{n} min
+719|{x} trebuie să fie cel puțin {x}
+720|{x} trebuie să fie cel mult {x}
+721|{n} realizări noi
+722|{n} din {n} deblocate
+723|{x} publicate. Clienții din apropiere pot rezerva acum.
+724|{x} salvate. Publică atunci când ești gata.
+726|{x} a fost arhivat
+727|{x} cu id-ul {x} nu a fost găsit
+729|{x} · Food Rescue
+730|{x} · membru din {x}
+731|{x} · orele sunt în fusul orar al magazinului
+736|{n}% reducere pentru clienți
+737|{x}. Introdu ce a rămas cu adevărat azi; nimic nu se copiază de ieri.
+738|{x}Completat. Verifică detaliile și modifică-le înainte de salvare.
+743|· zile în {x}
+744|· ridicare {x}–{x}
+745|· magazin pe care îl urmărești
+746|· ore în {x}
+747|„{x}” s-a încheiat deja
+748|„{x}” e din nou la ofertă
+749|„{x}” e pe pauză și ascuns de clienți
+750|„{x}” a fost publicat
+751|„{x}” a fost înregistrat. E timpul să adaugi mâncare!
+752|„{x}” a fost salvat. Folosește-l când configurezi ofertele de azi.
+753|Te rugăm să intri în cont (token de autentificare lipsă, invalid sau expirat)
+754|Te rugăm să intri în cont
+755|Tipul tău de cont nu poate face asta
+756|Prea multe încercări. Încearcă din nou peste {n} minute
+757|Prea multe încercări. Încearcă din nou peste 1 minut
+758|(se termină în {x})
+759|în {n} h
+760|în {n} zile
+761|într-o zi
+762|{n} zile
+763|{n} din {n}
+764|{n} din {n} magazine
+765|{n} din {n} săptămâni
+766|{n} din {n} kg
+767|{n} din {n} lei
+768|{n} gratuite
+769|{n} ridicări cu interval de ridicare.
+770|{n} produse
+771|1 produs
+772|{n} unități · {x} kg
+773|{n} rezultate
+774|1 rezultat
+775|{n} magazine
+776|1 magazin
+777|{n} rămase
+778|{n} rămase · până la {n} pe comandă
+779|{n} produse · {n} unități de vânzare
+780|{n} produse
+781|1 produs
+782|{n} unități
+783|1 unitate
+784|{n} pungi
+785|1 pungă
+786|{n} oferte
+787|1 ofertă
+788|{n} ciorne
+789|1 ciornă
+790|{n} clienți
+791|1 client
+792|{n} sugestii
+793|1 sugestie
+794|{n} prețuri mai mici
+795|1 preț mai mic
+796|{n} Rescue Drop-uri
+797|1 Rescue Drop
+798|{n} săptămâni
+799|1 săptămână
+800|1 zi
+801|{n} persoane au
+802|1 persoană are
+803|{n} produse au
+804|1 produs are
+805|Prima salvare
+806|Ridică prima ta mâncare salvată
+807|Salvator obișnuit
+808|Ridică mâncare salvată de 10 ori
+809|Erou al salvării
+810|Ridică mâncare salvată de 50 de ori
+811|5 kg salvate de la gunoi
+812|Salvează 5 kg de mâncare
+813|25 kg salvate de la gunoi
+814|Salvează 25 kg de mâncare
+815|Cumpărător isteț
+816|Economisește 100 lei față de prețurile întregi
+817|Explorator local
+818|Ridică de la 3 magazine diferite
+819|Vânător de drop-uri
+820|Ridică un Rescue Drop
+821|Serie constantă
+822|Salvează mâncare 4 săptămâni la rând
+823|Progres: {x}
+824|Salvăm împreună {n} produse în {x}
+825|ianuarie
+826|februarie
+827|martie
+828|aprilie
+829|mai
+830|iunie
+831|iulie
+832|august
+833|septembrie
+834|octombrie
+835|noiembrie
+836|decembrie
+837|Tu ai salvat {n} dintre ele luna aceasta.
+838|Deblocat pe {x}
+839|Ridică până la {x} ·
+840|{x} revine la vânzare pentru alții. Nu se poate anula.
+841|Ia gratuit {x}
+842|Rezervă {x}
+843|Editează {x}
+844|Șterge {x}
+845|Urmărește {x}
+846|Nu mai urmări {x}
+847|{x} este din nou activ
+848|{x} este suspendat
+849|Una mai puțin: {x}
+850|Încă una: {x}
+851|O unitate gratuită mai puțin: {x}
+852|Încă o unitate gratuită: {x}
+853|O unitate de vânzare mai puțin: {x}
+854|Încă o unitate de vânzare: {x}
+855|Ridicare de la, {x}
+856|Ridicare până la, {x}
+857|Șterge {x} din produsele tale
+858|Rezervare pentru {x}
+859|Unități de {x} pentru pungi
+860|unități gratuite din {x}
+861|unități de vânzare din {x}
+862|Rezervă · {x}
+863|{n}% nu s-a vândut ({n} din {n} unități).
+864|Clienții încă veneau. Autopilotul sugerează deja mai mult; verifică dacă poți oferi.
+865|Mai puțin {x} rămas
+866|Oferă încă {n} × {x}
+867|Oferă mai puțin, scade prețul sau grupează resturile într-un Rescue Drop mai devreme seara.
+868|Rămâne des nevândut
+869|Se epuizează
+870|Multe neridicări
+871|{x} · multe neridicări
+872|Epuizat în {n} din {n} zile, de obicei cu {x} înainte de sfârșitul ridicării.
+873|Epuizat în {n} din {n} zile.
+874|{n} minute
+875|{n} ore
+876|Corect în {n} din ultimele {n} zile · des epuizat, cererea poate fi mai mare
+877|Cele mai multe rezervări se fac între {x} și {x}.
+878|Pe zi: {n} unități ridicate și {n} rămase în total. Tabelul de mai jos are fiecare zi.
+879|mai puțin de 5
+880|Sugerat: {n}
+881|Orele de ridicare ca pe {x}.
+882|Încă niciun istoric. Introdu cantitatea de azi; sugestiile încep după câteva zile.
+883|La fel ca data trecută ({x}). Mai multe sugestii după câteva zile.
+884|Epuizat în {n} din ultimele {n} zile, așa că {n} pot acoperi cererea.
+885|De obicei cam {n} rezervate și {n} rămase.
+886|Cam {n}% rămâne de obicei nevândut; un preț de {x} lei poate ajuta. Se aplică doar dacă îl alegi.
+887|luni {x}
+888|marți {x}
+889|miercuri {x}
+890|joi {x}
+891|vineri {x}
+892|sâmbătă {x}
+893|duminică {x}
+894|{n} ian.
+895|{n} feb.
+896|{n} mar.
+897|{n} apr.
+898|{n} mai
+899|{n} iun.
+900|{n} iul.
+901|{n} aug.
+902|{n} sept.
+903|{n} oct.
+904|{n} nov.
+905|{n} dec.
+906|1 ciornă nu e încă vizibilă pentru clienți.
+907|{n} ciorne nu sunt încă vizibile pentru clienți.
+908|„{x}” se vinde repede: au rămas {n} din {n}. Adaugă mai multe dacă ai.
+909|„{x}” s-a epuizat cu {x} înainte de sfârșitul ridicării. Autopilotul va ține cont de asta.
+910|{n} unități nevândute expiră în {n} ore. Le grupezi într-o pungă surpriză ca Rescue Drop?
+911|{n} unități nevândute expiră în {n} ore. Le grupezi în {n} pungi surpriză ca Rescue Drop?
+912|Cei mai mulți clienți vin la sfârșitul intervalului
+913|{n}% dintre ridicări au fost în ultimul sfert al intervalului de ridicare.
+914|Dacă ridicarea începe mai târziu, tejgheaua e liberă mai devreme și pot scădea neridicările.
+915|{n}% dintre rezervări nu au fost ridicate
+916|{n} unități rezervate nu au fost ridicate niciodată.
+917|Clienții primesc acum un memento înainte să se închidă ridicarea. Intervalele mai scurte ajută și ele.
+918|Adaugă greutăți ca să vezi câte kg de mâncare au fost salvate
+919|1 produs nu are încă greutate, de ex. {x}.
+920|{n} produse nu au încă greutate, de ex. {x}.
+921|Ajunge o estimare pe unitate.
+922|Nicio ofertă în {n} din ultimele {n} zile
+923|Surplusul nepublicat ajunge la gunoi.
+924|Pornește mementoul zilnic și folosește Autopilotul ca să publici în mai puțin de un minut.
+925|Nu a publicat niciodată
+926|Ultima ofertă acum {n} zile
+927|Doar {n}% din mâncarea oferită a fost ridicată
+928|{n}% dintre rezervări nu au fost ridicate
+929|Rescue Drop la {x}
+930|{x} · până la {x}
+931|Favoritul tău la {x}
+932|{x} e la ofertă pentru {x} lei
+933|{x} dintre favoritele tale la {x}
+934|{x} sunt la ofertă
+935|1 ofertă lângă tine azi
+936|{n} oferte lângă tine azi
+937|{x} · pe o rază de {n} km
+938|{x} și încă {n}
+939|Ridică până la {x} de la {x}
+940|{x} · codul de ridicare e în Comenzile mele
+941|Un amestec din {x} de azi. Conținutul variază.
+942|Realizări
+943|Activ
+944|Ia gratuit
+945|Copiază
+946|Editează
+947|Fructe și legume
+948|Carne și pește
+949|Oferit
+950|Pauză
+951|Reactivează
+952|Rezervă
+953|Rezervat, e al tău!
+954|Rezervate, așteaptă
+955|Reia
+956|Suspendă
+957|Suspendat
+958|De plată la magazin:
+959|Total, de plată la magazin
+960|Nu mai urmărești.
+961|Îl păstrăm pentru tine un timp limitat. Vei vedea termenul exact de ridicare după ce îl iei.
+962|Îl păstrăm pentru tine un timp limitat. Vei vedea termenul exact de ridicare după ce rezervi.
+963|Mărește
+964|Micșorează
+965|delicios
+966|gratuit
+967|lângă tine.
+968|opțional
+969|la mai puțin de 100 m
+970|locația ta
+971|locul tău salvat
+972|Produsele gratuite sunt limitate la unul pe zi, ca să fie destul pentru toată lumea.
+973|Mergi la magazin înainte de {x}. După aceea, mâncarea revine la vânzare.
+974|· se termină
+975|{x} cu unități gratuite
+976|{x} din favoritele tale
+977|Unul dintre favoritele tale
+978|De la un magazin pe care îl urmărești
+979|L-ai mai luat o dată
+980|L-ai mai luat de {n} ori
+981|Ai mai ridicat de aici o dată
+982|Ai mai ridicat de aici de {n} ori
+983|Se potrivește cu interesul tău pentru {x}
+984|Unități gratuite disponibile pentru tine
+985|Rescue Drop activ
+986|Se termină curând
+987|brutărie
+988|mâncare gătită
+989|fructe și legume
+990|lactate
+991|carne și pește
+992|dulciuri
+993|băcănie
+994|vegetarian
+995|vegan
+996|{x} rămas(e) de azi, la preț redus ca să nu se arunce. Întreabă-ne despre ingrediente și alergeni.
+997|Pâine
+998|Covrigi bagel
+999|Covrigi
+1000|Produse de patiserie
+1001|Aluat
+1002|Desert cu ciocolată
+1003|Înghețată
+1004|Înghețată pe băț
+1005|Desert
+1006|Pizza
+1007|Burrito
+1008|Hot dog
+1009|Burgeri
+1010|Plăcintă
+1011|Paste
+1012|Supă
+1013|Tocană
+1014|Piure de cartofi
+1015|Guacamole
+1016|Mâncare gătită
+1017|Drob de carne
+1018|Carne
+1019|Mere
+1020|Căpșuni
+1021|Portocale
+1022|Lămâi
+1023|Smochine
+1024|Ananas
+1025|Banane
+1026|Jackfruit
+1027|Anona
+1028|Rodii
+1029|Varză
+1030|Broccoli
+1031|Conopidă
+1032|Dovlecei
+1033|Dovleac
+1034|Castraveți
+1035|Anghinare
+1036|Ardei
+1037|Cardon
+1038|Ciuperci
+1039|Porumb dulce
+1040|Completat. Verifică detaliile și modifică-le înainte de salvare.
+1041|Urmărești.
+1042|Salvat.
+1043|Poate greși. Nu completează niciodată alergeni sau etichete ca vegetarian ori vegan: adaugă-le tu.
+1044|{x} pe o rază de {n} km de {x}
+1045|Produs · {x}
+1046|Pungă surpriză · {x}
+1047|{x} · la mai puțin de 100 m
+1048|{x} · la {n} km
+1049|Principal
+1050|Produse de brutărie pe tejghea
+1051|Bol cu fructe proaspete
+1052|Croissante în Madrid
+1053|Legume și fructe proaspete la piață
+1054|Felie de tort de ciocolată
+1055|Pizza la felie în Roma
+1056|Bol de salată, Kiedrich
+1057|Kraphao moo
+1058|Sandviș cu halloumi și legume coapte
+1059|Nu mă mai întreba
+1060|mâine {x}
+1061|Ridicare
+1062|{n} × {x} la {x} lei
+1063|{n} × {x} (gratuit, Pay-It-Forward)
+1064|{x} e la ofertă pentru {x} lei · ridicare {x}–{x}
+1065|{x} sunt la ofertă · ridicare {x}–{x}

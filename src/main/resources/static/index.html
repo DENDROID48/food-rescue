@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="styles.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+<script src="i18n.js" defer></script>
 <script src="app.js" defer></script>
 </head>
 <body>
@@ -69,6 +70,11 @@
       <span class="brand-word" aria-hidden="true">food<span>rescue</span><i>.</i></span>
     </a>
     <nav class="main-nav" id="mainNav" aria-label="Main" hidden></nav>
+    <label class="lang-pick" id="langPick"><span class="visually-hidden">Language</span>
+      <select class="select select-sm" id="langSelect" translate="no">
+        <option value="en">English</option><option value="ro">Română</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="pt">Português</option>
+      </select>
+    </label>
     <div class="account" id="account" hidden>
       <button class="account-btn" id="accountBtn" type="button" aria-haspopup="dialog">
         <span class="avatar" id="accountAvatar" aria-hidden="true"></span>
@@ -531,7 +537,7 @@
         </div>
         <div class="field">
           <label class="field-label" for="accLanguage">Language</label>
-          <select class="select" id="accLanguage" name="language"><option value="en">English</option><option value="ro">Română</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="pt">Português</option></select>
+          <select class="select" id="accLanguage" name="language" translate="no"><option value="en">English</option><option value="ro">Română</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="pt">Português</option></select>
         </div>
       </div>
       <div class="field">

@@ -98,6 +98,15 @@ async function resetLinkFor(email) {
     const me = await p.evaluate(async () => (await fetch('/api/v1/users/me',
       { headers: { Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('foodrescue.token')) } })).json());
     expect(me.language === 'ro', 'language ' + me.language);
+    // The rest of these checks read English text: switch the account (and this device) back.
+    await p.evaluate(async (m) => {
+      const h = { Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('foodrescue.token')), 'Content-Type': 'application/json' };
+      await fetch('/api/v1/users/me', { method: 'PUT', headers: h, body: JSON.stringify({ fullName: m.fullName, email: m.email, language: 'en' }) });
+      localStorage.setItem('foodrescue.language', JSON.stringify('en'));
+    }, me);
+    await p.reload();
+    await p.waitForSelector('#view-shop:not([hidden])');
+    await p.waitForFunction(() => document.documentElement.lang === 'en');
   });
 
   await step(p, 'account settings open from the avatar and save a new name', async () => {

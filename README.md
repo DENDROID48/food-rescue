@@ -24,7 +24,7 @@ OpenStreetMap; without them, food search still works as a list.
 
 ```bash
 mvn spring-boot:run      # http://localhost:8080, in-memory database with demo data
-mvn test                 # 171 unit and integration tests
+mvn test                 # 175 unit and integration tests
 ```
 
 Browser tests that drive the real page are in [`e2e/`](e2e/README.md).
@@ -223,6 +223,15 @@ Rules:
 - **Nothing extra is stored:** `GamificationService` works everything out from the order history,
   so the figures always match it. The `Achievement` enum holds each milestone's figure and target.
 
+## Languages
+
+The interface comes in English, Romanian, Spanish, French, German, Italian and Portuguese. A first
+visit uses the browser's language; anyone can switch on the sign-in screen or in Account settings,
+and the account keeps the choice, so password emails and push notifications use it too. Dates use
+the chosen language. How translations work and how to add text or a language:
+[`src/main/i18n/README.md`](src/main/i18n/README.md). The translations still need a native
+speaker's review before launch, and the privacy policy and terms are in English only.
+
 ## Production
 
 Production uses PostgreSQL. Run it with Docker:
@@ -260,7 +269,9 @@ The production profile starts with an empty database and no demo accounts.
 - Put the app behind HTTPS (the hosting platform's, or a reverse proxy such as Caddy or nginx).
   `X-Forwarded-*` headers from proxies on private network addresses are trusted, so links,
   client addresses (for the sign-in limits) and HSTS are right.
-- Fill in and have a lawyer check `privacy.html` and `terms.html` (everything in [square brackets]).
+- Fill in and have a lawyer check `privacy.html` and `terms.html` (everything in [square brackets]),
+  and translate them at least into Romanian.
+- Have a native speaker review each interface language (`src/main/i18n`).
 - Set up a mail server so people can reset forgotten passwords, and send yourself a test reset.
 - Back up the database and the photo folder every day, and try a restore once.
 - Point the hosting platform's health check at `GET /api/v1/health` (200 while the database answers).
