@@ -12,6 +12,7 @@ const API = '/api/v1';
 const TOKEN_KEY = 'foodrescue.token';
 const LOCATION_KEY = 'foodrescue.location';
 const PREFS_KEY = 'foodrescue.prefs';
+const STORE_KEY = 'foodrescue.store'; // + owner id: the store they last looked at
 const DEFAULT_LOCATION = { lat: 45.7537, lng: 21.2257, label: 'Timișoara center' };
 /** foodrescue.max-quantity-per-reservation, loaded from GET /settings at start-up. The server enforces it. */
 let maxPerReservation = 5;
@@ -174,11 +175,48 @@ function openDialog(dialog) {
   if (dialog.open) return;
   const opener = document.activeElement;
   dialog.showModal();
+  openDialogs.push(dialog);
+  pushHistory({ view: currentView, dialog: true }, location.hash || '#' + currentView);
   dialog.addEventListener('close', () => {
+    openDialogs.splice(openDialogs.indexOf(dialog), 1);
+    // Closed with its own buttons or Escape: drop the dialog's history entry too.
+    if (closingFromBack) closingFromBack = false;
+    else if (history.state?.dialog) { skipNextPop = true; history.back(); }
     const fallback = dialog.dataset.focusFallback && $(dialog.dataset.focusFallback);
     (opener?.isConnected ? opener : fallback)?.focus?.();
   }, { once: true });
 }
+
+// ---------- history: back button, reload and links keep the place ----------
+
+const openDialogs = [];
+let closingFromBack = false; // a dialog closed by the back button: its entry is already gone
+let skipNextPop = false;     // our own history.back() after a dialog closed some other way
+let pushAfterSkip = null;    // an entry added while that history.back() was still on its way
+
+/** Adds a history entry, or waits for our own pending history.back() so it isn't the one removed. */
+function pushHistory(state, url) {
+  if (skipNextPop) pushAfterSkip = [state, url];
+  else history.pushState(state, '', url);
+}
+
+/** Shows the view in the address (#orders), or the role's first view. */
+function viewFromAddress() {
+  const name = location.hash.slice(1).split('/')[0];
+  return me && VIEWS[me.role].some(([v]) => v === name) ? name : null;
+}
+
+window.addEventListener('popstate', () => {
+  if (skipNextPop) {
+    skipNextPop = false;
+    if (pushAfterSkip) { history.pushState(pushAfterSkip[0], '', pushAfterSkip[1]); pushAfterSkip = null; }
+    return;
+  }
+  const top = openDialogs.findLast((d) => d.open);
+  if (top) { closingFromBack = true; top.close(); return; }
+  if (!me) return;
+  showView(viewFromAddress() || VIEWS[me.role][0][0], { record: false });
+});
 
 /** Accessible replacement for confirm(). Resolves to true when the person confirms. */
 function confirmDialog({ title, body, confirmLabel = 'Confirm', cancelLabel = 'Cancel', danger = false }) {
@@ -265,9 +303,10 @@ const VIEWS = {
 const VIEW_TITLES = { auth: 'Welcome', shop: 'Discover', orders: 'My orders', impact: 'My impact', store: 'My store', admin: 'Admin' };
 let currentView = null;
 
-function showView(name, { focus = false } = {}) {
+function showView(name, { focus = false, record = true } = {}) {
   const changed = currentView !== name;
   currentView = name;
+  if (record && changed && name !== 'auth') pushHistory({ view: name }, '#' + name);
   for (const s of $$('main > section')) s.hidden = s.id !== 'view-' + name;
   for (const b of $$('[data-view]')) {
     if (b.dataset.view === name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
@@ -309,6 +348,7 @@ async function signOut() {
   $('#mainNav').hidden = true;
   $('#bottomNav').hidden = true;
   $('#account').hidden = true;
+  history.replaceState(null, '', location.pathname); // the next person starts on their own first view
   showView('auth');
 }
 
@@ -325,7 +365,10 @@ async function startSession() {
   $('#accountAvatar').textContent = initials(me.fullName);
   $('#account').hidden = false;
   renderNav();
-  showView(VIEWS[me.role][0][0]);
+  // A reload or a link to #orders opens that view again, for this role.
+  const first = viewFromAddress() || VIEWS[me.role][0][0];
+  if (location.hash.slice(1).split('/')[0] !== first) history.replaceState({ view: first }, '', '#' + first);
+  showView(first, { record: false });
   $('#inboxBtn').hidden = me.role !== 'CONSUMER';
   if (me.role === 'CONSUMER') {
     initShopMap(); renderEligibility(); search(); loadMyOrders(); startInbox(); syncPush();
@@ -916,7 +959,7 @@ async function openAlert(n) {
 async function openLinkedAlert(url = location.href) {
   const id = Number(new URL(url, location.origin).searchParams.get('alert'));
   if (!id) return;
-  history.replaceState(null, '', '/');
+  history.replaceState({ view: currentView }, '', '/#' + currentView);
   await pollInbox();
   openAlert(inbox.items.find((n) => n.id === id));
 }
@@ -1486,9 +1529,13 @@ async function loadStores() {
     $('#storeSuspended').hidden = true;
     return;
   }
-  if (!myStores.some((s) => s.id === currentStoreId)) currentStoreId = myStores[0].id;
+  if (!myStores.some((s) => s.id === currentStoreId)) {
+    const last = restore(STORE_KEY + '.' + me.id);
+    currentStoreId = myStores.some((s) => s.id === last) ? last : myStores[0].id;
+  }
   select.value = currentStoreId;
   loadStoreDetails();
+  if (location.hash === '#store/insights') setStoreTab('insights');
 }
 
 function renderStoreHead() {
@@ -2392,6 +2439,8 @@ function setStoreTab(tab) {
   }
   $('#todayPanel').hidden = tab !== 'today';
   $('#insightsPanel').hidden = tab !== 'insights';
+  // The tab is part of the address, so a reload stays on it (no extra history step for a tab).
+  history.replaceState(history.state, '', tab === 'insights' ? '#store/insights' : '#store');
   if (tab === 'insights') loadInsights();
 }
 
@@ -2983,7 +3032,7 @@ $('#mapToggle').addEventListener('click', toggleMap);
 
 $('#reserveDialog').addEventListener('submit', (e) => { if (e.target.id === 'reserveForm') submitReserve(e); });
 
-$('#storeSelect').addEventListener('change', (e) => { currentStoreId = Number(e.target.value); today = null; insights = null; setStoreTab('today'); $('#pickupResult').innerHTML = ''; loadStoreDetails(); });
+$('#storeSelect').addEventListener('change', (e) => { currentStoreId = Number(e.target.value); save(STORE_KEY + '.' + me.id, currentStoreId); today = null; insights = null; setStoreTab('today'); $('#pickupResult').innerHTML = ''; loadStoreDetails(); });
 $('#editStore').addEventListener('click', () => openStoreForm(currentStore()));
 $('#addStore').addEventListener('click', () => openStoreForm(null));
 $('#storeForm').addEventListener('submit', saveStore);

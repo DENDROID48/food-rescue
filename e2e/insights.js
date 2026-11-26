@@ -60,6 +60,13 @@ async function axe(page, label) {
     await shot(o, '80-insights-top');
   });
 
+  await step('a reload stays on Insights', async () => {
+    expect(o.url().endsWith('#store/insights'), 'address is ' + o.url());
+    await o.reload();
+    await o.waitForSelector('#insightsBody .insight-stats');
+    expect(await o.isHidden('#todayPanel'), 'reload went back to Today');
+  });
+
   await step('recommendations explain themselves and open the right editor', async () => {
     const recs = await o.$$eval('#insightsBody .rec strong', (r) => r.map((x) => x.textContent));
     expect(recs.some((r) => /Offer \d+ more Sourdough loaf/.test(r)), 'sells-out rec: ' + recs);

@@ -236,6 +236,29 @@ async function impactFigures(page) {
     expect(await ph.locator('#orderHistory .history-row').count() === 20, 'not 20 after "Show older orders"');
     await noOverflow(ph, 'phone orders');
   });
+  await step(ph, 'back button and reload: a reload keeps the tab, back closes a dialog first, then goes to the last tab', async () => {
+    await ph.click('#bottomNav [data-view="impact"]');
+    await ph.waitForSelector('#impactBody .achievement');
+    expect(ph.url().endsWith('#impact'), 'address is ' + ph.url());
+    await ph.reload();
+    await ph.waitForSelector('#view-impact:not([hidden]) #impactBody .achievement');
+    await ph.click('#inboxBtn');
+    await ph.waitForSelector('#inboxDialog[open]');
+    await ph.goBack();
+    await ph.waitForSelector('#inboxDialog[open]', { state: 'detached' });
+    expect(await ph.isVisible('#view-impact'), 'back closed the dialog but left the Impact page');
+    await ph.goBack(); // to My orders, the tab before
+    await ph.waitForSelector('#view-orders:not([hidden])');
+    await ph.goForward();
+    await ph.waitForSelector('#view-impact:not([hidden])');
+    // A dialog closed with its own button leaves no extra step behind.
+    await ph.click('#inboxBtn');
+    await ph.waitForSelector('#inboxDialog[open]');
+    await ph.click('#inboxDialog [data-close]');
+    await ph.waitForTimeout(300);
+    await ph.goBack();
+    await ph.waitForSelector('#view-orders:not([hidden])');
+  });
 
   const owner = await newPage(1280, 900);
   await step(owner, 'impact is for customers: shop owners do not get the page', async () => {
