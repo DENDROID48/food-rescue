@@ -102,6 +102,10 @@ const closed = (page, id) => page.waitForFunction((x) => !document.querySelector
     const reasons = await c.$$eval('#forYouList .for-you-reason', (r) => r.map((x) => x.textContent));
     // Every pick says why it was chosen (the demo student's history now outranks the interest reason).
     expect(reasons.length > 0 && reasons.every((r) => r.trim().length > 5), 'reasons: ' + reasons);
+    // Picks already at the top of the list are left out: For you only points further down.
+    const top = await c.$$eval('#nearby .food-card', (cards) => cards.slice(0, 2).map((x) => x.id.replace('food-', '')));
+    const picked = await c.$$eval('#forYouList .for-you-card', (cards) => cards.map((x) => x.dataset.scrollTo));
+    expect(!picked.some((id) => top.includes(id)), `pick ${picked} repeats a top card ${top}`);
     await c.waitForSelector('#inboxDot:not([hidden])');
     const star = c.locator('.food-card:has-text("Sourdough loaf") .star-btn').first();
     expect((await star.getAttribute('aria-pressed')) === 'true', 'sourdough star should be on');

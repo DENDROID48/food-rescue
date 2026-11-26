@@ -421,15 +421,29 @@ function setLocation(loc, refresh = true) {
   save(LOCATION_KEY, loc);
   updateWhere();
   closeSuggestions();
+  setSearchOpen(false);
   if (refresh) search();
 }
 
 function updateWhere() {
   $('#locationLabel').textContent = location_.label;
+  $('#summaryPlace').textContent = location_.label;
+  $('#summaryRadius').textContent = `within ${radiusKm} km`;
   $('#radiusText').textContent = radiusKm + ' km';
   $('#heroWhere').textContent = `within ${radiusKm} km of ${location_.label}`;
   const radio = $(`input[name="radius"][value="${radiusKm}"]`);
   if (radio) radio.checked = true;
+}
+
+/** Phones only (the summary line is hidden on wider screens): open or close the full search form. */
+function setSearchOpen(open) {
+  const form = $('#placeForm');
+  const hadFocus = form.contains(document.activeElement) && document.activeElement !== $('#placeSummary');
+  form.classList.toggle('is-collapsed', !open);
+  $('#placeSummary').setAttribute('aria-expanded', String(open));
+  $('#summaryAction').textContent = open ? 'Done' : 'Change';
+  // Focus must not stay on a control that has just been hidden.
+  if (!open && hadFocus && $('#placeSummary').offsetParent) $('#placeSummary').focus();
 }
 
 function closeSuggestions() {
@@ -481,6 +495,9 @@ function useMyLocation(button) {
 // ---------- customer: food ----------
 
 let nearbyItems = [];
+/** The results as shown (after filters and sorting); "For you" leaves out the first of them. */
+let shownItems = [];
+const FOR_YOU_SKIP_TOP = 2;
 let sortBy = 'distance';
 let freeOnly = false;
 let searchSeq = 0;
@@ -546,6 +563,7 @@ function renderNearby() {
   // Live Rescue Drops first: they end soonest.
   const list = nearbyItems.filter((i) => (!freeOnly || i.payItForwardQuantity > 0) && (!favOnly || isFavourite(i)))
     .sort((a, b) => (b.rescueDrop - a.rescueDrop) || SORTERS[sortBy](a, b));
+  shownItems = list;
   renderDropStrip();
   renderForYou();
   $('#favOnly').hidden = me?.role !== 'CONSUMER' || (!favStores.size && !favProducts.size && !favOnly);
@@ -936,7 +954,8 @@ function starButton(i) {
 /** "For you": the Radar's picks among the current results, each with its reason. */
 function renderForYou() {
   const section = $('#forYou');
-  const byId = new Map(nearbyItems.map((i) => [i.id, i]));
+  // Only picks that are in the list but not already at the top of it: those are easy to see anyway.
+  const byId = new Map(shownItems.slice(FOR_YOU_SKIP_TOP).map((i) => [i.id, i]));
   const picks = (radar?.personalised ? radar.picks : []).filter((p) => byId.has(p.itemId));
   section.hidden = !picks.length;
   if (!picks.length) return;
@@ -2889,7 +2908,8 @@ document.addEventListener('click', (e) => {
   else if (d.gotoOrders !== undefined) { $('#reserveDialog').close(); showView('orders', { focus: true }); }
   else if (d.scrollTo) scrollToFood(Number(d.scrollTo));
   else if (d.radius) { radiusKm = Number(d.radius); save(PREFS_KEY, { radius: radiusKm }); search(); }
-  else if (d.focusSearch !== undefined || t.id === 'heroSearch') { $('#placeQuery').focus(); $('#placeForm').scrollIntoView({ block: 'center' }); }
+  else if (t.id === 'placeSummary') setSearchOpen($('#placeForm').classList.contains('is-collapsed'));
+  else if (d.focusSearch !== undefined || t.id === 'heroSearch') { setSearchOpen(true); $('#placeQuery').focus(); $('#placeForm').scrollIntoView({ block: 'center' }); }
   else if (d.showAll !== undefined) { freeOnly = false; favOnly = false; $('#freeOnly').setAttribute('aria-pressed', 'false'); $('#favOnly').setAttribute('aria-pressed', 'false'); renderNearby(); }
   else if (d.retrySearch !== undefined) search();
   else if (d.cancel) cancelOrder(Number(d.cancel));

@@ -218,6 +218,17 @@ async function impactFigures(page) {
     await ph.click('#bottomNav [data-view="shop"]');
     expect(await ph.locator('#view-shop .hero.is-compact').count() === 1, 'hero is not compact');
     expect(await ph.isHidden('#heroLocate'), 'big welcome buttons still shown');
+    // The search is one line until opened (choosing a place closes it again too).
+    expect(await ph.isHidden('#placeQuery'), 'search form open on a phone');
+    expect((await ph.textContent('#placeSummary')).includes('within 3 km'), 'summary does not say the distance');
+    await ph.click('#placeSummary');
+    expect(await ph.isVisible('#placeQuery'), 'search form did not open');
+    expect(await ph.getAttribute('#placeSummary', 'aria-expanded') === 'true', 'aria-expanded not true');
+    await ph.click('label.chip:has-text("5 km")');
+    await ph.waitForFunction(() => document.querySelector('#placeSummary').textContent.includes('within 5 km'));
+    await ph.click('#placeSummary'); // "Done"
+    await ph.waitForSelector('#placeForm.is-collapsed');
+    expect(await ph.isHidden('#placeQuery'), 'search form did not close');
     await ph.click('#bottomNav [data-view="orders"]');
     await ph.waitForSelector('#historyMore');
     expect(await ph.locator('#orderHistory .history-row').count() === 10, 'not 10 past orders');

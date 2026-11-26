@@ -197,7 +197,13 @@
 
     <div id="eligibilityBox" class="notice" hidden></div>
 
-    <form id="placeForm" class="card searchbar" role="search" novalidate>
+    <form id="placeForm" class="card searchbar is-collapsed" role="search" novalidate>
+      <button type="button" class="place-summary" id="placeSummary" aria-expanded="false" aria-controls="placeFormBody">
+        <svg aria-hidden="true"><use href="#i-pin"/></svg>
+        <span class="place-summary-text"><strong id="summaryPlace">Timișoara center</strong><span id="summaryRadius">within 3 km</span></span>
+        <span class="place-summary-change" id="summaryAction">Change</span>
+      </button>
+      <div class="searchbar-body" id="placeFormBody">
       <div class="searchbar-row">
         <div class="field place-field">
           <label class="field-label" for="placeQuery">Search a place</label>
@@ -222,6 +228,7 @@
         </div>
       </div>
       <p class="searchbar-where" id="whereNow"><svg aria-hidden="true"><use href="#i-pin"/></svg>Showing food within <strong id="radiusText">3 km</strong> of <strong id="locationLabel">Timișoara center</strong></p>
+      </div>
     </form>
 
     <div class="results-toolbar">
