@@ -2,6 +2,13 @@ package com.foodrescue.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foodrescue.config.SecurityProperties;
+import com.foodrescue.repository.UserRepository;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -50,6 +57,28 @@ import java.util.List;
 @Configuration
 public class SecurityConfig implements WebMvcConfigurer {
 
+    /**
+     * The page's own files, Leaflet (unpkg), Google Fonts, OpenStreetMap tiles, and the free image
+     * model for listing suggestions (jsDelivr, its weights from Google's and Kaggle's storage).
+     * 'unsafe-inline' for styles only: the page sets a few style attributes (animation delays).
+     * The browser itself also fetches the font stylesheet, hence the fonts in connect-src.
+     */
+    static final String CONTENT_SECURITY_POLICY = String.join("; ",
+            "default-src 'self'",
+            // 'unsafe-eval' only because the image model (TensorFlow.js) builds code at run time. Inline
+            // and injected scripts stay blocked, which is what stops cross-site scripting.
+            "script-src 'self' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com",
+            "font-src 'self' https://fonts.gstatic.com",
+            "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://unpkg.com",
+            "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net https://tfhub.dev https://www.kaggle.com https://*.kaggle.com https://storage.googleapis.com https://*.googleusercontent.com",
+            "worker-src 'self'",
+            "manifest-src 'self'",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'self'");
+
     private final CurrentUserArgumentResolver currentUserArgumentResolver;
     private final ObjectMapper objectMapper;
 
@@ -63,13 +92,22 @@ public class SecurityConfig implements WebMvcConfigurer {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // The H2 console (dev profile only) is shown in a frame of its own page.
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                .headers(headers -> headers
+                        // The H2 console (dev profile only) is shown in a frame of its own page.
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        .referrerPolicy(r -> r.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                        .addHeaderWriter(new StaticHeadersWriter("Permissions-Policy",
+                                "geolocation=(self), camera=(), microphone=(), payment=(), usb=()"))
+                        // Which sites the page may load from. The H2 console needs inline scripts, so it is left out.
+                        .addHeaderWriter(new DelegatingRequestMatcherHeaderWriter(
+                                new NegatedRequestMatcher(new AntPathRequestMatcher("/h2-console/**")),
+                                new StaticHeadersWriter("Content-Security-Policy", CONTENT_SECURITY_POLICY))))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/users",
+                                "/api/v1/auth/password-reset", "/api/v1/auth/password-reset/confirm").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/food-items/nearby", "/api/v1/food-items/*/photo",
                                 "/api/v1/geocode", "/api/v1/geocode/**", "/api/v1/template-photos/*",
-                                "/api/v1/push/public-key", "/api/v1/settings").permitAll()
+                                "/api/v1/push/public-key", "/api/v1/settings", "/api/v1/health").permitAll()
                         .requestMatchers("/api/v1/food-items/*/reservations", "/api/v1/food-items/*/free-claims",
                                 "/api/v1/orders/**", "/api/v1/users/me/eligibility-request", "/api/v1/me/**").hasRole("CONSUMER")
                         .requestMatchers("/api/v1/stores/**").hasRole("STORE_OWNER")
@@ -118,11 +156,13 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     /** Checks the signature, the expiry time and that the token was issued by this application. */
     @Bean
-    public JwtDecoder jwtDecoder(SecurityProperties properties) {
+    public JwtDecoder jwtDecoder(SecurityProperties properties, UserRepository userRepository) {
         NimbusJwtDecoder decoder = NimbusJwtDecoder.withSecretKey(signingKey(properties))
                 .macAlgorithm(MacAlgorithm.HS256)
                 .build();
-        decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(TokenService.ISSUER));
+        // Also refuses tokens of deleted accounts and tokens from before a password change.
+        decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(
+                JwtValidators.createDefaultWithIssuer(TokenService.ISSUER), new AccountTokenValidator(userRepository)));
         return decoder;
     }
 

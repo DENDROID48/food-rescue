@@ -5,6 +5,16 @@ const path = require('path');
 const AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const BASE = 'http://localhost:8080/';
+
+/** Like page.waitForFunction, which the page's security policy blocks (it needs eval). */
+async function waitFn(page, fn, arg, { timeout = 15000 } = {}) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    if (await page.evaluate(fn, arg)) return;
+    if (Date.now() > end) throw new Error('Timed out waiting for: ' + String(fn).slice(0, 120));
+    await page.waitForTimeout(100);
+  }
+}
 const OUT = process.argv[2] || path.join(__dirname, 'screenshots');
 fs.mkdirSync(OUT, { recursive: true });
 const results = [];
@@ -37,7 +47,7 @@ async function login(page, email) {
 }
 async function axe(page, label) {
   await page.waitForTimeout(700);
-  await page.addScriptTag({ content: AXE });
+  await page.evaluate(AXE); // not a script tag: the page's security policy blocks inline scripts
   const res = await page.evaluate(async () => (await axe.run(document, { runOnly: ['wcag2a', 'wcag2aa'] })).violations
     .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`));
   results.push([res.length ? 'WARN' : 'PASS', `axe WCAG A/AA on ${label}`, res.join(' ;; ')]);
@@ -104,7 +114,7 @@ async function axe(page, label) {
 
   await step('period switch and CSV export', async () => {
     await o.click('label.chip:has(input[name="insightDays"][value="7"])');
-    await o.waitForFunction(() => document.querySelectorAll('#insightsBody .table-view tbody tr').length === 7);
+    await waitFn(o, () => document.querySelectorAll('#insightsBody .table-view tbody tr').length === 7);
     const [download] = await Promise.all([o.waitForEvent('download'), o.click('#exportCsv')]);
     const file = path.join(OUT, 'export.csv');
     await download.saveAs(file);

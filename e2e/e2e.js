@@ -8,6 +8,16 @@ const path = require('path');
 const AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const BASE = 'http://localhost:8080/';
+
+/** Like page.waitForFunction, which the page's security policy blocks (it needs eval). */
+async function waitFn(page, fn, arg, { timeout = 15000 } = {}) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    if (await page.evaluate(fn, arg)) return;
+    if (Date.now() > end) throw new Error('Timed out waiting for: ' + String(fn).slice(0, 120));
+    await page.waitForTimeout(100);
+  }
+}
 const OUT = process.argv[2] || path.join(__dirname, 'screenshots');
 const PHOTO = process.argv[3] || path.join(__dirname, '..', 'src', 'main', 'resources', 'static', 'photos', 'bread-480.webp');
 fs.mkdirSync(OUT, { recursive: true });
@@ -82,7 +92,7 @@ async function signOut(page) {
 }
 async function axe(page, label) {
   await page.waitForTimeout(500);
-  await page.addScriptTag({ content: AXE });
+  await page.evaluate(AXE); // not a script tag: the page's security policy blocks inline scripts
   const res = await page.evaluate(async () => (await axe.run(document, { runOnly: ['wcag2a', 'wcag2aa'] })).violations
     .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`));
   record(res.length ? 'WARN' : 'PASS', `axe WCAG A/AA on ${label}`, res.join(' ;; '));
@@ -123,7 +133,7 @@ async function openReservable(page, min = 2) {
     await a.fill('#loginEmail', 'student@example.com');
     await a.fill('#loginPassword', 'wrongpass');
     await a.click('#loginForm [type=submit]');
-    await a.waitForFunction(() => document.querySelector('#loginAlert').textContent.includes('Wrong email or password'));
+    await waitFn(a, () => document.querySelector('#loginAlert').textContent.includes('Wrong email or password'));
     await shot(a, '02-auth-error');
   });
   await step(a, 'auth: show and hide the password', async () => {
@@ -141,6 +151,9 @@ async function openReservable(page, min = 2) {
     await a.click('#registerForm [type=submit]');
     expect((await a.textContent('#regPasswordError')).includes('8'), 'no min length error');
     await a.fill('#regPassword', 'longenough1');
+    await a.click('#registerForm [type=submit]');
+    expect((await a.textContent('#regTermsError')).includes('terms'), 'terms not required');
+    await a.check('#regTerms');
     await shot(a, '03-register');
     await a.click('#registerForm [type=submit]');
     await a.waitForSelector('#view-shop:not([hidden])');
@@ -178,7 +191,7 @@ async function openReservable(page, min = 2) {
   });
   await step(c, 'customer: radius chips re-run the search', async () => {
     await c.click('label.chip:has-text("1 km")');
-    await c.waitForFunction(() => document.querySelector('#resultCount').textContent.includes('1 km'));
+    await waitFn(c, () => document.querySelector('#resultCount').textContent.includes('1 km'));
     await c.click('label.chip:has-text("3 km")');
     await c.waitForSelector('#nearby[aria-busy="false"]');
   });
@@ -186,7 +199,7 @@ async function openReservable(page, min = 2) {
     const before = await c.textContent('#locationLabel');
     await c.fill('#placeQuery', 'Piata Victoriei Timisoara');
     await c.click('#placeForm .search-submit');
-    await c.waitForFunction((b) => !document.querySelector('#placeSuggestions').hidden
+    await waitFn(c, (b) => !document.querySelector('#placeSuggestions').hidden
       || document.querySelector('#locationLabel').textContent !== b
       || [...document.querySelectorAll('#toasts .toast')].some((t) => !t.textContent.includes('Welcome')), before, { timeout: 15000 });
     if (await c.locator('#placeSuggestions').isVisible()) { await shot(c, '05-place-suggestions'); await c.click('#placeSuggestions button >> nth=0'); }
@@ -262,7 +275,7 @@ async function openReservable(page, min = 2) {
     await c.click('#inboxBtn');
     await c.click('#inboxTabSettings');
     await c.waitForSelector('#freeOfferBlock:not([hidden])');
-    await c.waitForFunction(() => !document.querySelector('#freeItemsOffer').checked, null, { timeout: 5000 })
+    await waitFn(c, () => !document.querySelector('#freeItemsOffer').checked, null, { timeout: 5000 })
       .catch(() => { throw new Error('setting should be off'); });
     await c.check('#freeItemsOffer');
     await c.click('#alertsForm [type=submit]');
@@ -308,7 +321,7 @@ async function openReservable(page, min = 2) {
     expect((await o.inputValue('#pickupCode')) === '12', 'non-digits not stripped');
     await o.fill('#pickupCode', '000000');
     await o.click('#pickupForm [type=submit]');
-    await o.waitForFunction(() => document.querySelector('#pickupCodeError').textContent.length > 0);
+    await waitFn(o, () => document.querySelector('#pickupCodeError').textContent.length > 0);
   });
   await step(o, "owner: confirm pickup with the customer's code", async () => {
     expect(keptCode, 'no code from the customer section');
@@ -364,7 +377,7 @@ async function openReservable(page, min = 2) {
     expect(await options.count() >= 2, 'store select has ' + await options.count());
     const [value, name] = [await options.nth(1).getAttribute('value'), (await options.nth(1).textContent()).trim()];
     await o.selectOption('#storeSelect', value);
-    await o.waitForFunction((n) => document.querySelector('#storeTitle').textContent.trim() === n, name);
+    await waitFn(o, (n) => document.querySelector('#storeTitle').textContent.trim() === n, name);
   });
   await o.context().close();
 

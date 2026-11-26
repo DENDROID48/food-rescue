@@ -28,6 +28,7 @@ public class TokenService {
 
     static final String ISSUER = "food-rescue";
     static final String ROLE_CLAIM = "role";
+    static final String ISSUED_MS_CLAIM = "iat_ms";
 
     private final JwtEncoder jwtEncoder;
     private final SecurityProperties properties;
@@ -41,6 +42,8 @@ public class TokenService {
                 .issuer(ISSUER)
                 .subject(String.valueOf(user.getId()))
                 .claim(ROLE_CLAIM, user.getRole().name())
+                // Exact issue time: "iat" has whole seconds only, too coarse for "sign out everywhere".
+                .claim(ISSUED_MS_CLAIM, now.toEpochMilli())
                 .issuedAt(now)
                 .expiresAt(expiresAt)
                 .build();

@@ -56,7 +56,7 @@ class ApiIntegrationTest {
         String email = role.toLowerCase() + "-" + UUID.randomUUID() + "@test.ro";
         String body = mvc.perform(post("/api/v1/users").contentType(MediaType.APPLICATION_JSON)
                         .content(json.writeValueAsString(Map.of(
-                                "fullName", "Test " + role, "email", email, "password", PASSWORD, "role", role))))
+                                "fullName", "Test " + role, "email", email, "password", PASSWORD, "role", role, "acceptTerms", true))))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         return json.readTree(body).get("token").asText();

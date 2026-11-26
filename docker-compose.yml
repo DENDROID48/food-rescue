@@ -35,6 +35,13 @@ services:
       FOODRESCUE_JWT_SECRET: ${FOODRESCUE_JWT_SECRET:?Set FOODRESCUE_JWT_SECRET to a random string of at least 32 characters}
       FOODRESCUE_ADMIN_EMAIL: ${FOODRESCUE_ADMIN_EMAIL:-}
       FOODRESCUE_ADMIN_PASSWORD: ${FOODRESCUE_ADMIN_PASSWORD:-}
+      FOODRESCUE_PUBLIC_URL: ${FOODRESCUE_PUBLIC_URL:-http://localhost:8080}
+      # Optional: an SMTP server for password reset emails (see README).
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST:-}
+      SPRING_MAIL_PORT: ${SPRING_MAIL_PORT:-587}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME:-}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD:-}
+      FOODRESCUE_MAIL_FROM: ${FOODRESCUE_MAIL_FROM:-}
     volumes:
       # Uploaded photos are files; keep them when the app container is rebuilt.
       - uploads:/app/uploads

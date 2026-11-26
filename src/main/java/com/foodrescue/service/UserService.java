@@ -9,6 +9,7 @@ import com.foodrescue.dto.UserResponse;
 import com.foodrescue.exception.BusinessRuleException;
 import com.foodrescue.exception.ResourceNotFoundException;
 import com.foodrescue.repository.UserRepository;
+import com.foodrescue.security.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+    private final RateLimiter rateLimiter;
 
     /** Creates the account and signs the new user in straight away. */
     @Transactional
-    public AuthResponse register(RegisterUserRequest request) {
+    public AuthResponse register(RegisterUserRequest request, String clientIp) {
+        rateLimiter.hit(RateLimiter.Limit.REGISTER_IP, clientIp);
         if (request.role() == UserRole.ADMIN) {
             throw new BusinessRuleException(HttpStatus.BAD_REQUEST, "role must be CONSUMER or STORE_OWNER");
         }
@@ -43,6 +46,8 @@ public class UserService {
         user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
+        user.setLanguage(request.language() == null ? "en" : request.language());
+        user.setTermsAcceptedAt(java.time.Instant.now());
 
         User saved = userRepository.save(user);
         log.info("Registered user {} as {}", saved.getId(), saved.getRole());

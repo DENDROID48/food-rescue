@@ -4,6 +4,16 @@ const fs = require('fs'), path = require('path'), zlib = require('zlib');
 const UPLOADS = process.argv[2] || path.join(__dirname, '..', 'uploads');
 const OUT = process.argv[3] || path.join(__dirname, 'screenshots');
 const BASE = 'http://localhost:8080/';
+
+/** Like page.waitForFunction, which the page's security policy blocks (it needs eval). */
+async function waitFn(page, fn, arg, { timeout = 15000 } = {}) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    if (await page.evaluate(fn, arg)) return;
+    if (Date.now() > end) throw new Error('Timed out waiting for: ' + String(fn).slice(0, 120));
+    await page.waitForTimeout(100);
+  }
+}
 const results = [], consoleErrors = [];
 const step = async (n, f) => { try { await f(); results.push(['PASS', n]); } catch (e) { results.push(['FAIL', n, e.message.split('\n').filter(Boolean).slice(0, 8).join(' / ')]); } };
 const expect = (c, m) => { if (!c) throw new Error(m); };
@@ -50,7 +60,7 @@ async function login(page, email) {
     if (await o.isVisible('#setupDialog[open]')) await o.keyboard.press('Escape');
     await o.locator(`[data-edit-template="${tplId}"]`).first().click();
     await o.waitForSelector('#templateDialog[open]');
-    await o.waitForFunction(() => [...document.querySelectorAll('#templateDialog img')].some((i) => i.complete && i.naturalWidth === 40), null, { timeout: 10000 });
+    await waitFn(o, () => [...document.querySelectorAll('#templateDialog img')].some((i) => i.complete && i.naturalWidth === 40), null, { timeout: 10000 });
     await o.screenshot({ path: path.join(OUT, 'photo-in-editor.png') });
   });
 

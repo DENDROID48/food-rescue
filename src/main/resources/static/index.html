@@ -70,8 +70,11 @@
     </a>
     <nav class="main-nav" id="mainNav" aria-label="Main" hidden></nav>
     <div class="account" id="account" hidden>
-      <span class="avatar" id="accountAvatar" aria-hidden="true"></span>
-      <span class="account-text"><strong id="accountName"></strong><span id="accountRole"></span></span>
+      <button class="account-btn" id="accountBtn" type="button" aria-haspopup="dialog">
+        <span class="avatar" id="accountAvatar" aria-hidden="true"></span>
+        <span class="account-text"><strong id="accountName"></strong><span id="accountRole"></span></span>
+        <span class="visually-hidden">Account settings</span>
+      </button>
       <button class="btn btn-ghost btn-sm btn-icon inbox-btn" id="inboxBtn" type="button" aria-label="Alerts" hidden><svg aria-hidden="true"><use href="#i-bell"/></svg><span class="nav-dot inbox-dot" id="inboxDot" hidden></span></button>
       <button class="btn btn-ghost btn-sm" id="logout" type="button"><svg aria-hidden="true"><use href="#i-logout"/></svg><span>Sign out</span></button>
     </div>
@@ -118,6 +121,7 @@
                 <button type="button" class="btn btn-ghost btn-icon btn-sm input-action" data-toggle-password="loginPassword" aria-label="Show password" aria-pressed="false"><svg aria-hidden="true"><use href="#i-eye"/></svg></button>
               </div>
               <p class="field-error" id="loginPasswordError"></p>
+              <button class="link-btn forgot-link" type="button" id="forgotOpen" hidden>Forgot your password?</button>
             </div>
             <button class="btn btn-primary btn-lg btn-block" type="submit"><span>Sign in</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
             <div class="demo">
@@ -159,6 +163,10 @@
               <label class="role-option"><input type="radio" name="role" value="CONSUMER" checked><span><b>Rescue food</b><small>Find and reserve food nearby</small></span></label>
               <label class="role-option"><input type="radio" name="role" value="STORE_OWNER"><span><b>Offer surplus food</b><small>I run a shop or restaurant</small></span></label>
             </fieldset>
+            <div class="field">
+              <label class="check terms-check"><input type="checkbox" id="regTerms" name="acceptTerms" required data-required-message="Please accept the terms and the privacy policy" aria-describedby="regTermsError"><span>I agree to the <a href="terms.html" target="_blank" rel="noopener">terms of use</a> and the <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>.</span></label>
+              <p class="field-error" id="regTermsError"></p>
+            </div>
             <button class="btn btn-primary btn-lg btn-block" type="submit"><span>Create my account</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
           </form>
         </div>
@@ -431,7 +439,11 @@
 <footer class="site-footer">
   <div class="container">
     <span>Food Rescue · good food, shared good.</span>
-    <button class="link-btn" type="button" id="openCredits">Photo credits</button>
+    <span class="footer-links">
+      <a class="link-btn" href="privacy.html">Privacy</a>
+      <a class="link-btn" href="terms.html">Terms</a>
+      <button class="link-btn" type="button" id="openCredits">Photo credits</button>
+    </span>
   </div>
 </footer>
 
@@ -452,6 +464,137 @@
       <button class="btn btn-primary" value="confirm" id="confirmOk">Confirm</button>
     </div>
   </form>
+</dialog>
+
+<!-- Forgot password: ask for a reset link -->
+<dialog class="modal" id="forgotDialog" aria-labelledby="forgotTitle">
+  <form id="forgotForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="forgotTitle">Reset your password</h2><p>We'll email you a link to choose a new one.</p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label" for="forgotEmail">Email address</label>
+        <input class="input" id="forgotEmail" name="email" type="email" autocomplete="email" required data-label="Email address" aria-describedby="forgotEmailError" placeholder="you@example.com">
+        <p class="field-error" id="forgotEmailError"></p>
+      </div>
+      <p class="notice-inline" id="forgotSent" role="status" hidden>If an account uses this address, a link is on its way. It works for one hour. Check your spam folder too.</p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" data-close>Close</button>
+      <button type="submit" class="btn btn-primary" id="forgotSubmit"><span>Send link</span></button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Forgot password: the emailed link opens this -->
+<dialog class="modal" id="resetDialog" aria-labelledby="resetTitle">
+  <form id="resetForm" novalidate>
+    <div class="modal-head">
+      <div><h2 id="resetTitle">Choose a new password</h2><p>You'll be signed in, and signed out everywhere else.</p></div>
+      <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-alert" id="resetAlert" role="alert"></div>
+      <div class="field">
+        <label class="field-label" for="resetPassword">New password</label>
+        <div class="input-group">
+          <input class="input" id="resetPassword" name="newPassword" type="password" minlength="8" maxlength="72" required autocomplete="new-password" data-label="New password" aria-describedby="resetPasswordHint resetPasswordError">
+          <button type="button" class="btn btn-ghost btn-icon btn-sm input-action" data-toggle-password="resetPassword" aria-label="Show password" aria-pressed="false"><svg aria-hidden="true"><use href="#i-eye"/></svg></button>
+        </div>
+        <p class="field-hint" id="resetPasswordHint">At least 8 characters.</p>
+        <p class="field-error" id="resetPasswordError"></p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary"><span>Save and sign in</span></button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Every role: one's own account -->
+<dialog class="modal wide" id="accountDialog" aria-labelledby="accountTitle">
+  <div class="modal-head">
+    <div><h2 id="accountTitle">Your account</h2><p id="accountSince"></p></div>
+    <button type="button" class="btn btn-ghost btn-icon close-btn" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="modal-body account-body">
+    <form id="detailsForm" class="settings-block" aria-labelledby="detailsHeading" novalidate>
+      <h3 id="detailsHeading">Your details</h3>
+      <div class="editor-grid">
+        <div class="field">
+          <label class="field-label" for="accName">Full name</label>
+          <input class="input" id="accName" name="fullName" required maxlength="120" autocomplete="name" data-label="Your name" aria-describedby="accNameError">
+          <p class="field-error" id="accNameError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="accLanguage">Language</label>
+          <select class="select" id="accLanguage" name="language"><option value="en">English</option><option value="ro">Română</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="pt">Português</option></select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="accEmail">Email address</label>
+        <input class="input" id="accEmail" name="email" type="email" required maxlength="180" autocomplete="email" data-label="Email address" aria-describedby="accEmailError">
+        <p class="field-error" id="accEmailError"></p>
+      </div>
+      <div class="field" id="accEmailPasswordField" hidden>
+        <label class="field-label" for="accEmailPassword">Current password</label>
+        <input class="input" id="accEmailPassword" name="currentPassword" type="password" autocomplete="current-password" data-label="Your current password" aria-describedby="accEmailPasswordHint accEmailPasswordError">
+        <p class="field-hint" id="accEmailPasswordHint">Needed to change your email address.</p>
+        <p class="field-error" id="accEmailPasswordError"></p>
+      </div>
+      <div class="settings-actions"><button type="submit" class="btn btn-primary btn-sm"><span>Save details</span></button></div>
+    </form>
+
+    <form id="passwordForm" class="settings-block" aria-labelledby="passwordHeading" novalidate>
+      <h3 id="passwordHeading">Password</h3>
+      <div class="editor-grid">
+        <div class="field">
+          <label class="field-label" for="accCurrentPassword">Current password</label>
+          <input class="input" id="accCurrentPassword" name="currentPassword" type="password" required autocomplete="current-password" data-label="Your current password" aria-describedby="accCurrentPasswordError">
+          <p class="field-error" id="accCurrentPasswordError"></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="accNewPassword">New password</label>
+          <input class="input" id="accNewPassword" name="newPassword" type="password" minlength="8" maxlength="72" required autocomplete="new-password" data-label="New password" aria-describedby="accNewPasswordHint accNewPasswordError">
+          <p class="field-hint" id="accNewPasswordHint">At least 8 characters. Other devices are signed out.</p>
+          <p class="field-error" id="accNewPasswordError"></p>
+        </div>
+      </div>
+      <div class="settings-actions"><button type="submit" class="btn btn-sm"><span>Change password</span></button></div>
+    </form>
+
+    <section class="settings-block" aria-labelledby="devicesHeading">
+      <h3 id="devicesHeading">Signed-in devices</h3>
+      <p class="field-hint">Lost a phone, or used a shared computer? Sign out everywhere except here.</p>
+      <div class="settings-actions"><button type="button" class="btn btn-sm" id="signOutEverywhere"><svg aria-hidden="true"><use href="#i-logout"/></svg><span>Sign out other devices</span></button></div>
+    </section>
+
+    <section class="settings-block" aria-labelledby="dataHeading">
+      <h3 id="dataHeading">Your data</h3>
+      <p class="field-hint">Download everything Food Rescue keeps about you, as a file. Read how we use it in the <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>.</p>
+      <div class="settings-actions"><button type="button" class="btn btn-sm" id="exportData"><span>Download my data</span></button></div>
+    </section>
+
+    <section class="settings-block danger-zone" aria-labelledby="deleteHeading">
+      <h3 id="deleteHeading">Delete account</h3>
+      <p class="field-hint" id="deleteHint">Your details, favourites and alerts are removed straight away, and open reservations are cancelled. This can't be undone.</p>
+      <button type="button" class="btn btn-sm btn-danger" id="deleteStart" aria-expanded="false" aria-controls="deleteForm">Delete my account…</button>
+      <form id="deleteForm" novalidate hidden>
+        <div class="field">
+          <label class="field-label" for="deletePassword">Type your password to confirm</label>
+          <input class="input" id="deletePassword" name="password" type="password" required autocomplete="current-password" data-label="Your password" aria-describedby="deletePasswordError">
+          <p class="field-error" id="deletePasswordError"></p>
+        </div>
+        <div class="settings-actions">
+          <button type="button" class="btn btn-sm" id="deleteCancel">Keep my account</button>
+          <button type="submit" class="btn btn-sm btn-danger-solid"><span>Delete my account for good</span></button>
+        </div>
+      </form>
+    </section>
+  </div>
 </dialog>
 
 <!-- Store owner: create or edit a listing -->

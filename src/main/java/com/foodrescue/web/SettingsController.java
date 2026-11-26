@@ -1,6 +1,7 @@
 package com.foodrescue.web;
 
 import com.foodrescue.config.FoodRescueProperties;
+import com.foodrescue.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +17,13 @@ import java.util.Map;
 public class SettingsController {
 
     private final FoodRescueProperties properties;
+    private final AccountService accountService;
 
     /** GET /api/v1/settings   public. */
     @GetMapping("/api/v1/settings")
     public Map<String, Object> settings() {
-        return Map.of("maxQuantityPerReservation", properties.maxQuantityPerReservation());
+        return Map.of("maxQuantityPerReservation", properties.maxQuantityPerReservation(),
+                // "Forgot password" is only offered when reset emails can actually be sent.
+                "passwordReset", accountService.resetAvailable());
     }
 }

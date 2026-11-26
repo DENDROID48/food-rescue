@@ -24,6 +24,16 @@ async function step(name, fn) {
   catch (e) { results.push(['FAIL', name, e.message.split('\n').filter(Boolean).slice(0, 3).join(' / ')]); }
 }
 function expect(cond, msg) { if (!cond) throw new Error(msg); }
+
+/** Like page.waitForFunction, which the page's security policy blocks (it needs eval). */
+async function waitFn(page, fn, arg, { timeout = 15000 } = {}) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    if (await page.evaluate(fn, arg)) return;
+    if (Date.now() > end) throw new Error('Timed out waiting for: ' + String(fn).slice(0, 120));
+    await page.waitForTimeout(100);
+  }
+}
 async function shot(page, name, full = false) { await page.waitForTimeout(450); await page.screenshot({ path: path.join(OUT, name + '.png'), fullPage: full }); }
 async function noOverflow(page, label) {
   const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
@@ -38,13 +48,13 @@ async function login(page, email) {
 }
 async function axe(page, label) {
   await page.waitForTimeout(700);
-  await page.addScriptTag({ content: AXE });
+  await page.evaluate(AXE); // not a script tag: the page's security policy blocks inline scripts
   const res = await page.evaluate(async () => (await axe.run(document, { runOnly: ['wcag2a', 'wcag2aa'] })).violations
     .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`));
   results.push([res.length ? 'WARN' : 'PASS', `axe WCAG A/AA on ${label}`, res.join(' ;; ')]);
 }
 const toastText = (page) => page.locator('#toasts .toast').last().innerText();
-const closed = (page, id) => page.waitForFunction((x) => !document.querySelector('#' + x).open, id);
+const closed = (page, id) => waitFn(page, (x) => !document.querySelector('#' + x).open, id);
 
 (async () => {
   browser = await chromium.launch();
@@ -117,7 +127,7 @@ const closed = (page, id) => page.waitForFunction((x) => !document.querySelector
   await step('follow a shop and filter by favourites', async () => {
     const follow = c.locator('.food-card:has-text("Fresh vegetable box") .follow-btn').first();
     await follow.click();
-    await c.waitForFunction(() => [...document.querySelectorAll('.follow-btn')].some((b) => b.textContent === 'Following'));
+    await waitFn(c, () => [...document.querySelectorAll('.follow-btn')].some((b) => b.textContent === 'Following'));
     await c.waitForSelector('#toasts .toast:has-text("Following")');
     await c.click('#favOnly');
     const names = await c.$$eval('#nearby .food-card h3', (h) => h.map((x) => x.textContent));
@@ -161,7 +171,7 @@ const closed = (page, id) => page.waitForFunction((x) => !document.querySelector
       if (!(await c.isVisible('#inboxTabSettings'))) await c.click('#inboxBtn');
       await c.click('#inboxTabSettings');
     }
-    await c.waitForFunction(() => document.querySelector('#pushStatus').textContent !== 'Checking…');
+    await waitFn(c, () => document.querySelector('#pushStatus').textContent !== 'Checking…');
     const status = await c.innerText('#pushStatus');
     expect(status.length > 10, 'status: ' + status);
     const permission = await c.evaluate(() => ('Notification' in window ? Notification.permission : 'unsupported'));

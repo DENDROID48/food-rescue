@@ -72,7 +72,7 @@ class AnalyticsIntegrationTest {
     private String[] register(String role) throws Exception {
         String email = role.toLowerCase() + "-" + UUID.randomUUID() + "@test.ro";
         String body = mvc.perform(post("/api/v1/users").contentType(MediaType.APPLICATION_JSON)
-                        .content(json.writeValueAsString(Map.of("fullName", "Test " + role, "email", email, "password", "demo1234", "role", role))))
+                        .content(json.writeValueAsString(Map.of("fullName", "Test " + role, "email", email, "password", "demo1234", "role", role, "acceptTerms", true))))
                 .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
         return new String[]{json.readTree(body).get("token").asText(), email};
     }

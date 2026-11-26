@@ -22,6 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
+    long countByRoleAndDeletedAtIsNull(com.foodrescue.domain.UserRole role);
+
     /** Verification requests waiting for an administrator, oldest first. */
     List<User> findByEligibilityStatusOrderByCreatedAtAsc(EligibilityStatus status);
 

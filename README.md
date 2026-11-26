@@ -24,7 +24,7 @@ OpenStreetMap; without them, food search still works as a list.
 
 ```bash
 mvn spring-boot:run      # http://localhost:8080, in-memory database with demo data
-mvn test                 # 158 unit and integration tests
+mvn test                 # 171 unit and integration tests
 ```
 
 Browser tests that drive the real page are in [`e2e/`](e2e/README.md).
@@ -249,9 +249,33 @@ FOODRESCUE_JWT_SECRET=... java -jar target/food-rescue-0.1.0-SNAPSHOT.jar
 | `FOODRESCUE_ADMIN_EMAIL`, `FOODRESCUE_ADMIN_PASSWORD` | first start | Creates the first administrator (password at least 12 characters). Nothing happens if the account exists. |
 | `FOODRESCUE_CONTACT_EMAIL` | recommended | Contact for OpenStreetMap's geocoder and for push services (VAPID subject) |
 | `FOODRESCUE_UPLOADS_DIR` | no | Folder for uploaded photos (default `uploads`, in Docker `/app/uploads` on its own volume). Back it up together with the database. |
+| `FOODRESCUE_PUBLIC_URL` | yes | The address people open the app at, e.g. `https://foodrescue.ro`; used in emailed links |
+| `SPRING_MAIL_HOST`, `SPRING_MAIL_PORT`, `SPRING_MAIL_USERNAME`, `SPRING_MAIL_PASSWORD`, `FOODRESCUE_MAIL_FROM` | for password reset | Any SMTP server (for example the free tier of Brevo, or your domain's mailbox), port 587 with STARTTLS. `FOODRESCUE_MAIL_FROM` is the sender, e.g. `Food Rescue <hello@foodrescue.ro>`. Without them "Forgot your password?" is hidden. |
 | `FOODRESCUE_PUSH_PUBLIC_KEY`, `FOODRESCUE_PUSH_PRIVATE_KEY` | for push | VAPID key pair, for example from `npx web-push generate-vapid-keys`. Keep them fixed: browsers must subscribe again when they change. Without them, temporary keys are used. Push also needs HTTPS. |
 
 The production profile starts with an empty database and no demo accounts.
+
+**Before launch**
+
+- Put the app behind HTTPS (the hosting platform's, or a reverse proxy such as Caddy or nginx).
+  `X-Forwarded-*` headers from proxies on private network addresses are trusted, so links,
+  client addresses (for the sign-in limits) and HSTS are right.
+- Fill in and have a lawyer check `privacy.html` and `terms.html` (everything in [square brackets]).
+- Set up a mail server so people can reset forgotten passwords, and send yourself a test reset.
+- Back up the database and the photo folder every day, and try a restore once.
+- Point the hosting platform's health check at `GET /api/v1/health` (200 while the database answers).
+
+**Security built in:** BCrypt passwords; at most 5 wrong passwords per email and 30 per network
+address in 15 minutes; limits on sign-ups and reset emails; a password change, a password reset
+or "sign out other devices" ends every other login; deleted accounts' logins stop at once;
+reset links are single-use, valid for one hour and stored only as a hash; a Content Security
+Policy allows scripts only from the app, Leaflet's and the image model's CDNs (it includes
+`'unsafe-eval'` because TensorFlow.js needs it; inline scripts stay blocked); Referrer-Policy,
+Permissions-Policy, `nosniff` and frame protection on every response.
+
+**People's rights (GDPR):** in Account settings anyone can change their details, download all
+their data as JSON and delete their account. Deleting removes personal data at once; past orders
+stay without a name, so shops' records add up. The last administrator cannot delete their account.
 
 **Database changes** are Flyway migrations in `src/main/resources/db/migration`. They run
 automatically at startup, on H2 and PostgreSQL alike. Never edit a migration that already ran;
@@ -264,9 +288,17 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 
 | Method and path | Who | What |
 |---|---|---|
-| `POST /api/v1/users` | anyone | Create a CONSUMER or STORE_OWNER account; returns a login token |
+| `POST /api/v1/users` | anyone | Create a CONSUMER or STORE_OWNER account (`acceptTerms: true` required, optional `language`); returns a login token |
 | `POST /api/v1/auth/login` | anyone | Sign in; returns a login token |
 | `GET /api/v1/users/me` | signed in | Own account |
+| `PUT /api/v1/users/me` | signed in | Name, email (needs `currentPassword`) and language |
+| `PUT /api/v1/users/me/password` | signed in | New password; signs out other devices and returns a new login |
+| `POST /api/v1/users/me/sign-out-everywhere` | signed in | Ends every login; returns a new one for this device |
+| `GET /api/v1/users/me/export` | signed in | Everything kept about the caller, as a JSON file |
+| `POST /api/v1/users/me/deletion` | signed in | `{"password"}`: deletes the account |
+| `POST /api/v1/auth/password-reset` | anyone | `{"email"}`: emails a reset link if the account exists (always 202) |
+| `POST /api/v1/auth/password-reset/confirm` | anyone | `{"token", "newPassword"}`: sets the password and signs in |
+| `GET /api/v1/health` | anyone | 200 while the database answers, 503 otherwise |
 | `POST /api/v1/users/me/eligibility-request` | consumer | Ask to be verified for free items |
 | `GET /api/v1/geocode?q=` | anyone | Places matching a name or address |
 | `GET /api/v1/geocode/reverse?lat=&lng=` | anyone | Address nearest to a point |
@@ -341,8 +373,7 @@ Errors are JSON in the RFC 7807 format, for example `{"status": 409, "detail": "
 ## Not built yet
 
 - **Online payment:** customers pay at the store. Adding Stripe or a local provider needs an account with them.
-- **Email or SMS alerts:** they need a provider. Web Push covers alerts outside the app for free.
-- **Password reset:** this also needs an email provider.
+- **Email or SMS alerts:** Web Push covers alerts outside the app for free. Emails are only sent for password resets.
 - **Several servers:** add ShedLock so only one server runs the reservation cleanup job.
 - **Address lookup at scale:** OpenStreetMap's free geocoder allows about one request per second.
   For real traffic, use a paid provider or host your own Nominatim.

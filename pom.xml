@@ -45,6 +45,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+        <!-- Password reset emails, through any SMTP server (configured with SPRING_MAIL_* variables). -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
 
         <!-- Authentication: password hashing, and signed JWT tokens issued at login and checked on every request -->
         <dependency>

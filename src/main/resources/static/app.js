@@ -187,6 +187,195 @@ function openDialog(dialog) {
   }, { once: true });
 }
 
+// ---------- account: forgot password, details, password, data, deletion ----------
+
+/** The interface language (a choice kept in the browser until the account has one). */
+const LANG_KEY = 'foodrescue.language';
+
+function applyLanguage(lang) {
+  document.documentElement.lang = lang;
+  save(LANG_KEY, lang);
+}
+
+function uiLanguage() {
+  return me?.language || restore(LANG_KEY) || 'en';
+}
+
+function renderAccountHeader() {
+  $('#accountName').textContent = me.fullName;
+  $('#accountRole').textContent = ROLE_TEXT[me.role];
+  $('#accountAvatar').textContent = initials(me.fullName);
+}
+
+function openForgot() {
+  const f = $('#forgotForm');
+  f.reset();
+  $('#forgotSent').hidden = true;
+  f.email.value = $('#loginEmail').value.trim();
+  showFieldError(f.email, '');
+  openDialog($('#forgotDialog'));
+  f.email.focus();
+}
+
+async function sendResetLink(event) {
+  event.preventDefault();
+  const f = event.target;
+  if (!validateForm(f)) return;
+  await withLoading($('#forgotSubmit'), async () => {
+    try {
+      await api('/auth/password-reset', { method: 'POST', body: { email: f.email.value.trim() } });
+      $('#forgotSent').hidden = false;
+    } catch (e) { showFieldError(f.email, e.message); }
+  });
+}
+
+let resetToken = null;
+function openReset(tokenFromLink) {
+  resetToken = tokenFromLink;
+  $('#resetForm').reset();
+  setAlert('#resetAlert', '');
+  openDialog($('#resetDialog'));
+}
+
+async function saveNewPassword(event) {
+  event.preventDefault();
+  const f = event.target;
+  setAlert('#resetAlert', '');
+  if (!validateForm(f)) return;
+  await withLoading($('[type=submit]', f), async () => {
+    try {
+      const auth = await api('/auth/password-reset/confirm', { method: 'POST', body: { token: resetToken, newPassword: f.newPassword.value } });
+      resetToken = null;
+      $('#resetDialog').close();
+      await signIn(auth);
+      toast('Password changed. You are signed in.');
+    } catch (e) { setAlert('#resetAlert', e.message); }
+  });
+}
+
+function openAccount() {
+  const d = $('#detailsForm');
+  d.reset();
+  d.fullName.value = me.fullName;
+  d.email.value = me.email;
+  d.language.value = me.language || 'en';
+  $('#accEmailPasswordField').hidden = true;
+  $('#passwordForm').reset();
+  $('#deleteForm').reset();
+  $('#deleteForm').hidden = true;
+  $('#deleteStart').hidden = false;
+  $('#deleteStart').setAttribute('aria-expanded', 'false');
+  for (const input of $$('#accountDialog input')) showFieldError(input, '');
+  $('#accountSince').textContent = `${ROLE_TEXT[me.role]} · member since ${new Date(me.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })}`;
+  $('#deleteHint').textContent = me.role === 'STORE_OWNER'
+    ? 'Your stores are hidden from customers for good, and your details are removed straight away. Hand over any food customers are waiting for first. This can\'t be undone.'
+    : 'Your details, favourites and alerts are removed straight away, and open reservations are cancelled. This can\'t be undone.';
+  openDialog($('#accountDialog'));
+}
+
+/** Changing the email needs the current password: the field shows up only then. */
+function syncEmailPassword() {
+  const changed = $('#accEmail').value.trim().toLowerCase() !== me.email;
+  $('#accEmailPasswordField').hidden = !changed;
+  $('#accEmailPassword').required = changed;
+}
+
+async function saveDetails(event) {
+  event.preventDefault();
+  const f = event.target;
+  syncEmailPassword();
+  if (!validateForm(f)) return;
+  await withLoading($('[type=submit]', f), async () => {
+    try {
+      const languageChanged = f.language.value !== me.language;
+      me = await api('/users/me', { method: 'PUT', body: {
+        fullName: f.fullName.value.trim(), email: f.email.value.trim(), language: f.language.value,
+        currentPassword: f.currentPassword.value || null } });
+      renderAccountHeader();
+      f.currentPassword.value = '';
+      syncEmailPassword();
+      if (languageChanged) applyLanguage(me.language);
+      toast('Your details are saved.');
+    } catch (e) {
+      if (/password/i.test(e.message)) showFieldError(f.currentPassword, e.message);
+      else if (/email/i.test(e.message)) showFieldError(f.email, e.message);
+      else fail(e);
+    }
+  });
+}
+
+/** A new login replaces the old one on this device (the server ended all the others). */
+function replaceLogin(auth) {
+  token = auth.token;
+  save(TOKEN_KEY, token);
+  me = auth.user;
+}
+
+async function changePassword(event) {
+  event.preventDefault();
+  const f = event.target;
+  if (!validateForm(f)) return;
+  await withLoading($('[type=submit]', f), async () => {
+    try {
+      replaceLogin(await api('/users/me/password', { method: 'PUT', body: { currentPassword: f.currentPassword.value, newPassword: f.newPassword.value } }));
+      f.reset();
+      toast('Password changed. Other devices are signed out.');
+    } catch (e) {
+      if (/current password/i.test(e.message)) showFieldError(f.currentPassword, e.message);
+      else showFieldError(f.newPassword, e.message);
+    }
+  });
+}
+
+async function signOutEverywhere(button) {
+  await withLoading(button, async () => {
+    try {
+      replaceLogin(await api('/users/me/sign-out-everywhere', { method: 'POST' }));
+      toast('Signed out on every other device.');
+    } catch (e) { fail(e); }
+  });
+}
+
+async function exportData(button) {
+  await withLoading(button, async () => {
+    try {
+      const data = await api('/users/me/export');
+      const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'food-rescue-my-data.json';
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) { fail(e); }
+  });
+}
+
+function toggleDelete(open) {
+  $('#deleteForm').hidden = !open;
+  $('#deleteStart').hidden = open;
+  $('#deleteStart').setAttribute('aria-expanded', String(open));
+  if (open) $('#deletePassword').focus(); else $('#deleteStart').focus();
+}
+
+async function deleteAccount(event) {
+  event.preventDefault();
+  const f = event.target;
+  if (!validateForm(f)) return;
+  await withLoading($('[type=submit]', f), async () => {
+    try {
+      await api('/users/me/deletion', { method: 'POST', body: { password: f.password.value } });
+      $('#accountDialog').close();
+      // The account is gone: forget the login without asking the server anything more.
+      token = null;
+      save(TOKEN_KEY, null);
+      await signOut();
+      toast('Your account was deleted. Thank you for rescuing food with us.');
+    } catch (e) { showFieldError(f.password, e.message); }
+  });
+}
+
 // ---------- history: back button, reload and links keep the place ----------
 
 const openDialogs = [];
@@ -258,6 +447,7 @@ async function withLoading(button, action) {
 
 function fieldMessage(input) {
   const v = input.validity, label = input.dataset.label || 'This field';
+  if (v.valueMissing && input.dataset.requiredMessage) return input.dataset.requiredMessage;
   if (v.valueMissing) return input.type === 'file' ? 'Choose a photo' : `${label} is required`;
   if (v.typeMismatch && input.type === 'email') return 'Enter an email address like name@example.com';
   if (v.tooShort) return `Use at least ${input.minLength} characters`;
@@ -360,9 +550,7 @@ async function startSession() {
     return;
   }
   document.body.dataset.role = me.role;
-  $('#accountName').textContent = me.fullName;
-  $('#accountRole').textContent = ROLE_TEXT[me.role];
-  $('#accountAvatar').textContent = initials(me.fullName);
+  renderAccountHeader();
   $('#account').hidden = false;
   renderNav();
   // A reload or a link to #orders opens that view again, for this role.
@@ -412,7 +600,8 @@ async function register(event) {
   await withLoading($('[type=submit]', f), async () => {
     try {
       const auth = await api('/users', { method: 'POST', body: {
-        fullName: f.fullName.value.trim(), email: f.email.value.trim(), password: f.password.value, role: f.role.value } });
+        fullName: f.fullName.value.trim(), email: f.email.value.trim(), password: f.password.value, role: f.role.value,
+        language: uiLanguage(), acceptTerms: f.acceptTerms.checked } });
       f.reset();
       await signIn(auth);
       toast(`Welcome to Food Rescue, ${auth.user.fullName.split(' ')[0]}!`);
@@ -3014,6 +3203,18 @@ $('.auth-tabs').addEventListener('keydown', (e) => {
   $(next === 'login' ? '#tabLogin' : '#tabRegister').focus();
 });
 $('#loginForm').addEventListener('submit', login);
+$('#forgotOpen').addEventListener('click', openForgot);
+$('#forgotForm').addEventListener('submit', sendResetLink);
+$('#resetForm').addEventListener('submit', saveNewPassword);
+$('#accountBtn').addEventListener('click', openAccount);
+$('#accEmail').addEventListener('input', syncEmailPassword);
+$('#detailsForm').addEventListener('submit', saveDetails);
+$('#passwordForm').addEventListener('submit', changePassword);
+$('#signOutEverywhere').addEventListener('click', (e) => signOutEverywhere(e.currentTarget));
+$('#exportData').addEventListener('click', (e) => exportData(e.currentTarget));
+$('#deleteStart').addEventListener('click', () => toggleDelete(true));
+$('#deleteCancel').addEventListener('click', () => toggleDelete(false));
+$('#deleteForm').addEventListener('submit', deleteAccount);
 $('#registerForm').addEventListener('submit', register);
 // Clear a field's message as soon as the person edits it.
 document.addEventListener('input', (e) => {
@@ -3108,6 +3309,23 @@ setInterval(() => {
 }, 30000);
 
 updateWhere();
-api('/settings').then((s) => { maxPerReservation = s.maxQuantityPerReservation; }).catch(() => {});
+api('/settings').then((s) => {
+  maxPerReservation = s.maxQuantityPerReservation;
+  $('#forgotOpen').hidden = !s.passwordReset;
+}).catch(() => {});
+// A "forgot password" link (#reset/<token>) or the link in the "password changed" email (#forgot).
+const linkedReset = location.hash.startsWith('#reset/') ? location.hash.slice('#reset/'.length) : null;
+const linkedForgot = location.hash === '#forgot';
+if (linkedReset || linkedForgot) history.replaceState(null, '', location.pathname); // keep the token out of history
 token = restore(TOKEN_KEY);
 if (token) startSession(); else signOut();
+if (linkedReset) openReset(linkedReset);
+else if (linkedForgot) openForgot();
+
+/** The same links opened in a tab that already shows the app (only the part after # changes). */
+window.addEventListener('hashchange', () => {
+  const reset = location.hash.startsWith('#reset/') ? location.hash.slice('#reset/'.length) : null;
+  if (!reset && location.hash !== '#forgot') return;
+  history.replaceState(history.state, '', location.pathname + (currentView && me ? '#' + currentView : ''));
+  if (reset) openReset(reset); else openForgot();
+});

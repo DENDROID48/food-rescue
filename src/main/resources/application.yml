@@ -72,6 +72,18 @@ foodrescue:
     jwt-secret: ${FOODRESCUE_JWT_SECRET:dev-only-secret-change-me-0123456789abcdef}
     token-validity-hours: 168
 
+  # Accounts, bound to AccountProperties.
+  accounts:
+    # The address people open the app at; used in the links of emails.
+    public-url: ${FOODRESCUE_PUBLIC_URL:http://localhost:8080}
+    # Sender of emails, e.g. "Food Rescue <hello@example.org>". Emails (password reset) are sent
+    # only when this and a mail server (SPRING_MAIL_HOST, SPRING_MAIL_PORT, SPRING_MAIL_USERNAME,
+    # SPRING_MAIL_PASSWORD) are set; until then "forgot password" is not offered.
+    mail-from: ${FOODRESCUE_MAIL_FROM:}
+    log-reset-links: false
+    # Limits on repeated sign-in, sign-up and password reset attempts.
+    rate-limits: true
+
   # Address lookup, bound to GeocodingProperties.
   geocoding:
     enabled: true
@@ -82,7 +94,29 @@ foodrescue:
     # Limits results to these countries (ISO codes, comma separated); empty means worldwide.
     country-codes: ro
 
+spring.mail.properties.mail.smtp:
+  # Mail servers on port 587 expect STARTTLS; a slow one must not hold a request forever.
+  starttls.enable: true
+  connectiontimeout: 10000
+  timeout: 10000
+  writetimeout: 10000
+
+spring.web.resources.cache.cachecontrol:
+  # app.js and styles.css keep their names between versions, so browsers must check for a new
+  # one each time (a quick "not modified" answer when nothing changed).
+  no-cache: true
+
+spring.lifecycle.timeout-per-shutdown-phase: 20s
+
 server:
+  # Finish requests in progress before stopping (for example during a new deployment).
+  shutdown: graceful
+  # Behind a reverse proxy or load balancer that ends HTTPS: trust its X-Forwarded-* headers
+  # (only from private network addresses), so links, secure cookies and client addresses are right.
+  forward-headers-strategy: native
+  compression:
+    enabled: true
+    mime-types: text/html,text/css,application/javascript,text/javascript,application/json,application/problem+json,image/svg+xml,application/manifest+json
   # So browsers accept the install manifest of the web app.
   mime-mappings:
     webmanifest: application/manifest+json

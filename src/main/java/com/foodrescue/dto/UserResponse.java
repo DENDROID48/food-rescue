@@ -14,7 +14,8 @@ public record UserResponse(
         UserRole role,
         EligibilityStatus eligibilityStatus,
         boolean freeClaimEligible,
-        Instant createdAt) {
+        Instant createdAt,
+        String language) {
 
     public static UserResponse from(User user) {
         return new UserResponse(
@@ -24,6 +25,7 @@ public record UserResponse(
                 user.getRole(),
                 user.getEligibilityStatus(),
                 user.isFreeClaimEligible(),
-                user.getCreatedAt());
+                user.getCreatedAt(),
+                user.getLanguage());
     }
 }

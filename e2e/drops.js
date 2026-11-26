@@ -5,6 +5,16 @@ const path = require('path');
 const AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const BASE = 'http://localhost:8080/';
+
+/** Like page.waitForFunction, which the page's security policy blocks (it needs eval). */
+async function waitFn(page, fn, arg, { timeout = 15000 } = {}) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    if (await page.evaluate(fn, arg)) return;
+    if (Date.now() > end) throw new Error('Timed out waiting for: ' + String(fn).slice(0, 120));
+    await page.waitForTimeout(100);
+  }
+}
 const OUT = process.argv[2] || path.join(__dirname, 'screenshots');
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -44,7 +54,7 @@ async function asOwner(page) {
 }
 async function axe(page, label) {
   await page.waitForTimeout(700);
-  await page.addScriptTag({ content: AXE });
+  await page.evaluate(AXE); // not a script tag: the page's security policy blocks inline scripts
   const res = await page.evaluate(async () => (await axe.run(document, { runOnly: ['wcag2a', 'wcag2aa'] })).violations
     .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`));
   results.push([res.length ? 'WARN' : 'PASS', `axe WCAG A/AA on ${label}`, res.join(' ;; ')]);
@@ -110,7 +120,7 @@ process.on('unhandledRejection', (e) => {
     await owner.click('#setupPublish');
     await owner.waitForSelector('#setupDialog:not([open])', { state: 'attached' });
     expect((await toastText(owner)).includes('3 offers published'), 'toast: ' + await toastText(owner));
-    await owner.waitForFunction(() => document.querySelectorAll('#todayOffers .listing').length >= 4);
+    await waitFn(owner, () => document.querySelectorAll('#todayOffers .listing').length >= 4);
     const croissant = await owner.locator('#todayOffers .listing', { hasText: 'Croissants' }).first().innerText();
     expect(/5\.50 lei/.test(croissant), 'approved croissant price not used: ' + croissant);
   });
@@ -118,7 +128,7 @@ process.on('unhandledRejection', (e) => {
   await step('launch a Rescue Drop of a saved product in a few taps', async () => {
     await owner.click('#storeContent [data-open-drop="product"]');
     await owner.waitForSelector('#dropDialog[open]');
-    await owner.waitForFunction(() => document.querySelector('#dropAudience').textContent.length > 0);
+    await waitFn(owner, () => document.querySelector('#dropAudience').textContent.length > 0);
     expect((await owner.innerText('#dropAudience')).includes('1 person has alerts on'), 'audience: ' + await owner.innerText('#dropAudience'));
     await owner.selectOption('#dropTemplate', { label: 'Sourdough loaf' });
     await owner.click('#dropProduct [data-bump="1"][data-target="dropQty"]');
@@ -159,7 +169,7 @@ process.on('unhandledRejection', (e) => {
     await owner.waitForSelector('#dropDialog:not([open])', { state: 'attached' });
     // The second drop from the same store within 2 hours does not alert the same person again.
     expect((await toastText(owner)).includes('Nobody nearby was due an alert'), 'toast: ' + await toastText(owner));
-    await owner.waitForFunction(() => document.querySelectorAll('#todayOffers .listing.is-drop').length === 2);
+    await waitFn(owner, () => document.querySelectorAll('#todayOffers .listing.is-drop').length === 2);
     await shot(owner, '55-owner-after-drops', true);
   });
 
@@ -211,7 +221,7 @@ process.on('unhandledRejection', (e) => {
     await p2.click('#inboxBtn');
     await p2.waitForSelector('#inboxDialog[open]');
     await p2.click('#inboxTabSettings');
-    await p2.waitForFunction(() => document.querySelector('#alertsPlace').textContent !== 'this place');
+    await waitFn(p2, () => document.querySelector('#alertsPlace').textContent !== 'this place');
     expect(!(await p2.isChecked('#alertsOn')), 'should start off');
     await p2.check('#alertsOn');
     await p2.selectOption('#alertsRadius', '2');

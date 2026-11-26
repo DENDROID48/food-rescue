@@ -23,10 +23,10 @@ class AuthServiceTest {
         when(encoder.encode(anyString())).thenReturn("$2a$dummy");
         when(users.findByEmail("nobody@example.com")).thenReturn(Optional.empty());
 
-        AuthService auth = new AuthService(users, encoder, mock(TokenService.class));
+        AuthService auth = new AuthService(users, encoder, mock(TokenService.class), mock(com.foodrescue.security.RateLimiter.class));
         verify(encoder).encode(anyString());   // done once, in the constructor
 
-        assertThatThrownBy(() -> auth.login(new LoginRequest("Nobody@Example.com", "secret123")))
+        assertThatThrownBy(() -> auth.login(new LoginRequest("Nobody@Example.com", "secret123"), "127.0.0.1"))
                 .isInstanceOf(BusinessRuleException.class)
                 .hasMessage("Wrong email or password");
         // The password was still checked, against the dummy hash.

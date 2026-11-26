@@ -6,6 +6,7 @@ import com.foodrescue.dto.UserResponse;
 import com.foodrescue.security.CurrentUser;
 import com.foodrescue.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,8 @@ public class UserController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthResponse register(@Valid @RequestBody RegisterUserRequest request) {
-        return userService.register(request);
+    public AuthResponse register(@Valid @RequestBody RegisterUserRequest request, HttpServletRequest http) {
+        return userService.register(request, http.getRemoteAddr());
     }
 
     /** GET /api/v1/users/me   returns the account of the caller. */

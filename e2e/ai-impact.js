@@ -9,6 +9,16 @@ const zlib = require('zlib');
 const AXE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
 
 const BASE = 'http://localhost:8080/';
+
+/** Like page.waitForFunction, which the page's security policy blocks (it needs eval). */
+async function waitFn(page, fn, arg, { timeout = 15000 } = {}) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    if (await page.evaluate(fn, arg)) return;
+    if (Date.now() > end) throw new Error('Timed out waiting for: ' + String(fn).slice(0, 120));
+    await page.waitForTimeout(100);
+  }
+}
 const OUT = process.argv[2] || path.join(__dirname, 'screenshots');
 const PHOTOS = path.join(__dirname, '..', 'src', 'main', 'resources', 'static', 'photos');
 fs.mkdirSync(OUT, { recursive: true });
@@ -61,7 +71,7 @@ async function login(page, email) {
 }
 async function axe(page, label) {
   await page.waitForTimeout(500);
-  await page.addScriptTag({ content: AXE });
+  await page.evaluate(AXE); // not a script tag: the page's security policy blocks inline scripts
   const res = await page.evaluate(async () => (await axe.run(document, { runOnly: ['wcag2a', 'wcag2aa'] })).violations
     .map((v) => `${v.impact} ${v.id} (${v.nodes.length}): ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`));
   record(res.length ? 'WARN' : 'PASS', `axe WCAG A/AA on ${label}`, res.join(' ;; '));
@@ -199,7 +209,7 @@ async function impactFigures(page) {
     await ownerPage.context().close();
     await c.click('#mainNav [data-view="shop"]');
     await c.click('#mainNav [data-view="impact"]');
-    await c.waitForFunction((n) => document.querySelectorAll('.impact-stats .stat')[2]?.innerText.includes(String(n)), before.rescues + 1);
+    await waitFn(c, (n) => document.querySelectorAll('.impact-stats .stat')[2]?.innerText.includes(String(n)), before.rescues + 1);
     expect((await c.innerText('.streak-card')).includes('This week already counts'), 'this week should count now');
   });
 
@@ -225,7 +235,7 @@ async function impactFigures(page) {
     expect(await ph.isVisible('#placeQuery'), 'search form did not open');
     expect(await ph.getAttribute('#placeSummary', 'aria-expanded') === 'true', 'aria-expanded not true');
     await ph.click('label.chip:has-text("5 km")');
-    await ph.waitForFunction(() => document.querySelector('#placeSummary').textContent.includes('within 5 km'));
+    await waitFn(ph, () => document.querySelector('#placeSummary').textContent.includes('within 5 km'));
     await ph.click('#placeSummary'); // "Done"
     await ph.waitForSelector('#placeForm.is-collapsed');
     expect(await ph.isHidden('#placeQuery'), 'search form did not close');

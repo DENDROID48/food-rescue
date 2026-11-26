@@ -8,7 +8,8 @@
     "radar": "node radar.js",
     "insights": "node insights.js",
     "photos": "node today-changes.js",
-    "ai-impact": "node ai-impact.js"
+    "ai-impact": "node ai-impact.js",
+    "account": "node account.js"
   },
   "devDependencies": {
     "axe-core": "4.10.2",

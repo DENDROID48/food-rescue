@@ -1,0 +1,5 @@
+# Development only (the default profile): demo data and no mail server needed.
+foodrescue:
+  accounts:
+    # "Forgot password" works without a mail server: the reset link is written to the log.
+    log-reset-links: true

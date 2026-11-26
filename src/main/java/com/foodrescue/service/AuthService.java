@@ -6,6 +6,7 @@ import com.foodrescue.dto.LoginRequest;
 import com.foodrescue.dto.UserResponse;
 import com.foodrescue.exception.BusinessRuleException;
 import com.foodrescue.repository.UserRepository;
+import com.foodrescue.security.RateLimiter;
 import com.foodrescue.security.TokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final RateLimiter rateLimiter;
 
     /**
      * Hash of a random value, checked against when the email is unknown. An unknown email then
@@ -30,23 +32,32 @@ public class AuthService {
      */
     private final String dummyHash;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService,
+                       RateLimiter rateLimiter) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
+        this.rateLimiter = rateLimiter;
         this.dummyHash = passwordEncoder.encode(UUID.randomUUID().toString());
     }
 
     @Transactional(readOnly = true)
-    public AuthResponse login(LoginRequest request) {
-        Optional<User> user = userRepository.findByEmail(normalizeEmail(request.email()));
+    public AuthResponse login(LoginRequest request, String clientIp) {
+        String email = normalizeEmail(request.email());
+        // Too many wrong passwords for this email, or from this network: wait before trying again.
+        rateLimiter.check(RateLimiter.Limit.FAILED_LOGIN_EMAIL, email);
+        rateLimiter.check(RateLimiter.Limit.FAILED_LOGIN_IP, clientIp);
+        Optional<User> user = userRepository.findByEmail(email).filter(u -> u.getDeletedAt() == null);
         String hash = user.map(User::getPasswordHash).orElse(dummyHash);
         boolean passwordMatches = passwordEncoder.matches(request.password(), hash);
 
         if (user.isEmpty() || !passwordMatches) {
+            rateLimiter.record(RateLimiter.Limit.FAILED_LOGIN_EMAIL, email);
+            rateLimiter.record(RateLimiter.Limit.FAILED_LOGIN_IP, clientIp);
             // One message for both cases, so the response does not reveal which emails exist.
             throw new BusinessRuleException(HttpStatus.UNAUTHORIZED, "Wrong email or password");
         }
+        rateLimiter.reset(RateLimiter.Limit.FAILED_LOGIN_EMAIL, email);
         return issueFor(user.get());
     }
 

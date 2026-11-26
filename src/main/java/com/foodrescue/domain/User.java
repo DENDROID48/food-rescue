@@ -53,6 +53,19 @@ public class User {
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 
+    /** Language of the interface and of emails: en, ro, es, fr, de, it or pt. */
+    @Column(nullable = false, length = 5)
+    private String language = "en";
+
+    /** Login tokens issued before this moment are refused: after a password change or "sign out everywhere". */
+    private Instant tokensValidAfter;
+
+    /** Set when the person deleted their account; the personal data is then already removed. */
+    private Instant deletedAt;
+
+    /** When the person agreed to the terms and the privacy policy. */
+    private Instant termsAcceptedAt;
+
     /** True when an administrator has verified that this user may receive free items. */
     public boolean isFreeClaimEligible() {
         return eligibilityStatus == EligibilityStatus.APPROVED;
