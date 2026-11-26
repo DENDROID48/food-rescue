@@ -77,13 +77,13 @@ function sameDay(a, b) { return a.toDateString() === b.toDateString(); }
 /** "18:30" today, "tomorrow 09:00", or "Tue 18:30". */
 function fmtTime(iso) {
   const d = new Date(iso), now = new Date();
-  const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
   if (sameDay(d, now)) return time;
   const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
   if (sameDay(d, tomorrow)) return 'tomorrow ' + time;
   return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }) + ', ' + time;
 }
-const timeOnly = (iso) => new Date(iso).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+const timeOnly = (iso) => new Date(iso).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 /** "18:00–20:00", with the day in front when it is not today. */
 const fmtWindow = (start, end) => `${fmtTime(start)}–${timeOnly(end)}`;
 function minutesUntil(iso) { return Math.round((new Date(iso) - Date.now()) / 60000); }
@@ -356,8 +356,7 @@ async function login(event) {
   await withLoading($('[type=submit]', f), async () => {
     try {
       await signIn(await api('/auth/login', { method: 'POST', body: { email: f.email.value.trim(), password: f.password.value } }));
-      f.reset();
-      toast(`Welcome back, ${me.fullName.split(' ')[0]}!`);
+      f.reset(); // no "welcome back" toast: the account button already shows who is signed in
     } catch (e) { setAlert('#loginAlert', e.message); }
   });
 }

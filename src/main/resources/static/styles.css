@@ -867,7 +867,13 @@ dialog.modal::backdrop { background: rgba(13, 30, 23, .5); backdrop-filter: blur
 .table-view { margin-top: var(--s-3); font-size: var(--text-sm); }
 .table-view summary { cursor: pointer; color: var(--forest-700); font-weight: 600; }
 .table-view table { margin-top: var(--s-2); }
-.table-scroll { overflow-x: auto; margin: 0 calc(var(--s-5) * -1); padding: 0 var(--s-5); }
+.table-scroll { overflow-x: auto; margin: 0 calc(var(--s-5) * -1); padding: 0 var(--s-5);
+  /* A soft shadow on an edge that has more columns behind it, so a table that scrolls sideways looks like it. */
+  background:
+    linear-gradient(to right, var(--paper) 30%, transparent) left / 40px 100% no-repeat local,
+    linear-gradient(to left, var(--paper) 30%, transparent) right / 40px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgb(0 0 0 / .2), transparent) left / 18px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgb(0 0 0 / .2), transparent) right / 18px 100% no-repeat scroll; }
 .insight-card table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
 .insight-card th, .insight-card td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
 .insight-card thead th { font-size: var(--text-xs); color: var(--muted); font-weight: 600; }
